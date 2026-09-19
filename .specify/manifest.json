@@ -1,0 +1,20 @@
+{
+  "project_id": "0072",
+  "project_name": "0072-cmre-engine",
+  "version": "0.3.0",
+  "domain": "Competitive Machine Learning & Scientific Tournament Intelligence",
+  "lead_researcher": "Rafael 'Rafa' Perez",
+  "agi_orchestrator": "Angelus Sovereign Core",
+  "cloud_agent": "Jules (Google Cloud)",
+  "open_spec_version": "2.0.0",
+  "primary_language": "python",
+  "python_version": ">=3.11",
+  "test_framework": "pytest",
+  "local_path": "C:\\Users\\rafae\\.gemini\\01_PROYECTOS\\0072-cmre-engine",
+  "drive_storage_path": "G:\\Mi unidad\\🏛️ Ecosistema_Angelus_2026\\0072-cmre-engine",
+  "github_repository": "https://github.com/perezernestorafael933/0072-cmre-engine",
+  "ci_cd_pipeline": "github_actions",
+  "status": "STAGE_4_DOMAIN_ENRICHED",
+  "test_pass_rate": "100%",
+  "tests_count": 68
+}

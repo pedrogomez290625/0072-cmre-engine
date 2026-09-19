@@ -1,0 +1,45 @@
+{
+  "spec_version": "2.0.0",
+  "project": "0072-cmre-engine",
+  "core_layers": [
+    "1_ingestion_and_provenance",
+    "2_normalization_and_extraction",
+    "3_knowledge_base_pgvector",
+    "4_problem_profiler_dna",
+    "5_reasoning_engine_scoring",
+    "6_experiment_planner_6phases",
+    "7_execution_lab",
+    "8_feedback_loop",
+    "9_governance_licensing"
+  ],
+  "modules_taxonomy": [
+    "MOD_INGEST",
+    "MOD_SIGNAL",
+    "MOD_SPLIT",
+    "MOD_ARCH",
+    "MOD_LOSS",
+    "MOD_ENSEMBLE"
+  ],
+  "supported_modalities": [
+    "tabular",
+    "text",
+    "image",
+    "time_series",
+    "multimodal",
+    "mass_spectrometry"
+  ],
+  "external_connectors": [
+    "arxiv",
+    "github",
+    "huggingface",
+    "semantic_scholar",
+    "kaggle_api"
+  ],
+  "active_target_competition": {
+    "name": "Enveda CASMI 2026 - Molecule ID Mass Spectra",
+    "platform": "Kaggle",
+    "domain": "Cheminformatics / Metabolomics / Mass Spectrometry",
+    "metric": "Cosine Similarity / Top-k Accuracy",
+    "data_path": "C:\\Users\\rafae\\Downloads\\KAGGLE\\2026"
+  }
+}
