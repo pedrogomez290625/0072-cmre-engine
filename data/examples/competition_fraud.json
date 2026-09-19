@@ -1,0 +1,28 @@
+{
+  "title": "Fraud Detection on Synthetic Banking Transactions",
+  "platform": "kaggle",
+  "task_type": "binary_classification",
+  "modality": "tabular",
+  "metric": "roc_auc",
+  "description": "Detect fraudulent transactions in a synthetic banking dataset. Train contains 200k rows with 400 features (anonymized PCA-style). Test contains 100k rows. Class imbalance is roughly 1:50.",
+  "data_summary": "Tabular numeric features only. No timestamps given. No group structure identified.",
+  "rules": {
+    "external_data_allowed": false,
+    "pretrained_models_allowed": false,
+    "team_size_limit": 5,
+    "submission_limit": 5
+  },
+  "has_temporal_component": false,
+  "has_group_structure": false,
+  "is_iid": true,
+  "has_external_data_allowed": false,
+  "has_pretrained_models_allowed": false,
+  "class_imbalance": "high",
+  "label_noise_risk": "low",
+  "distribution_shift_risk": "unknown",
+  "leak_risk": "medium",
+  "leak_signals": ["test_train_row_overlap_suspected"],
+  "compute_constraint": "low",
+  "interpretability_required": false,
+  "submission_limit": 5
+}

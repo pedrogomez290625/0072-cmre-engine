@@ -1,0 +1,28 @@
+{
+  "title": "User-Item Recommendation with Session Context",
+  "platform": "codalab",
+  "task_type": "ranking",
+  "modality": "tabular",
+  "metric": "ndcg_at_10",
+  "description": "Recommend top-10 items for each user given their session context (last 5 events). 2M users, 50k items, 30M events. Cold-start users (~10%) have no history.",
+  "data_summary": "30M events: (user_id, item_id, event_type, timestamp). Sessions of 5 events.",
+  "rules": {
+    "external_data_allowed": true,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 3,
+    "submission_limit": 3
+  },
+  "has_temporal_component": true,
+  "has_group_structure": true,
+  "is_iid": false,
+  "has_external_data_allowed": true,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "extreme",
+  "label_noise_risk": "low",
+  "distribution_shift_risk": "medium",
+  "leak_risk": "medium",
+  "leak_signals": ["future_event_leakage_risk"],
+  "compute_constraint": "medium",
+  "interpretability_required": false,
+  "submission_limit": 3
+}

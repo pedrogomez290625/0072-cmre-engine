@@ -1,0 +1,28 @@
+{
+  "title": "Store-Sales Forecasting",
+  "platform": "kaggle",
+  "task_type": "forecasting",
+  "modality": "time_series",
+  "metric": "smape",
+  "description": "Forecast daily sales for 1800 store-product combinations over a 90-day horizon. Training data covers 5 years of history with promotions, holidays, and store metadata.",
+  "data_summary": "5 years of daily sales for 1800 store-product pairs. Promotions and holidays marked.",
+  "rules": {
+    "external_data_allowed": true,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 5,
+    "submission_limit": 5
+  },
+  "has_temporal_component": true,
+  "has_group_structure": true,
+  "is_iid": false,
+  "has_external_data_allowed": true,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "low",
+  "label_noise_risk": "medium",
+  "distribution_shift_risk": "medium",
+  "leak_risk": "high",
+  "leak_signals": ["future_lagged_features_risk", "rolling_leakage_risk"],
+  "compute_constraint": "medium",
+  "interpretability_required": false,
+  "submission_limit": 5
+}

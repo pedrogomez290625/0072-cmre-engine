@@ -1,0 +1,55 @@
+{
+  "case_id": "timeseries_forecast_grouped_003",
+  "description": "Store-sales forecasting competition with 1800 store-product combinations. Winners used global models (TFT/LightGBM with lags) and rolling-origin validation; per-series ARIMA and random KFold failed.",
+
+  "competition_input": {
+    "title": "Store-Sales Forecasting (1800 series, 5 years)",
+    "platform": "kaggle",
+    "task_type": "forecasting",
+    "modality": "time_series",
+    "metric": "smape",
+    "description": "Forecast daily sales for 1800 store-product combinations over a 90-day horizon. Training data covers 5 years of history with promotions, holidays, and store metadata.",
+    "has_temporal_component": true,
+    "has_group_structure": true,
+    "is_iid": false,
+    "class_imbalance": "low",
+    "label_noise_risk": "medium",
+    "distribution_shift_risk": "medium",
+    "leak_risk": "high",
+    "leak_signals": ["future_lagged_features_risk", "rolling_leakage_risk"],
+    "compute_constraint": "medium"
+  },
+
+  "expected_dna_flags": [
+    "temporal_dependency",
+    "group_dependency",
+    "distribution_shift",
+    "leak_risk"
+  ],
+  "expected_validation_recommendations": [
+    "rolling_origin",
+    "walk_forward",
+    "multiple_horizons"
+  ],
+  "expected_anti_patterns": [
+    "random_kfold_on_temporal",
+    "future_leakage_via_lags"
+  ],
+  "expected_top_mechanisms": [
+    "temporal_validation",
+    "domain_adaptation",
+    "regularization"
+  ],
+  "forbidden_recommendations": [
+    "use_random_kfold_as_primary_validation",
+    "use_future_information_in_lags"
+  ],
+
+  "known_outcome": {
+    "public_score": 0.13,
+    "private_score": 0.12,
+    "placement": "gold",
+    "main_failure_naive_baseline": "per_series_arima_with_random_cv",
+    "lesson": "Global models with proper rolling-origin CV and lag features were decisive."
+  }
+}

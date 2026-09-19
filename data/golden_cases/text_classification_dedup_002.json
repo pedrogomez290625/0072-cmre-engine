@@ -1,0 +1,51 @@
+{
+  "case_id": "text_classification_dedup_002",
+  "description": "Text classification competition where many train texts were duplicated in test. Winners deduplicated and used source-based splits; default random KFold inflated CV.",
+
+  "competition_input": {
+    "title": "Multilingual Support Ticket Classification (with duplicates)",
+    "platform": "zindi",
+    "task_type": "multiclass_classification",
+    "modality": "text",
+    "metric": "f1_macro",
+    "description": "Classify customer support tickets into 12 categories. Train and test overlap by ~5% (near-duplicates). Test set is held-out.",
+    "has_temporal_component": false,
+    "has_group_structure": true,
+    "is_iid": false,
+    "class_imbalance": "medium",
+    "label_noise_risk": "medium",
+    "distribution_shift_risk": "low",
+    "leak_risk": "high",
+    "leak_signals": ["duplicate_tickets_across_train_test"],
+    "compute_constraint": "medium"
+  },
+
+  "expected_dna_flags": [
+    "leak_risk",
+    "group_dependency",
+    "label_noise"
+  ],
+  "expected_validation_recommendations": [
+    "source_based_split",
+    "deduplication_check"
+  ],
+  "expected_anti_patterns": [
+    "random_split_with_duplicates"
+  ],
+  "expected_top_mechanisms": [
+    "tree_baseline",
+    "augmentation_strategy",
+    "regularization"
+  ],
+  "forbidden_recommendations": [
+    "trust_random_kfold_when_duplicates_exist"
+  ],
+
+  "known_outcome": {
+    "public_score": 0.78,
+    "private_score": 0.74,
+    "placement": "top_20",
+    "main_failure": "duplicate_leakage_in_cv",
+    "lesson": "Dedup first, then build CV. Several top teams shared the same deduplication trick."
+  }
+}

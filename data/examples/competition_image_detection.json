@@ -1,0 +1,28 @@
+{
+  "title": "Wildlife Detection in Camera Trap Imagery",
+  "platform": "drivendata",
+  "task_type": "detection",
+  "modality": "image",
+  "metric": "map",
+  "description": "Detect and localize 12 wildlife species in camera trap images. Each image is from one of 200 camera sites; images from the same site are highly correlated. Train has 50k images, test has 30k. Image resolution is variable (mostly 1024x768 to 3000x2000).",
+  "data_summary": "Camera trap images from 200 sites. Strong site-level correlation. Variable resolution.",
+  "rules": {
+    "external_data_allowed": true,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 5,
+    "submission_limit": 5
+  },
+  "has_temporal_component": false,
+  "has_group_structure": true,
+  "is_iid": false,
+  "has_external_data_allowed": true,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "medium",
+  "label_noise_risk": "low",
+  "distribution_shift_risk": "high",
+  "leak_risk": "low",
+  "leak_signals": ["site_id_in_metadata"],
+  "compute_constraint": "high",
+  "interpretability_required": false,
+  "submission_limit": 5
+}

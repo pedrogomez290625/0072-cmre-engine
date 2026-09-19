@@ -1,0 +1,28 @@
+{
+  "title": "Multilingual Customer Support Ticket Classification",
+  "platform": "zindi",
+  "task_type": "multiclass_classification",
+  "modality": "text",
+  "metric": "f1_macro",
+  "description": "Classify customer support tickets into 12 categories (Billing, Account, Technical, etc.) across English and Spanish. 80k labeled tickets for training. Test set is held-out, drawn from the same distribution but with some duplicate tickets across train/test.",
+  "data_summary": "Free-text customer support tickets, multilingual (EN/ES), up to 1500 chars. Duplicates suspected.",
+  "rules": {
+    "external_data_allowed": true,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 3,
+    "submission_limit": 3
+  },
+  "has_temporal_component": false,
+  "has_group_structure": false,
+  "is_iid": true,
+  "has_external_data_allowed": true,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "medium",
+  "label_noise_risk": "medium",
+  "distribution_shift_risk": "low",
+  "leak_risk": "high",
+  "leak_signals": ["duplicate_tickets_across_train_test", "agent_id_leak"],
+  "compute_constraint": "medium",
+  "interpretability_required": false,
+  "submission_limit": 3
+}

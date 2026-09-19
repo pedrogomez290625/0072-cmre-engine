@@ -1,0 +1,20 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: cmre-db
+    environment:
+      POSTGRES_USER: cmre
+      POSTGRES_PASSWORD: cmre
+      POSTGRES_DB: cmre
+    ports:
+      - "5432:5432"
+    volumes:
+      - cmre_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cmre -d cmre"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  cmre_pgdata:

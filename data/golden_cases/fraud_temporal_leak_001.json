@@ -1,0 +1,53 @@
+{
+  "case_id": "fraud_temporal_leak_001",
+  "description": "Tabular fraud competition. The hidden time structure caused a large public/private gap when contestants used random KFold. Winners used adversarial validation + temporal split.",
+
+  "competition_input": {
+    "title": "Fraud Detection (synthetic, hidden temporal structure)",
+    "platform": "kaggle",
+    "task_type": "binary_classification",
+    "modality": "tabular",
+    "metric": "roc_auc",
+    "description": "Detect fraudulent transactions in a synthetic banking dataset. Train contains 200k rows with anonymized features; test contains 100k rows. The dataset has a hidden temporal structure (transactions per quarter).",
+    "has_temporal_component": true,
+    "has_group_structure": false,
+    "is_iid": false,
+    "class_imbalance": "high",
+    "label_noise_risk": "low",
+    "distribution_shift_risk": "high",
+    "leak_risk": "medium",
+    "leak_signals": ["test_train_row_overlap_suspected"],
+    "compute_constraint": "low"
+  },
+
+  "expected_dna_flags": [
+    "temporal_dependency",
+    "distribution_shift",
+    "class_imbalance",
+    "leak_risk"
+  ],
+  "expected_validation_recommendations": [
+    "temporal_validation",
+    "adversarial_validation"
+  ],
+  "expected_anti_patterns": [
+    "random_kfold_on_temporal"
+  ],
+  "expected_top_mechanisms": [
+    "tree_baseline",
+    "class_imbalance_handling",
+    "temporal_validation",
+    "adversarial_validation"
+  ],
+  "forbidden_recommendations": [
+    "random_kfold_as_primary_validation"
+  ],
+
+  "known_outcome": {
+    "public_score": 0.91,
+    "private_score": 0.87,
+    "placement": "silver",
+    "main_failure": "random_kfold_overfit_public_lb",
+    "lesson": "Winners ran adversarial validation first; some switched to temporal CV."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Product Listing Quality from Image + Description",
+  "platform": "aicrowd",
+  "task_type": "multiclass_classification",
+  "modality": "multimodal",
+  "metric": "ndcg",
+  "description": "Predict product listing quality (5 levels) from image and product description. Some test samples have missing descriptions (description field is empty). Image and text modalities carry complementary information.",
+  "data_summary": "100k products with image + text. ~20% of test has missing description. Image resolution 256x256.",
+  "rules": {
+    "external_data_allowed": false,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 4,
+    "submission_limit": 5
+  },
+  "has_temporal_component": false,
+  "has_group_structure": false,
+  "is_iid": true,
+  "has_external_data_allowed": false,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "medium",
+  "label_noise_risk": "medium",
+  "distribution_shift_risk": "low",
+  "leak_risk": "low",
+  "leak_signals": [],
+  "compute_constraint": "high",
+  "interpretability_required": false,
+  "submission_limit": 5
+}

@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+.cache/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+postgres-data/
+pgdata/
+
+# Reports (keep the folder)
+reports/*.md
+!reports/.gitkeep
+
+# Jules outbox
+.jules/outbox.jsonl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# ML
+mlruns/
+wandb/
