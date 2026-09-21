@@ -1,0 +1,32 @@
+{
+  "title": "Enveda - CASMI 2026 Blind Molecular Identification Challenge",
+  "platform": "kaggle",
+  "task_type": "retrieval",
+  "modality": "multimodal",
+  "metric": "top_k_accuracy",
+  "description": "Blind de novo identification and candidate ranking of small molecules from tandem mass spectrometry (LC-MS/MS). Combines 1D spectra peak profiles with 2D/3D chemical graphs. Severe risk of chemical analog leakage across Bemis-Murcko scaffolds.",
+  "data_summary": "Columnar tandem mass spectra (MS2) in Parquet format with precursor m/z, retention time, adduct states, and candidate SMILES chemical libraries exceeding 100,000 compounds.",
+  "rules": {
+    "external_data_allowed": true,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 5,
+    "submission_limit": 5
+  },
+  "has_temporal_component": false,
+  "has_group_structure": true,
+  "is_iid": false,
+  "has_external_data_allowed": true,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "high",
+  "label_noise_risk": "medium",
+  "distribution_shift_risk": "high",
+  "leak_risk": "high",
+  "leak_signals": [
+    "molecular_scaffold_overlap",
+    "adduct_precursor_mz_leakage",
+    "instrument_detector_shift_orbitrap_qtof"
+  ],
+  "compute_constraint": "high",
+  "interpretability_required": true,
+  "submission_limit": 5
+}
