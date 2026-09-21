@@ -1,0 +1,108 @@
+{
+  "catalog_version": "1.0.0",
+  "author": "Perez, Ernesto Rafael (\"Rafa\") & Angelus AGI",
+  "created_at": "2026-09-21",
+  "ecosystem": "0072-cmre-engine",
+  "description": "Formal contract specifications and synthetic samples for competition submissions across 5 golden benchmark tournaments.",
+  "contracts": {
+    "ENVEDA_CASMI_2026": {
+      "competition_id": "enveda_casmi_2026",
+      "platform": "CASMI / Direct",
+      "domain_type": "ranking",
+      "id_column": "molecular_id",
+      "target_columns": ["rank", "predicted_smiles", "score"],
+      "expected_columns": ["molecular_id", "rank", "predicted_smiles", "score"],
+      "top_k": 10,
+      "rules": {
+        "rows_multiplier": 10,
+        "score_monotonic": true,
+        "rank_sequence": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "no_nulls": true
+      },
+      "sample_valid": [
+        {"molecular_id": "MOL_001", "rank": 1, "predicted_smiles": "CC(=O)OC1=CC=CC=C1C(=O)O", "score": 0.9421},
+        {"molecular_id": "MOL_001", "rank": 2, "predicted_smiles": "CC(=O)NC1=CC=C(O)C=C1", "score": 0.8812},
+        {"molecular_id": "MOL_001", "rank": 3, "predicted_smiles": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "score": 0.7645}
+      ]
+    },
+    "RSNA_SCREENING_MAMMOGRAPHY": {
+      "competition_id": "rsna_screening_mammography",
+      "platform": "Kaggle",
+      "domain_type": "probability",
+      "id_column": "prediction_id",
+      "target_columns": ["cancer"],
+      "expected_columns": ["prediction_id", "cancer"],
+      "id_format": "{patient_id}_{laterality}",
+      "rules": {
+        "probability_bounds": [0.0, 1.0],
+        "strictly_calibrated": true,
+        "no_nulls": true,
+        "exact_test_cardinality": true
+      },
+      "sample_valid": [
+        {"prediction_id": "10008_L", "cancer": 0.0124},
+        {"prediction_id": "10008_R", "cancer": 0.0489},
+        {"prediction_id": "10011_L", "cancer": 0.0031},
+        {"prediction_id": "10011_R", "cancer": 0.0028}
+      ]
+    },
+    "ISIC_MELANOMA_2024": {
+      "competition_id": "isic_melanoma_2024",
+      "platform": "Kaggle",
+      "domain_type": "probability",
+      "id_column": "isic_id",
+      "target_columns": ["target"],
+      "expected_columns": ["isic_id", "target"],
+      "rules": {
+        "probability_bounds": [0.0, 1.0],
+        "pauc_optimized": true,
+        "no_nulls": true,
+        "exact_test_cardinality": true
+      },
+      "sample_valid": [
+        {"isic_id": "ISIC_0015678", "target": 0.0015},
+        {"isic_id": "ISIC_0015679", "target": 0.0842},
+        {"isic_id": "ISIC_0015680", "target": 0.8920}
+      ]
+    },
+    "DRIVENDATA_RICHTERS_PREDICTOR": {
+      "competition_id": "drivendata_richters_predictor",
+      "platform": "DrivenData",
+      "domain_type": "discrete",
+      "id_column": "building_id",
+      "target_columns": ["damage_grade"],
+      "expected_columns": ["building_id", "damage_grade"],
+      "valid_classes": [1, 2, 3],
+      "rules": {
+        "exact_rows": 86868,
+        "discrete_set": [1, 2, 3],
+        "no_nulls": true,
+        "integer_dtype": true
+      },
+      "sample_valid": [
+        {"building_id": 114051, "damage_grade": 1},
+        {"building_id": 114052, "damage_grade": 2},
+        {"building_id": 114053, "damage_grade": 3}
+      ]
+    },
+    "ZINDI_AIRQO": {
+      "competition_id": "zindi_airqo",
+      "platform": "Zindi",
+      "domain_type": "continuous_nonneg",
+      "id_column": "ID",
+      "target_columns": ["target"],
+      "expected_columns": ["ID", "target"],
+      "rules": {
+        "min_value": 0.0,
+        "physical_upper_bound": 1000.0,
+        "no_nulls": true,
+        "exact_test_cardinality": true
+      },
+      "sample_valid": [
+        {"ID": "ID_001_2023-01-01", "target": 42.15},
+        {"ID": "ID_002_2023-01-01", "target": 38.90},
+        {"ID": "ID_003_2023-01-01", "target": 55.30}
+      ]
+    }
+  }
+}

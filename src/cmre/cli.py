@@ -245,6 +245,62 @@ def cmd_dispatch(
     console.print("[bold green]Estado de Despacho: LISTO PARA EJECUCIÓN.[/bold green]\n")
 
 
+@app.command("validate-submission")
+def cmd_validate_submission(
+    submission: str = typer.Option(..., "--submission", "-s", help="Path to submission CSV file."),
+    sample: Optional[str] = typer.Option(None, "--sample", "-ref", help="Path to sample_submission.csv."),
+    test: Optional[str] = typer.Option(None, "--test", "-t", help="Path to test.csv."),
+    domain: str = typer.Option("probability", "--domain", "-d", help="Domain type: probability, discrete, continuous_nonneg, ranking."),
+    classes: Optional[str] = typer.Option(None, "--classes", help="Comma-separated allowed classes for discrete domain (e.g. '1,2,3')."),
+    id_col: Optional[str] = typer.Option(None, "--id-col", help="Name of identifier column."),
+) -> None:
+    """Validar integridad, schema, cotas y alineacion 1-a-1 de un archivo de submission antes de enviar."""
+    from .services.submission_validator import SubmissionIntegrityValidator
+
+    valid_classes = None
+    if classes:
+        parts = [c.strip() for c in classes.split(",")]
+        # Try to parse integers if possible
+        parsed = []
+        for p in parts:
+            try:
+                parsed.append(int(p))
+            except ValueError:
+                parsed.append(p)
+        valid_classes = parsed
+
+    validator = SubmissionIntegrityValidator()
+    report = validator.validate_file(
+        submission_path=submission,
+        sample_path=sample,
+        test_path=test,
+        id_col=id_col,
+        domain_type=domain,
+        valid_classes=valid_classes,
+    )
+
+    console.print("\n[bold cyan]=== CMRE PRE-SUBMISSION INTEGRITY AUDIT ===[/bold cyan]")
+    console.print(f"Archivo: [bold]{submission}[/bold]")
+    console.print(f"Huella SHA-256: [bold green]{report.sha256}[/bold green]")
+    console.print(f"Dimensiones: {report.row_count} filas x {report.column_count} columnas")
+
+    if report.issues:
+        console.print("\n[bold yellow]Hallazgos de Auditoría:[/bold yellow]")
+        for issue in report.issues:
+            if issue.level == "ERROR":
+                console.print(f"  • [bold red][ERROR][/bold red] {issue.check}: {issue.message}")
+            elif issue.level == "WARNING":
+                console.print(f"  • [bold yellow][WARN][/bold yellow] {issue.check}: {issue.message}")
+            else:
+                console.print(f"  • [bold cyan][INFO][/bold cyan] {issue.check}: {issue.message}")
+
+    if report.is_valid:
+        console.print("\n[bold green]✓ CERTIFICACIÓN DE SUBMISSION: APROBADA (0 Errores). LISTO PARA SUBIR.[/bold green]\n")
+    else:
+        console.print(f"\n[bold red]✗ CERTIFICACIÓN DE SUBMISSION: RECHAZADA ({report.errors_count} Errores). SUBMISSION BLOQUEADA.[/bold red]\n")
+        raise typer.Exit(code=1)
+
+
 def main() -> None:
     app()
 

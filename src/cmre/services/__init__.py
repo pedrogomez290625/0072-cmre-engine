@@ -6,9 +6,12 @@ models (for persistence) but never the other way around.
 """
 
 from .embedder import Embedder, cosine_similarity
+from .submission_validator import SubmissionIntegrityValidator, ValidationIssue, ValidationReport
 
 __all__ = [
     "Embedder",
     "cosine_similarity",
-    # filled in by the reasoner/profiler/planner/knowledge_base/reporter modules
+    "SubmissionIntegrityValidator",
+    "ValidationReport",
+    "ValidationIssue",
 ]

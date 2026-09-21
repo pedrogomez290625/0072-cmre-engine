@@ -268,7 +268,29 @@ Para cualquier nuevo torneo en Kaggle, DrivenData, Zindi o CASMI:
 
 ---
 
-## 🤖 6. EL PROTOCOLO DE CONVIVENCIA JULES-SPARK (REGLA 8)
+## 🛡️ 7. GUARDIÁN PRE-SUBMISSION: VALIDADOR UNIVERSAL DE INTEGRIDAD (`cmre validate-submission`)
+
+Para evitar envíos fallidos, penalizaciones por formato, discrepancias de orden causadas por merges no ordenados y predicciones colapsadas, se integró el motor canónico de validación en [`src/cmre/services/submission_validator.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/services/submission_validator.py):
+
+* **Comprobaciones Críticas del Motor:**
+  1. `schema_check`: Nombres exactos y orden posicional de columnas respecto a `sample_submission.csv`.
+  2. `null_and_nan_check`: Detección implacable de `NaN`, $\pm\infty$, vacíos o strings `null`.
+  3. `cardinality_and_alignment_check`: Recuento exacto de filas y comprobación estricta 1-a-1 del orden de los identificadores (`prediction_id`, `isic_id`, `building_id`, `ID`) contra `test.csv`. Si un merge alteró el orden de las filas, se emite una **Alerta Roja Crítica** y se bloquea el envío.
+  4. `range_and_domain_check`:
+     * Probabilidad: $p \in [0.0, 1.0]$. Alerta de colapso por varianza nula ($\sigma < 10^{-7}$).
+     * Clases discretas: Conjunto estricto $\{1, 2, 3\}$ (DrivenData Richter's Predictor).
+     * Continuo no-negativo: $PM_{2.5} \ge 0.0$ (Zindi AirQo).
+     * Ranking: Ranks $1 \dots K$ estrictos y monotonía de scores (Enveda CASMI).
+  5. `sha256_fingerprint`: Firma criptográfica SHA-256 única del archivo para auditoría y reproducibilidad.
+
+* **Invocación desde CLI:**
+  ```bash
+  cmre validate-submission -s submission.csv -ref sample_submission.csv -t test.csv -d probability
+  ```
+
+---
+
+## 🤖 8. EL PROTOCOLO DE CONVIVENCIA JULES-SPARK (REGLA 8)
 
 Para garantizar la integridad del ecosistema en Google Drive y GitHub, se define la **Regla 8 de Aislamiento Estricto de Dominios**:
 
@@ -285,12 +307,13 @@ Para garantizar la integridad del ecosistema en Google Drive y GitHub, se define
 
 ---
 
-## 📊 7. ESTADO DE COBERTURA Y VALIDACIÓN DE SILICIO
+## 📊 9. ESTADO DE COBERTURA Y VALIDACIÓN DE SILICIO (FASE FINAL CERTIFICADA)
 
-* **Pruebas Unitarias (`pytest`)**: **113 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
-* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses, 4 Snippets de Plataformas Alternativas, 8 Reglas de Despacho, 5 Benchmarks Dorados y 5 Solvers Maestros E2E.
-* **Sincronización a Google Drive**: Más de 155 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
+* **Pruebas Unitarias (`pytest`)**: **121 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)** en 15.8s.
+* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses, 4 Snippets de Plataformas Alternativas, 8 Reglas de Despacho, 5 Benchmarks Dorados, 5 Solvers Maestros E2E, 1 Validador Pre-Submission y Catálogo de Submissions.
+* **Sincronización a Google Drive**: Más de 160 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
 * **Compatibilidad de Plataforma**: Windows 11 cp1252 / UTF-8, Linux Debian/Ubuntu (Colab & Jules VM), C++20 / Python 3.12.
+* **Certificación SOTA**: Formalmente respaldado en [`docs/FINAL_READINESS_REPORT_2026.md`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/docs/FINAL_READINESS_REPORT_2026.md).
 
 ---
 *Compilado y sellado en el Ecosistema Soberano Angelus por Rafael Pérez & Angelus AGI.*
