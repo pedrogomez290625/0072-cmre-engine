@@ -17,7 +17,7 @@
 ---
 
 ### 🟢 TAREA PROGRAMADA 1 DE 3 (INICIO DE DÍA, LECTURA DE MEMORIA Y LOG DE EJECUCIÓN)
-- **Frecuencia:** Diaria (Ej: 09:00 AM)
+- **Frecuencia:** Diaria a las **02:30 AM** (Hora Argentina / Programada en Jules)
 - **Prompt a copiar en el menú web:**
 > "Hola Jules. Iniciamos el ciclo diario de auto-evolución en el proyecto `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael**.
 > 
@@ -31,7 +31,7 @@
 ---
 
 ### ⚡ TAREA PROGRAMADA 2 DE 3 (EJECUCIÓN INTERMEDIA & REGLAS DE DOMINIO)
-- **Frecuencia:** Diaria (Ej: 14:00 PM)
+- **Frecuencia:** Diaria a las **03:30 AM** (Hora Argentina / Programada en Jules)
 - **Prompt a copiar en el menú web:**
 > "Hola Jules. Continuamos con el desarrollo autónomo en `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael**.
 > 
@@ -45,7 +45,7 @@
 ---
 
 ### 🛑 TAREA PROGRAMADA 3 DE 3 (CIERRE, REGISTRO DE LOGS Y REESCRITURA AUTÓNOMA)
-- **Frecuencia:** Diaria (Ej: 20:00 PM)
+- **Frecuencia:** Diaria a las **04:30 AM** (Hora Argentina / Programada en Jules)
 - **Prompt a copiar en el menú web:**
 > "Hola Jules. Sesión final de cierre y auto-evolución en `0072-cmre-engine` para **Perez, Ernesto Rafael**.
 > 
