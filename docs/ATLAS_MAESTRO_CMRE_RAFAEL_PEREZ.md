@@ -237,6 +237,35 @@ El evaluador determinista (`evaluate_golden.py`) valida de extremo a extremo las
 | **`GOLDEN_04`** | DrivenData Richter's Predictor | Daño Sísmico Ordinal | `RULE_TAB_ORDINAL_DAMAGE` | Micro-F1: 0.695 $\rightarrow$ **0.755** (Top 1% GM tier) |
 | **`GOLDEN_05`** | Zindi AirQo Ugandan Air Quality | Telemetría IoT Espacio-Temporal | `RULE_ENV_SPATIO_TEMPORAL_IOT` | RMSE: 32.50 $\rightarrow$ **22.85** (-9.65 error reduction) |
 
+### 5.1. LOS 5 SOLVERS MAESTROS E2E (`src/cmre/solvers/`)
+
+Los 5 solvers canónicos compilan y ejecutan de forma autónoma el pipeline de punta a punta para cada torneo:
+
+1. **`EnvedaCasmiSolver` ([`enveda_casmi_solver.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/solvers/enveda_casmi_solver.py))**:
+   - Ingesta espectral binned (0.05 Da) con norma $L_2$ $\rightarrow$ Partición greedy por Scaffolds de Bemis-Murcko $\rightarrow$ Cálculo Tanimoto bitset POPCNT $\rightarrow$ Reranking bayesiano con penalización por error de masa en ppm.
+2. **`RSNAMammographySolver` ([`rsna_mammography_solver.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/solvers/rsna_mammography_solver.py))**:
+   - Ingesta DICOM VOI LUT / MONOCHROME1 $\rightarrow$ StratifiedGroupKFold por `patient_id` $\rightarrow$ Atención cruzada CC $\leftrightarrow$ MLO $\rightarrow$ Asymmetric Loss ($\gamma_-=4.0$, margin clip $0.05$) $\rightarrow$ Nelder-Mead sobre OOF para pF1.
+3. **`ISICMelanomaSolver` ([`isic_melanoma_solver.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/solvers/isic_melanoma_solver.py))**:
+   - Extracción de variables del "patito feo" $\rightarrow$ Partición paciente-disjunta $\rightarrow$ LightGBM compensado $\rightarrow$ Calibración de pAUC restringida a la ventana clínica de alta sensibilidad ($TPR \ge 0.80$).
+4. **`RichtersPredictorSolver` ([`richters_predictor_solver.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/solvers/richters_predictor_solver.py))**:
+   - Ratios de esbeltez estructural (altura/área) $\rightarrow$ SA Feature Selection $\rightarrow$ Ordinal Damage Classifier $\rightarrow$ Nelder-Mead continuo sobre umbrales de argmax para Micro-F1.
+5. **`ZindiAirQoSolver` ([`zindi_airqo_solver.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/solvers/zindi_airqo_solver.py))**:
+   - Lags multiescala causales ($t-1h, t-2h, t-3h, t-24h$) y armónicos diurnos $\sin/\cos$ $\rightarrow$ Spatial Group K-Fold $\rightarrow$ Ensamble convexo 85% LightGBM + 15% Geo-KNN $\rightarrow$ Restricción física ($PM_{2.5} \ge 0$).
+
+### 5.2. MANUAL DE COMBATE EN 10 MINUTOS & LAS 4 LEYES INQUEBRANTABLES DE RAFA
+
+Para cualquier nuevo torneo en Kaggle, DrivenData, Zindi o CASMI:
+* **Min 0-2 (Ingesta & ADN):** `cmre profile -i comp.json` (extraer modalidad, métrica, grupos y desbalance).
+* **Min 2-4 (Auditoría Forense):** `cmre audit-leak -i comp.json` (cruce con el Wall of Shame: alertar fugas FAIL_01 a FAIL_10).
+* **Min 4-6 (Despacho):** `cmre dispatch -i comp.json` (disparo de la regla óptima y bloqueo de técnicas prohibidas).
+* **Min 6-10 (Generación & Verificación):** Instanciación del solver, `pytest tests/` y `evaluate_golden.py`.
+
+#### ⚖️ Las 4 Leyes Inquebrantables de Rafa para Pre-Submission:
+1. **Ley del Umbral OOF:** En desbalance $< 5\%$ o métricas F1/pF1, queda prohibido asumir umbral fijo 0.50. El umbral debe sintonizarse vía Nelder-Mead en OOF.
+2. **Ley de los Dos Envíos:** Envío A (Mejor CV OOF local) y Envío B (Ensamble regularizado con balance CV/Public LB).
+3. **Ley del Límite de Tiempo al 60%:** El pipeline de inferencia debe ejecutar el 100% de test en $< 60\%$ del tiempo límite permitido.
+4. **Ley de Trazabilidad por Git Hash:** Ningún submission se emite sin registrar el commit SHA de Git, la semilla (`seed=42`) y el hash de dependencias.
+
 ---
 
 ## 🤖 6. EL PROTOCOLO DE CONVIVENCIA JULES-SPARK (REGLA 8)
@@ -258,9 +287,9 @@ Para garantizar la integridad del ecosistema en Google Drive y GitHub, se define
 
 ## 📊 7. ESTADO DE COBERTURA Y VALIDACIÓN DE SILICIO
 
-* **Pruebas Unitarias (`pytest`)**: **108 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
-* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses, 4 Snippets de Plataformas Alternativas, 8 Reglas de Despacho y 5 Benchmarks Dorados.
-* **Sincronización a Google Drive**: Más de 150 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
+* **Pruebas Unitarias (`pytest`)**: **113 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
+* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses, 4 Snippets de Plataformas Alternativas, 8 Reglas de Despacho, 5 Benchmarks Dorados y 5 Solvers Maestros E2E.
+* **Sincronización a Google Drive**: Más de 155 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
 * **Compatibilidad de Plataforma**: Windows 11 cp1252 / UTF-8, Linux Debian/Ubuntu (Colab & Jules VM), C++20 / Python 3.12.
 
 ---
