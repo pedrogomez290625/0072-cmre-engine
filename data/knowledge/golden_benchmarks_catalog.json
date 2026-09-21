@@ -1,0 +1,58 @@
+{
+  "author": "Perez, Ernesto Rafael (\"Rafa\") & Angelus AGI",
+  "version": "1.0.0",
+  "date": "2026-09-21",
+  "total_benchmarks": 5,
+  "benchmarks": [
+    {
+      "benchmark_id": "GOLDEN_01",
+      "competition_id": "enveda_casmi_2026",
+      "title": "Enveda CASMI 2026 Blind Molecular Identification Challenge",
+      "domain": "cheminformatics_mass_spec",
+      "dispatched_rule": "RULE_CHEM_MOLECULAR_SCAFFOLD",
+      "baseline_metric": "Top-1 Accuracy: 0.280",
+      "target_metric": "Top-1 Accuracy: 0.465 (+0.185 lift neto), Top-10 Recall: 0.812",
+      "key_defenses": ["SNIP_SPLIT_SCAFFOLD_MURCKO", "SNIP_HPC_BITSET_TANIMOTO_FAST", "SNIP_HPC_CHOKUDAI_SEARCH"]
+    },
+    {
+      "benchmark_id": "GOLDEN_02",
+      "competition_id": "rsna_screening_mammography",
+      "title": "RSNA Screening Mammography Breast Cancer Detection",
+      "domain": "medical_radiology",
+      "dispatched_rule": "RULE_MED_MAMMO_EXTREME_IMBALANCE",
+      "baseline_metric": "Probabilistic F1 (pF1): 0.210",
+      "target_metric": "Probabilistic F1 (pF1): 0.585 (+0.375 lift neto)",
+      "key_defenses": ["SNIP_INGEST_DICOM_FAST", "SNIP_SPLIT_GROUP_PATIENT_DISJOINT", "SNIP_MED_CROSS_VIEW_MAMMO_ATTENTION", "SNIP_LOSS_ASYMMETRIC_CUDA", "SNIP_ENS_NELDER_MEAD_THRESHOLD"]
+    },
+    {
+      "benchmark_id": "GOLDEN_03",
+      "competition_id": "isic_2024_skin_cancer",
+      "title": "ISIC 2024 Skin Cancer Detection with 3D-TBP",
+      "domain": "medical_dermatology",
+      "dispatched_rule": "RULE_MED_DERMATOLOGY_PATIENT_COHORT",
+      "baseline_metric": "Partial AUC (pAUC): 0.125",
+      "target_metric": "Partial AUC (pAUC): 0.182 (+0.057 lift neto)",
+      "key_defenses": ["SNIP_SPLIT_GROUP_PATIENT_DISJOINT", "SNIP_MED_UGLY_DUCKLING_NORMALIZER", "SNIP_LOSS_ASYMMETRIC_CUDA"]
+    },
+    {
+      "benchmark_id": "GOLDEN_04",
+      "competition_id": "drivendata_richters_predictor",
+      "title": "Richter's Predictor: Modeling Earthquake Damage",
+      "domain": "tabular_engineering",
+      "dispatched_rule": "RULE_TAB_ORDINAL_DAMAGE",
+      "baseline_metric": "Micro-Averaged F1: 0.695",
+      "target_metric": "Micro-Averaged F1: 0.755 (Top 1% Grandmaster tier)",
+      "key_defenses": ["SNIP_ALT_DRIVENDATA_ORDINAL_DAMAGE_MODELER", "SNIP_HPC_SIMULATED_ANNEALING_FEATURE_SELECTION", "SNIP_ENS_NNLS_STACKING"]
+    },
+    {
+      "benchmark_id": "GOLDEN_05",
+      "competition_id": "zindi_airqo_ugandan_air",
+      "title": "AirQo Ugandan Air Quality Forecast Challenge",
+      "domain": "environmental_telemetry",
+      "dispatched_rule": "RULE_ENV_SPATIO_TEMPORAL_IOT",
+      "baseline_metric": "RMSE: 32.50",
+      "target_metric": "RMSE: 22.85 (-9.65 reducción de error)",
+      "key_defenses": ["SNIP_ALT_ZINDI_SPATIO_TEMPORAL_LAG_BLENDER", "SNIP_SPLIT_PURGED_EMBARGO_TIME"]
+    }
+  ]
+}

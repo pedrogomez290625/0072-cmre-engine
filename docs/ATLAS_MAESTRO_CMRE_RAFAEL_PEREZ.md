@@ -182,9 +182,64 @@ Autopsias Históricas Relevantes (Wall of Shame):
 Estado de Auditoría: VALIDADO.
 ```
 
+### 4.2. MATRIZ DE DECISIÓN DETERMINISTA & DESPACHO AUTOMÁTICO (`cmre dispatch`)
+
+El servicio [`DecisionMatrixEngine`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/services/decision_matrix.py) unifica las 89 claims, los 13 snippets canónicos, los 5 módulos HPC/radiología avanzados y las recetas alternativas en **8 reglas de despacho determinista**:
+
+| Regla de Despacho | Torneo Canónico | Dominio | Ingesta & Split | Pipeline de Señal, Pérdida & Modelo |
+| --- | --- | --- | --- | --- |
+| **`RULE_MED_MAMMO_EXTREME_IMBALANCE`** | RSNA Mammography | Radiología Dual | DICOM VOI LUT + StratifiedGroupKFold | Cross-View Attention + AsymmetricLoss + Nelder-Mead |
+| **`RULE_FIN_TIMESERIES_ORDERBOOK`** | Optiver Trading | Microestructura | Parquet + PurgedGroupTimeSeriesSplit | SegmentTree Lazy + Huber Loss + Stacking NNLS |
+| **`RULE_CHEM_MOLECULAR_SCAFFOLD`** | Enveda CASMI 2026 | Metabolómica | Binned MS/MS + Bemis-Murcko Split | POPCNT Tanimoto + Chokudai Beam Search + Reranking |
+| **`RULE_MED_DERMATOLOGY_PATIENT_COHORT`**| ISIC 2024 Melanoma | Dermatología 3D | HDF5 + Group Patient Disjoint | Patito Feo IQR + AsymmetricLoss + Nelder-Mead (TPR>80%) |
+| **`RULE_TAB_ORDINAL_DAMAGE`** | Richter's Predictor | Ingeniería Sísmica | Tipado + Stratified K-Fold | Ratios Esbeltez + SA Feature Selection + Nelder-Mead |
+| **`RULE_ENV_SPATIO_TEMPORAL_IOT`** | Zindi AirQo | Telemetría IoT | Columnar + Spatial Group Purged | Lags Multiescala + Armónicos Diurnos + Blending GBDT/KNN |
+| **`RULE_BIO_ANIMAL_FEWSHOT_REID`** | Zindi Turtle Recall| Ecología Re-ID | Aumentación + Group Avistamiento | Doble Recorte + ArcFace Margin + Similitud Coseno Open-Set |
+| **`RULE_WSI_HISTOPATHOLOGY_GIGAPIXEL`** | HuBMAP Vasculature | Patología Digital| TIFF + Group Donante | Tiling 25% + U-Net + Recombinación Ventana Hanning 2D |
+
+#### Ejemplo de Ejecución CLI:
+```bash
+cmre dispatch -i data/examples/competition_rsna_screening_mammography.json
+```
+```text
+=== CMRE DETERMINISTIC DISPATCH ENGINE ===
+Torneo: RSNA Screening Mammography Breast Cancer Detection
+Regla Disparada: RULE_MED_MAMMO_EXTREME_IMBALANCE (Radiología & Mamografía Dual CC/MLO con Desbalance Extremo)
+Dominio: medical_imaging | Confianza: 98.0%
+
+Pipeline Canónico Despachado:
+  • INGEST: SNIP_INGEST_DICOM_FAST (VOI LUT + corrección MONOCHROME1)
+  • SPLIT: SNIP_SPLIT_GROUP_PATIENT_DISJOINT (StratifiedGroupKFold por paciente)
+  • SIGNAL: SNIP_MED_CROSS_VIEW_MAMMO_ATTENTION (Fusión atencional CC <-> MLO)
+  • LOSS: SNIP_LOSS_ASYMMETRIC_CUDA (AsymmetricLoss gamma_neg=4.0) + SNIP_LOSS_SOFT_F1_WEIGHTED
+  • MODEL: ConvNeXt / EfficientNet-B4 + CrossView Bidirectional Attention
+  • ENSEMBLE: SNIP_ENS_NNLS_STACKING (Stacking simplex no negativo)
+  • POSTPROCESS: SNIP_ENS_NELDER_MEAD_THRESHOLD (Optimización continua de umbral OOF)
+
+Técnicas Prohibidas (Wall of Shame):
+  • [PROHIBIDO] Umbral fijo de decisión 0.50 (FAIL_01: colapso de pF1)
+  • [PROHIBIDO] K-Fold aleatorio mezclando proyecciones del mismo paciente (FAIL_05)
+  • [PROHIBIDO] Omitir interpretación de PhotometricInterpretation MONOCHROME1 (FAIL_10)
+Estado de Despacho: LISTO PARA EJECUCIÓN.
+```
+
 ---
 
-## 🤖 5. EL PROTOCOLO DE CONVIVENCIA JULES-SPARK (REGLA 8)
+## 🏆 5. CATÁLOGO DE BENCHMARKS DORADOS E2E
+
+El evaluador determinista (`evaluate_golden.py`) valida de extremo a extremo las soluciones frente a 5 torneos dorados:
+
+| Benchmark ID | Torneo | Dominio | Regla Disparada | Métrica Base $\rightarrow$ Métrica Objetivo CMRE |
+| --- | --- | --- | --- | --- |
+| **`GOLDEN_01`** | Enveda CASMI 2026 | Quimioinformática & MS/MS | `RULE_CHEM_MOLECULAR_SCAFFOLD` | Top-1 Acc: 0.280 $\rightarrow$ **0.465** (+0.185 lift) |
+| **`GOLDEN_02`** | RSNA Screening Mammography | Radiología Médica | `RULE_MED_MAMMO_EXTREME_IMBALANCE` | pF1: 0.210 $\rightarrow$ **0.585** (+0.375 lift) |
+| **`GOLDEN_03`** | ISIC 2024 Skin Cancer | Dermatología 3D-TBP | `RULE_MED_DERMATOLOGY_PATIENT_COHORT` | pAUC: 0.125 $\rightarrow$ **0.182** (+0.057 lift) |
+| **`GOLDEN_04`** | DrivenData Richter's Predictor | Daño Sísmico Ordinal | `RULE_TAB_ORDINAL_DAMAGE` | Micro-F1: 0.695 $\rightarrow$ **0.755** (Top 1% GM tier) |
+| **`GOLDEN_05`** | Zindi AirQo Ugandan Air Quality | Telemetría IoT Espacio-Temporal | `RULE_ENV_SPATIO_TEMPORAL_IOT` | RMSE: 32.50 $\rightarrow$ **22.85** (-9.65 error reduction) |
+
+---
+
+## 🤖 6. EL PROTOCOLO DE CONVIVENCIA JULES-SPARK (REGLA 8)
 
 Para garantizar la integridad del ecosistema en Google Drive y GitHub, se define la **Regla 8 de Aislamiento Estricto de Dominios**:
 
@@ -201,11 +256,11 @@ Para garantizar la integridad del ecosistema en Google Drive y GitHub, se define
 
 ---
 
-## 📊 6. ESTADO DE COBERTURA Y VALIDACIÓN DE SILICIO
+## 📊 7. ESTADO DE COBERTURA Y VALIDACIÓN DE SILICIO
 
-* **Pruebas Unitarias (`pytest`)**: **102 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
-* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses y 4 Snippets de Plataformas Alternativas.
-* **Sincronización a Google Drive**: Más de 145 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
+* **Pruebas Unitarias (`pytest`)**: **108 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
+* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses, 4 Snippets de Plataformas Alternativas, 8 Reglas de Despacho y 5 Benchmarks Dorados.
+* **Sincronización a Google Drive**: Más de 150 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
 * **Compatibilidad de Plataforma**: Windows 11 cp1252 / UTF-8, Linux Debian/Ubuntu (Colab & Jules VM), C++20 / Python 3.12.
 
 ---

@@ -217,9 +217,38 @@ def cmd_audit_leak(
     console.print("\n[bold green]Estado de Auditoría: VALIDADO.[/bold green]\n")
 
 
+@app.command("dispatch")
+def cmd_dispatch(
+    input: str = typer.Option(..., "--input", "-i", help="Path to CompetitionInput JSON."),
+) -> None:
+    """Despachar deterministamente la arquitectura y pipeline optimo segun la Matriz de Decision."""
+    from .services.decision_matrix import DecisionMatrixEngine
+    data = json.loads(Path(input).read_text(encoding="utf-8"))
+    
+    engine = DecisionMatrixEngine()
+    result = engine.dispatch(data)
+    
+    console.print(f"\n[bold cyan]=== CMRE DETERMINISTIC DISPATCH ENGINE ===[/bold cyan]")
+    console.print(f"Torneo: [bold]{data.get('title', 'Unknown')}[/bold]")
+    console.print(f"Regla Disparada: [bold green]{result.matched_rule_id}[/bold green] ({result.rule_title})")
+    console.print(f"Dominio: [cyan]{result.domain}[/cyan] | Confianza: [bold]{result.confidence_score*100:.1f}%[/bold]")
+    
+    console.print("\n[bold green]Pipeline Canónico Despachado:[/bold green]")
+    for stage, snip in result.prescribed_pipeline.items():
+        console.print(f"  • [cyan]{stage.upper()}:[/cyan] [bold]{snip}[/bold]")
+        
+    if result.forbidden_approaches:
+        console.print("\n[bold red]Técnicas Prohibidas (Wall of Shame):[/bold red]")
+        for forb in result.forbidden_approaches:
+            console.print(f"  • [red][PROHIBIDO][/red] {forb}")
+            
+    console.print("[bold green]Estado de Despacho: LISTO PARA EJECUCIÓN.[/bold green]\n")
+
+
 def main() -> None:
     app()
 
 
 if __name__ == "__main__":
     main()
+
