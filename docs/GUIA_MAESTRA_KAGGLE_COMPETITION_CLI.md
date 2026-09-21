@@ -181,7 +181,28 @@ En las competencias modernas más importantes (como *RSNA Mammography*, *ISIC Me
 
 ---
 
-## 🏆 7. RESUMEN: EL CICLO COMPLETO CON EL ECOSISTEMA CMRE
+## 🗄️ 8. GESTOR MULTI-CUENTA: SEPARACIÓN SANDBOX VS PRODUCCIÓN
+
+Para mantener una higiene impecable y evitar penalizaciones de multi-accounting, se implementó el gestor [`scripts/switch_kaggle_account.py`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/scripts/switch_kaggle_account.py):
+
+* **Cuenta Sandbox / Pruebas:** `pedrogomez001` (Verificada, 30h GPU semanales, utilizada para pruebas de humo, envíos dummy y validación de pipelines).
+* **Cuenta Producción / Torneo Oficial:** Se activará cuando Rafael Pérez conecte la cuenta primaria para competencias oficiales.
+
+### Comandos del Gestor Multi-Cuenta:
+```bash
+# Ver cuentas disponibles y cuenta activa
+python scripts/switch_kaggle_account.py list
+
+# Conmutar a la cuenta de sandbox (pedrogomez001)
+python scripts/switch_kaggle_account.py switch sandbox
+
+# Importar una nueva cuenta desde un archivo descargado
+python scripts/switch_kaggle_account.py import C:\Users\rafae\Downloads\kaggle.json produccion
+```
+
+---
+
+## 🏆 9. RESUMEN: EL CICLO COMPLETO CON EL ECOSISTEMA CMRE
 
 ```mermaid
 flowchart LR
