@@ -285,19 +285,19 @@ def cmd_validate_submission(
     console.print(f"Dimensiones: {report.row_count} filas x {report.column_count} columnas")
 
     if report.issues:
-        console.print("\n[bold yellow]Hallazgos de Auditoría:[/bold yellow]")
+        console.print("\n[bold yellow]Hallazgos de Auditoria:[/bold yellow]")
         for issue in report.issues:
             if issue.level == "ERROR":
-                console.print(f"  • [bold red][ERROR][/bold red] {issue.check}: {issue.message}")
+                console.print(f"  * [bold red][ERROR][/bold red] {issue.check}: {issue.message}")
             elif issue.level == "WARNING":
-                console.print(f"  • [bold yellow][WARN][/bold yellow] {issue.check}: {issue.message}")
+                console.print(f"  * [bold yellow][WARN][/bold yellow] {issue.check}: {issue.message}")
             else:
-                console.print(f"  • [bold cyan][INFO][/bold cyan] {issue.check}: {issue.message}")
+                console.print(f"  * [bold cyan][INFO][/bold cyan] {issue.check}: {issue.message}")
 
     if report.is_valid:
-        console.print("\n[bold green]✓ CERTIFICACIÓN DE SUBMISSION: APROBADA (0 Errores). LISTO PARA SUBIR.[/bold green]\n")
+        console.print("\n[bold green][PASS] CERTIFICACION DE SUBMISSION: APROBADA (0 Errores). LISTO PARA SUBIR.[/bold green]\n")
     else:
-        console.print(f"\n[bold red]✗ CERTIFICACIÓN DE SUBMISSION: RECHAZADA ({report.errors_count} Errores). SUBMISSION BLOQUEADA.[/bold red]\n")
+        console.print(f"\n[bold red][FAIL] CERTIFICACION DE SUBMISSION: RECHAZADA ({report.errors_count} Errores). SUBMISSION BLOQUEADA.[/bold red]\n")
         raise typer.Exit(code=1)
 
 
