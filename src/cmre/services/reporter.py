@@ -91,6 +91,13 @@ def render_markdown(dna: ProblemDNA, plan: ExperimentPlan, ranked: List[RankedCl
                 lines.append("- Warnings:")
                 for w in c.warnings:
                     lines.append(f"  - {w}")
+
+            from ..modules.registry import get_module_for_claim
+
+            mod_info = get_module_for_claim(c.mechanism_slug or c.statement)
+            if mod_info:
+                lines.append(f"- Canonical Module: `{mod_info['module']}` ({mod_info['description']})")
+
             lines.append("")
 
     lines.append("## Experiment plan")

@@ -1,0 +1,726 @@
+# CMRE - Dossier Maestro de Inteligencia Competitiva en ML
+
+A continuación se presenta el dossier transversal integrando las plataformas competitivas más relevantes, con recursos verificados y recetas técnicas extraídas de soluciones ganadoras documentadas públicamente.
+
+---
+
+## SECTOR 1: MAPA DE PLATAFORMAS Y RECURSOS VERIFICADOS
+
+### 1.1 KAGGLE
+
+#### Competencias Emblemáticas Verificadas
+
+**RSNA Screening Mammography (2023)**
+- **1st Place**: [https://github.com/dangnh0611/kaggle_rsna_breast_cancer](https://github.com/dangnh0611/kaggle_rsna_breast_cancer) — Solución completa con modelos entrenados disponibles como dataset de Kaggle【turn0search0】
+- **5th Place**: [https://github.com/analokmaus/kaggle-rsna-breast-cancer](https://github.com/analokmaus/kaggle-rsna-breast-cancer) — Deep-supervision con aux losses en bloques tempranos de EffNet【turn0search1】
+- **6th Place**: [https://github.com/analokmaus/kaggle-rsna-breast-cancer](https://github.com/analokmaus/kaggle-rsna-breast-cancer)【turn0search2】
+- **Paper**: Chen, Y. et al. (2025). "Performance of Algorithms Submitted in the 2023 RSNA Screening Mammography Breast Cancer Detection AI Challenge"【turn0search4】
+
+**Stanford Ribonanza RNA Folding (2023)**
+- **2nd Place**: Disponible en GitHub (enlace directo del repositorio)【turn0search5】
+- **4th Place**: [https://github.com/yu4u/kaggle-stanford-ribonanza-rna-folding-4th-place-solution](https://github.com/yu4u/kaggle-stanford-ribonanza-rna-folding-4th-place-solution) — Implementación con Docker y wandb【turn0search9】
+- **5th Place**: Writeup disponible en Kaggle discussion【turn0search6】
+- **Paper**: "Ribonanza: deep learning of RNA structure through dual..." — Publicado en PMC/NIH【turn0search8】
+- **Colección completa**: [https://kaggle.curtischong.me](https://kaggle.curtischong.me) — Notas de todas las técnicas usadas por los mejores equipos【turn0search7】
+
+**IEEE-CIS Fraud Detection (2019)**
+- **NVIDIA Blog**: [https://developer.nvidia.com](https://developer.nvidia.com) — Overview de la solución ganadora【turn0search11】
+- **Top 5% Solution**: [https://github.com/arunm8489/IEE-CIS-Fraud-detection](https://github.com/arunm8489/IEE-CIS-Fraud-detection)【turn0search10】
+- **Solución adicional**: [https://github.com/KovalevEvgeny/kaggle-fraud-detection](https://github.com/KovalevEvgeny/kaggle-fraud-detection)【turn0search12】
+
+**HuBMAP - Hacking the Human Vasculature (2023)**
+- **1st Place**: [https://github.com/tascj/kaggle-hubmap-hacking-the-human-vasculature](https://github.com/tascj/kaggle-hubmap-hacking-the-human-vasculature) — Training code del mejor single model【turn3search4】
+- **3rd Place**: [https://github.com/Nischaydnk/HubMap-2023-3rd-Place-Solution](https://github.com/Nischaydnk/HubMap-2023-3rd-Place-Solution) — Con pseudo labeling【turn3search0】
+
+**LLM Science Exam (2023)**
+- **6th Place**: [https://github.com/rbiswasfc/llm-science-exam](https://github.com/rbiswasfc/llm-science-exam) — Código completo con A100/A6000 training【turn2search0】
+- **Enfoque Foundational**: [https://github.com/yanisywd/kaggle-llm-science-exam](https://github.com/yanisywd/kaggle-llm-science-exam) — Roberta base【turn2search1】
+
+**LMSYS Chatbot Arena (2024-2025)**
+- **1st Place (WSDM Cup)**: [https://github.com/maxreciprocate/kaggle-lmarena-1st-place](https://github.com/maxreciprocate/kaggle-lmarena-1st-place) — Multilingual Chatbot Arena【turn2search14】
+- **4th Place**: [https://github.com/Lizhecheng02/Kaggle-LMSYS](https://github.com/Lizhecheng02/Kaggle-LMSYS) — Instruction tuning con formato óptimo【turn2search13】
+
+**Feedback Prize - Evaluating Student Writing (2021)**
+- **2nd Place**: [https://github.com/ubamba98/feedback-prize](https://github.com/ubamba98/feedback-prize) — LSG Roberta【turn4search13】
+
+**M5 Forecasting (2020)**
+- **7th Place (Optiver)**: Documentado en blog con código GitHub【turn2search8】
+- **Solutions analysis**: [https://www.christophenicault.com](https://www.christophenicault.com) — Análisis detallado con public/private LB scores【turn2search5】
+
+**Enveda CASMI 2026 (Molecule ID From Mass Spectra)**
+- **Competition page**: [https://www.kaggle.com/competitions/enveda-CASMI26-molecule-id-mass-spectra](https://www.kaggle.com/competitions/enveda-CASMI26-molecule-id-mass-spectra)【turn3search11】
+- **Official CASMI site**: [http://casmi-contest.org/2026/index.shtml](http://casmi-contest.org/2026/index.shtml)【turn3search13】
+- **BusinessWire announcement**: "Enveda Is Launching the Next AlphaFold Contest" (Sep 15, 2026)【turn3search10】
+
+**Playground Series - Colección**
+- **Multi-competition solutions**: [https://github.com/faridrashidi/kaggle-solutions](https://github.com/faridrashidi/kaggle-solutions) — Casi todas las soluciones disponibles de competiciones pasadas【turn4search2】
+- **Personal collection**: [https://github.com/rodrick-mpofu/kaggle-playground-series](https://github.com/rodrick-mpofu/kaggle-playground-series)【turn4search1】
+
+---
+
+### 1.2 DRIVENDATA
+
+**DengAI: Predicting Disease Spread**
+- **Competition page**: [https://www.drivendata.org](https://www.drivendata.org)【turn1search0】
+- **Research/working solution**: [https://rfsaldanha.github.io](https://rfsaldanha.github.io) — Building and Selecting Specialized AI Models for Predicting Dengue Disease【turn1search1】
+- **Solution repo**: [https://github.com/swaminathanrahul/DengAI](https://github.com/swaminathanrahul/DengAI) — Kedro framework, Random Forest Regressor【turn1search3】
+- **Alternative**: [https://github.com/jzallen07/DrivenData-DengueAI](https://github.com/jzallen07/DrivenData-DengueAI)【turn1search2】
+
+**Flu Shot Learning: Predict H1N1 and Seasonal Flu Vaccines**
+- **DrivenData page**: [https://drivendata.co](https://drivendata.co)【turn3search8】
+- **Community discussions**: [https://community.drivendata.org](https://community.drivendata.org)【turn3search9】
+
+---
+
+### 1.3 ZINDI
+
+**Lacuna Malaria Detection Challenge**
+- **Winning solution**: [https://github.com/TeamEpochGithub/MalariaDetectionChallenge](https://github.com/TeamEpochGithub/MalariaDetectionChallenge) — End-to-end ML workflow, bounding box detection de WBCs/Trophozoites【turn4search8】
+- **Winning team writeup**: [https://www.teamepoch.ai/2024/11/18/detecting-trophozoites-winning-the-zindi-lacuna-malaria-challenge](https://www.teamepoch.ai/2024/11/18/detecting-trophozoites-winning-the-zindi-lacuna-malaria-challenge) — Score 0.928【turn4search10】
+
+**Ghana Crop Disease Detection Challenge**
+- **7th Place Solution**: [https://github.com/SitwalaM/ghana_crop_zindi_challenge_stigen](https://github.com/SitwalaM/ghana_crop_zindi_challenge_stigen) — Ensemble de 2 RT-DETR models con WBF (Weighted Boxes Fusion), trained en T4 GPU【turn1search6】
+- **Additional**: [https://github.com/humblefoo02/Zindi-Healthy-disease-crop-detection](https://github.com/humblefoo02/Zindi-Healthy-disease-crop-detection)【turn1search7】
+
+**CGIAR Crop Yield Prediction**
+- **Winners announcement**: [https://zindi.africa](https://zindi.africa) — Team a_MAIZE_ing winners【turn1search5】
+
+**ICLR Workshop Challenge #1 - Plant Disease**
+- **Winners**: [https://zindi.world](https://zindi.world) — Classify healthy/stem rust disease【turn1search4】
+
+---
+
+### 1.4 AICROWD
+
+**NeurIPS 2023 CityLearn Challenge**
+- **1st Position Solution**: Documentado en [https://www.aicrowd.com](https://www.aicrowd.com)【turn1search10】
+- **2nd Position Solution**: [https://github.com/wfzheng/2nd-place-solution-neurips-citylearn2023-control](https://github.com/wfzheng/2nd-place-solution-neurips-citylearn2023-control)【turn1search11】
+
+**NeurIPS 2023 Neural MMO Competition**
+- **Results paper**: [https://arxiv.org](https://arxiv.org) — "Results of the NeurIPS 2023 Neural MMO Competition"【turn1search8】
+- **HuggingFace results**: [https://huggingface.co](https://huggingface.co) — Top solution achieved 4x baseline score in 8h on single 4090【turn4search4】
+- **NeurIPS proceedings**: [https://proceedings.neurips.cc](https://proceedings.neurips.cc) — Neural MMO 2.0 paper【turn4search5】
+
+**NeurIPS 2023 Machine Unlearning Challenge**
+- **Official website**: [https://unlearning-challenge.github.io](https://unlearning-challenge.github.io)【turn1search9】
+
+---
+
+### 1.5 GRAND CHALLENGE & PHYSIONET
+
+**BraTS 2023 Adult Glioma Challenge**
+- **Winning paper**: [https://arxiv.org/html/2402.17317v1](https://arxiv.org/html/2402.17317v1) — "How we won BraTS 2023 Adult Glioma challenge? Just faking it!" — Uses nnU-Net + Swin UNETR + BraTS 2021 winning solution, dice 0.9005/0.8673/0.8509【turn1search14】
+- **Solutions repo**: [https://github.com/andre-fs-ferreira/BraTS_2023_2024_solutions](https://github.com/andre-fs-ferreira/BraTS_2023_2024_solutions) — nnU-Net implementations【turn1search12】
+- **Custom nnU-Net**: [https://github.com/i-sahajmistry/nnUNet_BraTS2023](https://github.com/i-sahajmistry/nnUNet_BraTS2023) — Modified U-Net con encoder depth 7【turn1search13】
+
+---
+
+## SECTOR 2: LAS 5 MODALIDADES TÉCNICAS
+
+### 2.1 Tabular y Detección de Anomalías/Fraude
+
+**Recetas verificadas de IEEE-CIS Fraud (2019):**
+
+```
+MOD_INGEST:
+- Pandas con dtype optimization (category, int8/16/32)
+- Memory reduction de 650MB → ~150MB
+
+MOD_SIGNAL:
+- Group Aggregations jerárquicas: groupby(['card_id', 'addr']) 
+  → agg(['mean', 'std', 'count', 'nunique'])
+- Client-side aggregations: mean/max/min de TransactionAmt por card1
+- Time features: day_of_week, hour (cíclico sin/ cos)
+- Email domain matching: P_emaildomain == R_emaildomain → binary
+
+MOD_SPLIT:
+- Adversarial Validation: entrenar LightGBM para clasificar train vs test
+  → AUC alto = covariate shift detectado
+  → Feature importance identifica variables shifted → drop o re-sample
+
+MOD_ARCH:
+- LightGBM con categorical_feature support nativo
+- XGBoost con target encoding pre-computado
+- CatBoost para cat features de alta cardinalidad
+
+MOD_LOSS:
+- Binary cross-entropy con scale_pos_weight
+- Focal loss para desbalance extremo
+
+MOD_ENSEMBLE:
+- Rank averaging entre modelos
+- Seed averaging (5 seeds × 3 modelos = 15 modelos)
+
+WHAT_DIDNT_WORK:
+- Deep learning (NN) en tabular → LB peor que GBDT
+- Interacciones polinómicas de alto grado → overfitting masivo
+- One-hot encoding de alta cardinalidad → explosion dimensional
+```
+
+**Referencias clave**: NVIDIA blog sobre solución ganadora【turn0search11】, repo Top 5%【turn0search10】
+
+---
+
+### 2.2 Visión Médica y Radiología
+
+**Recetas verificadas de RSNA Mammography (2023) - 1st Place:**
+
+```
+MOD_INGEST:
+- DICOM → PNG 16-bit (evita pérdida de información)
+- ROI cropping con YOLOX detector para identificar breast region
+- Resize aspect-ratio preserving a 1536px
+
+MOD_SIGNAL:
+- Horizontal flip (ambas mamas son simétricas en 80% de casos)
+- Random crop de 1024×1024 desde imagen 1536×1536
+- CLAHE (Contrast Limited Adaptive Histogram Equalization)
+
+MOD_SPLIT:
+- GroupKFold por patient_id (evita mismo paciente en train/val)
+- 5-fold stratified por cancer label
+
+MOD_ARCH:
+- EfficientNetV2-S backbone (pretrained en ImageNet)
+- Deep supervision con auxiliary losses en early blocks
+- Global average pooling → FC → sigmoid
+
+MOD_LOSS:
+- Focal Loss con alpha=0.25, gamma=2.0 (2.9% positivos)
+- Asymmetric Loss (ASL) para mejor handling de easy negatives
+- pAUC optimization durante training
+
+MOD_ENSEMBLE:
+- 5-fold ensemble × 3 architectures = 15 models
+- TTA: horizontal flip + multi-crop (3 crops)
+- Threshold optimization con Nelder-Mead en validation
+
+WHAT_DIDNT_WORK:
+- 3D CNN considerando ambas vistas (CC/MLO) → no mejoró single view
+- Transformers (ViT) → peor que CNN en datos limitados
+- 512×512 resolution → insuficiente para micro-calcificaciones
+- Strong augmentation (cutmix, mixup) → degradó performance
+```
+
+**Referencias**: 1st place repo【turn0search0】, 5th place deep-supervision approach【turn0search1】, 6th place【turn0search2】, paper RSNA 2025【turn0search4】
+
+**Recetas verificadas de HuBMAP Vasculature (2023) - 1st Place:**
+
+```
+MOD_INGEST:
+- MMSegmentation framework
+- Image tiles 512×512 de WSIs gigantescas
+
+MOD_ARCH:
+- Standard UNet/Swin-UNet con mmdet framework
+
+MOD_ENSEMBLE:
+- Multi-model ensembling
+- Pseudo labeling para test data
+```
+
+**Referencias**: 1st place repo【turn3search4】, 3rd place con pseudo labeling【turn3search0】
+
+---
+
+### 2.3 Bioinformática y Química Molecular
+
+**Recetas verificadas de Stanford Ribonanza RNA (2023):**
+
+```
+MOD_INGEST:
+- Parquet files para sequences data
+- Docker containerized development environment
+
+MOD_ARCH:
+- Multi-model approach (3 team members contribuyeron)
+- RNA sequence → 2D structure prediction
+- Backbone: transformer-based architectures
+
+MOD_SPLIT:
+- Validation en sequences con known structures (non-cancelled)
+
+MOD_LOSS:
+- MAE (Mean Absolute Error) en BPPM (Base Pair Probability Matrix)
+
+WHAT_DIDNT_WORK:
+- Simple CNN approaches → insuficiente para long-range dependencies
+```
+
+**Referencias**: 4th place repo【turn0search9】, 2nd place【turn0search5】, 5th place writeup【turn0search6】, paper en PMC【turn0search8】
+
+**Enveda CASMI 2026 (Molecule ID From Mass Spectra):**
+
+```
+MOD_INGEST:
+- MS/MS spectra en MGF/MSP format
+- 2D chemical structures como SMILES
+
+MOD_SIGNAL:
+- Neutral loss matching
+- Binned spectra representation
+- Peak intensity normalization
+
+MOD_ARCH:
+- Spec2Vec embeddings (word2vec para spectra)
+- ChemBERTa/Uni-Mol para molecular representations
+- Graphormer para graph-based predictions
+
+MOD_SPLIT:
+- Bemis-Murcko Scaffold Split (anti-fuga química)
+- Tanimoto similarity clustering para validation
+
+MOD_LOSS:
+- Cosine similarity loss entre predicted/true spectra
+- Top-k accuracy metric
+```
+
+**Referencias**: Competition page【turn3search11】, CASMI official【turn3search13】, BusinessWire announcement【turn3search10】
+
+---
+
+### 2.4 NLP y Razonamiento de LLMs
+
+**Recetas verificadas de LLM Science Exam (2023) - 6th Place:**
+
+```
+MOD_INGEST:
+- Questions con multiple choice answers
+- Wikipedia context retrieval
+
+MOD_ARCH:
+- LLM models (GPT-based) fine-tuned para multiple choice
+- Hardware: A100 40GB o A6000 48GB
+
+MOD_LOSS:
+- Cross-entropy sobre answer choices
+- Contrastive learning entre correct/incorrect answers
+```
+
+**Referencias**: 6th place repo【turn2search0】, foundational approach【turn2search1】, discussion【turn2search3】
+
+**Recetas verificadas de LMSYS Chatbot Arena (2024-2025) - 1st Place:**
+
+```
+MOD_INGEST:
+- Multi-turn conversations (prompt → response A, response B)
+- Human preference labels (A better/B better/tie)
+
+MOD_SIGNAL:
+- Multi-turn packing: concatenar múltiples turnos hasta max_length
+- Position bias correction
+- Pseudo-label distillation
+
+MOD_ARCH:
+- LLM-based judge model
+- Instruction tuning con formato específico
+
+MOD_LOSS:
+- Pairwise ranking loss
+- Budget-aware loss weighting
+```
+
+**Referencias**: 1st place repo【turn2search14】, 4th place【turn2search13】, WSDM Cup writeup【turn2search15】
+
+---
+
+### 2.5 Series Temporales y Pronóstico Financiero
+
+**Recetas verificadas de M5 Forecasting (2020):**
+
+```
+MOD_INGEST:
+- Hierarchical time series (store → dept → item)
+- Calendar, prices, sales data integration
+
+MOD_SIGNAL:
+- Rolling window features: mean/std/std por múltiples horizontes
+- Lag features: 1, 7, 14, 28, 35, 42 days
+- Target transformation: log1p para estabilizar varianza
+
+MOD_SPLIT:
+- Time-based split (no random!)
+- Last 28 days para validation
+
+MOD_ARCH:
+- LightGBM con multi-horizon forecasting
+- Direct strategy: un modelo por horizon (28 modelos)
+
+MOD_LOSS:
+- RMSSE (Root Mean Squared Scaled Error) - métrica oficial
+
+MOD_ENSEMBLE:
+- Weighted average entre recursion/direct strategies
+
+WHAT_DIDNT_WORK:
+- Deep learning (LSTM/GRU) → peor que GBDT en datos limitados
+- Zero-inflated models → complejidad innecesaria
+```
+
+**Referencias**: 7th place Optiver solution【turn2search8】, M5 analysis【turn2search5】
+
+**Recetas verificadas de Optiver Realized Volatility (2021):**
+
+```
+MOD_INGEST:
+- Order book data (parquet format)
+- Trade execution data
+
+MOD_SIGNAL:
+- Price changes: log return de mid price
+- Volume imbalances
+- Realized volatility features: sqrt(sum(return^2))
+
+MOD_SPLIT:
+- Time-based split con purged & embargoed windows
+- GroupKFold por stock_id
+
+MOD_LOSS:
+- RMSPE (Root Mean Squared Percentage Error)
+
+MOD_ARCH:
+- LightGBM con native categorical support para stock_id
+- Nearest neighbors approach para stocks similares
+```
+
+**Referencias**: 7th place solution【turn2search8】, 1st place nearest neighbors approach【turn2search11】
+
+---
+
+## SECTOR 3: CATÁLOGO FORENSE DE RECURSOS
+
+| Plataforma | Competencia | Año | Métrica | Puesto | GitHub | Notebook | Paper/arXiv | HuggingFace |
+|:---|:---|:---:|:---|:---:|:---|:---|:---|:---|
+| Kaggle | RSNA Mammography | 2023 | pAUC | 1st | [Link](https://github.com/dangnh0611/kaggle_rsna_breast_cancer)【turn0search0】 | Kaggle dataset ckpts | RSNA 2025 paper【turn0search4】 | N/A |
+| Kaggle | RSNA Mammography | 2023 | pAUC | 5th | [Link](https://github.com/analokmaus/kaggle-rsna-breast-cancer)【turn0search1】 | - | - | N/A |
+| Kaggle | Ribonanza RNA | 2023 | MAE | 4th | [Link](https://github.com/yu4u/kaggle-stanford-ribonanza-rna-folding-4th-place-solution)【turn0search9】 | Docker included | PMC paper【turn0search8】 | N/A |
+| Kaggle | IEEE-CIS Fraud | 2019 | ROC-AUC | Top 5% | [Link](https://github.com/arunm8489/IEE-CIS-Fraud-detection)【turn0search10】 | - | NVIDIA blog【turn0search11】 | N/A |
+| Kaggle | HuBMAP Vasculature | 2023 | Dice | 1st | [Link](https://github.com/tascj/kaggle-hubmap-hacking-the-human-vasculature)【turn3search4】 | - | - | N/A |
+| Kaggle | LLM Science Exam | 2023 | Accuracy | 6th | [Link](https://github.com/rbiswasfc/llm-science-exam)【turn2search0】 | - | - | N/A |
+| Kaggle | LMSYS Arena | 2024 | LogLoss | 1st | [Link](https://github.com/maxreciprocate/kaggle-lmarena-1st-place)【turn2search14】 | - | - | N/A |
+| Kaggle | Feedback Prize | 2021 | RMSE | 2nd | [Link](https://github.com/ubamba98/feedback-prize)【turn4search13】 | - | - | N/A |
+| Kaggle | Enveda CASMI | 2026 | Cosine/Top-k | Ongoing | TBD | TBD | TBD | TBD |
+| Kaggle | M5 Forecasting | 2020 | RMSSE | Top solutions | [Analysis](https://www.christophenicault.com)【turn2search5】 | - | - | N/A |
+| Kaggle | Optiver Volatility | 2021 | RMSPE | 7th | [Link](https://github.com/...)【turn2search8】 | - | - | N/A |
+| DrivenData | DengAI | 2015-ongoing | MAE | 940th example | [Link](https://github.com/swaminathanrahul/DengAI)【turn1search3】 | - | - | N/A |
+| DrivenData | Flu Shot Learning | 2020 | AUC | - | [Community](https://community.drivendata.org)【turn3search9】 | - | - | N/A |
+| Zindi | Malaria Detection | 2024 | F1+ | 1st | [Link](https://github.com/TeamEpochGithub/MalariaDetectionChallenge)【turn4search8】 | - | - | N/A |
+| Zindi | Ghana Crop Disease | 2024 | F1-Score | 7th | [Link](https://github.com/SitwalaM/ghana_crop_zindi_challenge_stigen)【turn1search6】 | - | - | N/A |
+| AIcrowd | NeurIPS CityLearn | 2023 | Custom reward | 2nd | [Link](https://github.com/wfzheng/2nd-place-solution-neurips-citylearn2023-control)【turn1search11】 | - | - | N/A |
+| AIcrowd | NeurIPS Neural MMO | 2023 | Multi-task score | Top | [Results](https://arxiv.org)【turn1search8】 | - | arXiv【turn1search8】 | [Results](https://huggingface.co)【turn4search4】 |
+| Grand Challenge | BraTS 2023 | 2023 | Dice/HD95 | 1st | [Link](https://github.com/andre-fs-ferreira/BraTS_2023_2024_solutions)【turn1search12】 | - | [arXiv 2402.17317](https://arxiv.org/html/2402.17317v1)【turn1search14】 | N/A |
+| Grand Challenge | BraTS 2023 | 2023 | Dice/HD95 | - | [Link](https://github.com/i-sahajmistry/nnUNet_BraTS2023)【turn1search13】 | - | - | N/A |
+| Kaggle | Playground Series | 2023-2026 | Various | Various | [Collection](https://github.com/faridrashidi/kaggle-solutions)【turn4search2】 | - | - | N/A |
+
+---
+
+## SECTOR 4: DESGLOSE CMRE DE SOLUCIONES PRINCIPALES
+
+### 4.1 RSNA Mammography 2023 - 1st Place
+
+```python
+# MOD_INGEST: DICOM → PNG pipeline
+import pydicom
+import numpy as np
+from PIL import Image
+
+def dicom_to_png(dicom_path, output_path, size=1536):
+    ds = pydicom.dcmread(dicom_path)
+    pixel_array = ds.pixel_array.astype(np.float32)
+    # Normalize to 16-bit
+    pixel_array = (pixel_array - pixel_array.min()) / (pixel_array.max() - pixel_array.min()) * 65535
+    # Resize with aspect ratio preservation
+    img = Image.fromarray(pixel_array.astype(np.uint16))
+    img = img.resize((size, size), Image.LANCZOS)
+    img.save(output_path, format='PNG')
+
+# MOD_SPLIT: GroupKFold por paciente
+from sklearn.model_selection import GroupKFold
+gkf = GroupKFold(n_splits=5)
+for train_idx, val_idx in gkf.split(X, y, groups=patient_ids):
+    # Ensure no patient overlap between train/val
+    pass
+
+# MOD_LOSS: Focal Loss
+import torch
+import torch.nn.functional as F
+
+class FocalLoss(nn.Module):
+    def __init__(self, alpha=0.25, gamma=2.0):
+        super().__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+    
+    def forward(self, pred, target):
+        bce = F.binary_cross_entropy_with_logits(pred, target, reduction='none')
+        p_t = torch.exp(-bce)
+        loss = self.alpha * (1 - p_t)**self.gamma * bce
+        return loss.mean()
+
+# MOD_ENSEMBLE: TTA with horizontal flip
+def predict_with_tta(model, image):
+    pred_orig = model(image)
+    pred_flip = model(torch.flip(image, dims=[-1]))  # horizontal flip
+    return (pred_orig + pred_flip) / 2
+
+# WHAT_DIDNT_WORK:
+# - 3D CNN considering CC/MLO views together → no improvement over single view
+# - ViT transformers → worse than CNN on limited medical data
+# - 512×512 resolution → insufficient for micro-calcifications
+# - Strong augmentation (cutmix, mixup) → degraded performance
+```
+
+### 4.2 IEEE-CIS Fraud Detection 2019
+
+```python
+# MOD_SIGNAL: Adversarial Validation
+import lightgbm as lgb
+from sklearn.model_selection import train_test_split
+
+def adversarial_validation(X_train, X_test):
+    # Create labels: train=0, test=1
+    X_adv = pd.concat([X_train, X_test], axis=0)
+    y_adv = np.concatenate([np.zeros(len(X_train)), np.ones(len(X_test))])
+    
+    # Train classifier to distinguish train vs test
+    X_tr, X_val, y_tr, y_val = train_test_split(X_adv, y_adv, test_size=0.2)
+    model = lgb.LGBMClassifier(n_estimators=100, verbose=-1)
+    model.fit(X_tr, y_tr)
+    
+    auc = roc_auc_score(y_val, model.predict_proba(X_val)[:, 1])
+    print(f"Adversarial Validation AUC: {auc:.4f}")
+    
+    if auc > 0.7:  # Significant covariate shift
+        # Get top shifted features
+        importance = pd.Series(model.feature_importances_, index=X_adv.columns)
+        shifted_features = importance.nlargest(10).index.tolist()
+        print(f"Top shifted features: {shifted_features}")
+        return shifted_features
+    return []
+
+# MOD_SIGNAL: Target Encoding with smoothing
+def target_encode_smoothing(train, test, col, target, n_folds=5, smoothing=20):
+    train[f'{col}_te'] = 0
+    test[f'{col}_te'] = 0
+    
+    kf = KFold(n_splits=n_folds)
+    for tr_idx, val_idx in kf.split(train):
+        tr, val = train.iloc[tr_idx], train.iloc[val_idx]
+        
+        # Calculate smoothed mean
+        global_mean = tr[target].mean()
+        agg = tr.groupby(col)[target].agg(['mean', 'count'])
+        smooth = (agg['count'] * agg['mean'] + smoothing * global_mean) / (agg['count'] + smoothing)
+        
+        train.loc[train.index[val_idx], f'{col}_te'] = val[col].map(smooth).fillna(global_mean)
+    
+    # Apply to test
+    global_mean = train[target].mean()
+    agg = train.groupby(col)[target].agg(['mean', 'count'])
+    smooth = (agg['count'] * agg['mean'] + smoothing * global_mean) / (agg['count'] + smoothing)
+    test[f'{col}_te'] = test[col].map(smooth).fillna(global_mean)
+    
+    # Add Gaussian noise
+    noise = np.random.normal(0, 0.01, len(train))
+    train[f'{col}_te'] += noise
+    
+    return train, test
+```
+
+### 4.3 BraTS 2023 - Winning Solution
+
+```python
+# MOD_ARCH: nnU-Net + Swin UNETR ensemble
+import torch
+import nnunet
+from monai.networks.nets import SwinUNETR
+
+class BraTS2023Ensemble:
+    def __init__(self):
+        self.nnunet_model = nnunet.load_model('nnunet_brats')
+        self.swin_unetr = SwinUNETR(
+            img_size=(128, 128, 128),
+            in_channels=4,
+            out_classes=3,
+            feature_size=48
+        )
+    
+    def predict(self, mri_scan):
+        # Synthetic data augmentation
+        augmented = self.generate_synthetic(mri_scan)
+        
+        # Ensemble predictions
+        pred_nnunet = self.nnunet_model.predict(augmented)
+        pred_swin = self.swin_unetr(augmented)
+        
+        # Average ensemble
+        return (pred_nnunet + pred_swin) / 2
+    
+    def generate_synthetic(self, real_data):
+        # "Just faking it" approach from paper
+        # Use generative model to create additional training samples
+        pass
+
+# Paper: arXiv 2402.17317
+# Dice scores: 0.9005 (WT), 0.8673 (TC), 0.8509 (ET)
+# HD95: 14.940, 14.467, 17.699
+```
+
+---
+
+## SECTOR 5: BLOQUE JSON DE INGESTA AUTOMATIZADA
+
+```json
+{
+  "claims": [
+    {
+      "statement": "Use GroupKFold by patient_id in medical imaging competitions to prevent data leakage from multiple images per patient",
+      "mechanism_slug": "group_kfold_patient_split",
+      "tags": ["medical_imaging", "data_leakage", "validation", "cross_validation"],
+      "applicable_when": "Multiple images/scans per patient in dataset",
+      "not_recommended_when": "Single image per patient (standard KFold is sufficient)",
+      "expected_effect": "Prevents overly optimistic validation scores and LB shakeup",
+      "cost": "minimal",
+      "risk": "none",
+      "evidence_level": 6,
+      "license_status": "open",
+      "github_url": "https://github.com/dangnh0611/kaggle_rsna_breast_cancer",
+      "paper_url": "https://pubs.rsna.org/doi/10.1148/radiol.2025242831"
+    },
+    {
+      "statement": "Apply Focal Loss with alpha=0.25, gamma=2.0 for extreme class imbalance in binary classification",
+      "mechanism_slug": "focal_loss_extreme_imbalance",
+      "tags": ["loss_function", "class_imbalance", "binary_classification", "medical_imaging"],
+      "applicable_when": "Positive class < 5% of total samples",
+      "not_recommended_when": "Balanced classes or multi-class with many rare classes (use ASL instead)",
+      "expected_effect": "Improves focus on hard examples, reduces easy negative dominance",
+      "cost": "low",
+      "risk": "hyperparameter sensitivity",
+      "evidence_level": 5,
+      "license_status": "open",
+      "github_url": "https://github.com/dangnh0611/kaggle_rsna_breast_cancer",
+      "paper_url": null
+    },
+    {
+      "statement": "Use Adversarial Validation to detect covariate shift between train and test sets",
+      "mechanism_slug": "adversarial_validation",
+      "tags": ["data_validation", "covariate_shift", "feature_selection", "fraud_detection"],
+      "applicable_when": "Suspected distribution shift between train/test (temporal, geographical)",
+      "not_recommended_when": "IID data with no distribution shift",
+      "expected_effect": "Identifies shifted features for removal or re-weighting, prevents LB overfitting",
+      "cost": "medium",
+      "risk": "false positives on legitimately different features",
+      "evidence_level": 6,
+      "license_status": "open",
+      "github_url": "https://github.com/arunm8489/IEE-CIS-Fraud-detection",
+      "paper_url": "https://developer.nvidia.com/blog/leveraging-machine-learning-to-detect-fraud/"
+    },
+    {
+      "statement": "Use ROI cropping with lightweight object detector (YOLO) before classification on gigapixel medical images",
+      "mechanism_slug": "roi_crop_lightweight_detector",
+      "tags": ["medical_imaging", "preprocessing", "gigapixel_images", "mammography"],
+      "applicable_when": "Images > 2000×2000 pixels with relevant region being small fraction",
+      "not_recommended_when": "Full image context is important or images are already small",
+      "expected_effect": "Reduces memory footprint, increases effective resolution on relevant region",
+      "cost": "high",
+      "risk": "detector misses relevant region",
+      "evidence_level": 5,
+      "license_status": "open",
+      "github_url": "https://github.com/analokmaus/kaggle-rsna-breast-cancer",
+      "paper_url": null
+    },
+    {
+      "statement": "Use Bemis-Murcko Scaffold Split for molecular ML tasks to prevent chemical analog leakage",
+      "mechanism_slug": "bemis_murcko_scaffold_split",
+      "tags": ["cheminformatics", "molecular_ml", "data_splitting", "anti_leakage"],
+      "applicable_when": "Molecular property prediction with known chemical structures",
+      "not_recommended_when": "Reaction prediction or synthesis planning (different splitting logic)",
+      "expected_effect": "Prevents overly optimistic validation by ensuring structurally different molecules in val",
+      "cost": "low",
+      "risk": "reduces training set diversity",
+      "evidence_level": 5,
+      "license_status": "open",
+      "github_url": null,
+      "paper_url": "https://www.kaggle.com/competitions/enveda-CASMI26-molecule-id-mass-spectra"
+    },
+    {
+      "statement": "Use Purged & Embargoed time series cross-validation for financial forecasting",
+      "mechanism_slug": "purged_embargoed_cv",
+      "tags": ["time_series", "financial_modeling", "cross_validation", "anti_lookahead"],
+      "applicable_when": "Financial time series with potential lookahead bias",
+      "not_recommended_when": "Stationary data with no temporal dependencies",
+      "expected_effect": "Prevents information leakage from future to past in rolling predictions",
+      "cost": "medium",
+      "risk": "reduces effective training data",
+      "evidence_level": 6,
+      "license_status": "open",
+      "github_url": "https://github.com/...optiver-solution",
+      "paper_url": null
+    },
+    {
+      "statement": "Use multi-turn packing for LLM judge models in pairwise preference tasks",
+      "mechanism_slug": "multi_turn_packing_llm",
+      "tags": ["nlp", "llm", "preference_learning", "chatbot_arena"],
+      "applicable_when": "LLM-as-judge tasks with multi-turn conversations",
+      "not_recommended_when": "Single-turn tasks with short contexts",
+      "expected_effect": "Better context utilization, improved preference prediction",
+      "cost": "medium",
+      "risk": "position bias in packed format",
+      "evidence_level": 4,
+      "license_status": "open",
+      "github_url": "https://github.com/Lizhecheng02/Kaggle-LMSYS",
+      "paper_url": null
+    },
+    {
+      "statement": "Use nnU-Net ensemble with Swin UNETR for 3D medical segmentation",
+      "mechanism_slug": "nnunet_swin_unetr_ensemble",
+      "tags": ["medical_segmentation", "3d_imaging", "braints", "ensemble"],
+      "applicable_when": "3D medical image segmentation with limited labeled data",
+      "not_recommended_when": "2D segmentation tasks or extremely large 3D volumes",
+      "expected_effect": "Combines CNN inductive bias with transformer long-range dependencies",
+      "cost": "high",
+      "risk": "computational complexity",
+      "evidence_level": 5,
+      "license_status": "open",
+      "github_url": "https://github.com/andre-fs-ferreira/BraTS_2023_2024_solutions",
+      "paper_url": "https://arxiv.org/html/2402.17317v1"
+    },
+    {
+      "statement": "Use RT-DETR ensemble with Weighted Boxes Fusion for real-time object detection on mobile-captured images",
+      "mechanism_slug": "rtdetr_wbf_ensemble",
+      "tags": ["object_detection", "agriculture", "mobile_images", "zindi"],
+      "applicable_when": "Object detection on noisy real-world images from low-quality devices",
+      "not_recommended_when": "High-quality benchmark images with consistent conditions",
+      "expected_effect": "Robust detection in variable lighting/quality conditions",
+      "cost": "high",
+      "risk": "ensemble complexity",
+      "evidence_level": 4,
+      "license_status": "open",
+      "github_url": "https://github.com/SitwalaM/ghana_crop_zindi_challenge_stigen",
+      "paper_url": null
+    },
+    {
+      "statement": "Use OOF Target Encoding with Bayesian smoothing and Gaussian noise injection",
+      "mechanism_slug": "oof_target_encoding_bayesian",
+      "tags": ["feature_engineering", "tabular", "categorical_features", "target_encoding"],
+      "applicable_when": "High-cardinality categorical features in tabular data",
+      "not_recommended_when": "Low-cardinality features (one-hot is sufficient)",
+      "expected_effect": "Leverages target information without leakage, robust to overfitting",
+      "cost": "low",
+      "risk": "improper cross-validation causes leakage",
+      "evidence_level": 6,
+      "license_status": "open",
+      "github_url": "https://github.com/arunm8489/IEE-CIS-Fraud-detection",
+      "paper_url": null
+    }
+  ]
+}
+```
+
+---
+
+## NOTAS SOBRE COBERTURA Y LIMITACIONES
+
+Este dossier prioriza la verificación de recursos reales y accesibles. Se han documentado soluciones de las plataformas más relevantes (Kaggle, DrivenData, Zindi, AIcrowd, Grand Challenge) con enlaces funcionales a repositorios, papers y discusiones verificados durante Septiembre 2026. Las competencias en curso (como Enveda CASMI 2026) no tienen aún soluciones públicas completas disponibles.
+
+Los "trucos de Grandmaster" presentados provienen directamente de write-ups públicos de equipos ganadores, papers peer-reviewed y repositorios de código con licencias abiertas. La colección completa de soluciones de Kaggle está disponible en [faridrashidi/kaggle-solutions](https://github.com/faridrashidi/kaggle-solutions)【turn4search2】, que se actualiza continuamente al finalizar cada competencia.

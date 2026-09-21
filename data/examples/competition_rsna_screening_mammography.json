@@ -1,0 +1,28 @@
+{
+  "title": "RSNA Screening Mammography Breast Cancer Detection",
+  "platform": "kaggle",
+  "task_type": "detection",
+  "modality": "image",
+  "metric": "pauc",
+  "description": "Identify breast cancer in screening mammograms. Massive class imbalance (approx 2% positive cases), multi-view DICOM format (CC and MLO views per breast), patient-level evaluation. Severe penalty for false positives and false negatives.",
+  "data_summary": "Full-field digital mammography (FFDM) in 16-bit DICOM. 54,000 screening images from over 11,000 patients across 4 acquisition systems.",
+  "rules": {
+    "external_data_allowed": true,
+    "pretrained_models_allowed": true,
+    "team_size_limit": 5,
+    "submission_limit": 5
+  },
+  "has_temporal_component": false,
+  "has_group_structure": true,
+  "is_iid": false,
+  "has_external_data_allowed": true,
+  "has_pretrained_models_allowed": true,
+  "class_imbalance": "high",
+  "label_noise_risk": "medium",
+  "distribution_shift_risk": "medium",
+  "leak_risk": "high",
+  "leak_signals": ["patient_id_across_views", "device_vendor_metadata"],
+  "compute_constraint": "high",
+  "interpretability_required": true,
+  "submission_limit": 5
+}

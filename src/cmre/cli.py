@@ -34,11 +34,14 @@ def cmd_init_db() -> None:
 
 @app.command("seed")
 def cmd_seed() -> None:
-    """Seed the multi-modal knowledge base (idempotent)."""
+    """Seed the multi-modal knowledge base and forensic claims (idempotent)."""
+    from .services.seeder_claims import seed_forensic_and_hpc_claims
+
     init_db()
     with Session(engine) as session:
-        n = run_seed(session)
-    console.print(f"[green]Seed complete. Inserted {n} claims.[/green]")
+        n_seed = run_seed(session)
+        n_forensic = seed_forensic_and_hpc_claims(session)
+    console.print(f"[green]Seed complete. Inserted {n_seed} multimodal seeds and {n_forensic} forensic/HPC claims.[/green]")
 
 
 @app.command("report")
