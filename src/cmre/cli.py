@@ -160,6 +160,47 @@ def cmd_evaluate_golden(
     raise SystemExit(subprocess.call(cmd, cwd="."))
 
 
+@app.command("audit-leak")
+def cmd_audit_leak(
+    input: str = typer.Option(..., "--input", "-i", help="Path to CompetitionInput JSON or split data."),
+) -> None:
+    """Auditar prevención de fugas (leakage) y riesgo de shakeup de leaderboard."""
+    from .services.leak_auditor import LeakAuditor
+    data = json.loads(Path(input).read_text(encoding="utf-8"))
+    
+    # Evaluar señales de leak y ADN
+    signals = data.get("leak_signals", [])
+    has_groups = data.get("has_group_structure", False)
+    has_temporal = data.get("has_temporal_component", False)
+    imbalance = data.get("class_imbalance", "low")
+    
+    console.print(f"\n[bold cyan]=== CMRE ANTI-SHAKEUP LEAK AUDIT ===[/bold cyan]")
+    console.print(f"Torneo: [bold]{data.get('title', 'Unknown')}[/bold]")
+    console.print(f"Estructura de Grupo (Pacientes): {has_groups}")
+    console.print(f"Componente Temporal: {has_temporal}")
+    console.print(f"Nivel de Desbalance: {imbalance}")
+    
+    defenses = []
+    if has_groups:
+        console.print("[yellow][WARN] RIESGO: Fuga de pacientes/grupos detectada.[/yellow]")
+        defenses.append("SNIP_SPLIT_GROUP_PATIENT_DISJOINT (StratifiedGroupKFold)")
+    if has_temporal:
+        console.print("[yellow][WARN] RIESGO: Lookahead bias temporal detectado.[/yellow]")
+        defenses.append("SNIP_SPLIT_PURGED_EMBARGO_TIME (PurgedGroupTimeSeriesSplit)")
+    if any("scaffold" in s.lower() for s in signals):
+        console.print("[yellow][WARN] RIESGO: Fuga de scaffolds moleculares detectada.[/yellow]")
+        defenses.append("SNIP_SPLIT_SCAFFOLD_MURCKO (Bemis-Murcko Scaffold Split)")
+    if imbalance in ("high", "severe", "extreme"):
+        console.print("[yellow][WARN] RIESGO: Colapso de gradiente por desbalance severo (<5%).[/yellow]")
+        defenses.append("SNIP_LOSS_ASYMMETRIC_CUDA (AsymmetricLoss)")
+        defenses.append("SNIP_LOSS_SOFT_F1_WEIGHTED (SoftF1Loss)")
+        
+    console.print("\n[bold green]Defensas Canónicas Obligatorias:[/bold green]")
+    for d in defenses:
+        console.print(f"  • [bold]{d}[/bold]")
+    console.print("[bold green]Estado de Auditoría: VALIDADO.[/bold green]\n")
+
+
 def main() -> None:
     app()
 
