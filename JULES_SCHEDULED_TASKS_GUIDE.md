@@ -11,50 +11,59 @@
 
 ---
 
+## 🛡️ PROTOCOLO DE CONVIVENCIA Y NO-COLISIÓN CON EL AGENTE SPARK
+> **Regla de Convivencia Silenciosa (Regla 8 de Arquitectura):**
+> 1. **Zona de Spark (Google Drive):** El agente Spark gestiona `knowledge_db/`, `writeups_oro/` e `investigaciones/`, donde residen `PLAYBOOK_DE_TRANSFERENCIA_SOTA_2026.md` y `canonical_code_snippets_catalog.json`. Jules **NUNCA** debe sobrescribir, renombrar ni eliminar estos archivos. Son recursos de **solo lectura e integración aditiva**.
+> 2. **Zona de Jules (Cloud Git):** Jules opera sobre `src/cmre/`, `tests/` y sus archivos de estado (`JULES_DYNAMIC_TASKS.md`, `JULES_EXECUTION_LOG.md`, `ARQUITECTURA_ESTADO.md`) en ramas aisladas, abriendo Pull Requests atómicos.
+> 3. **Cero Fricción y Preservación de Datos:** Ningún proceso de fondo eliminará ni dañará archivos existentes. Toda intervención es aditiva y no-regresiva.
+
+---
+
 ## 💡 CÓMO CONFIGURAR LAS 3 TAREAS PROGRAMADAS EN LA INTERFAZ WEB DE JULES
 > **Instrucción para Rafa y Victoria:** En el menú web de Jules (`Configure Repo -> Scheduled Task`), crea **únicamente 3 Tareas Programadas fijas**. Copia y pega los siguientes 3 prompts adaptados a este repositorio. **NUNCA tendrás que cambiarlos en la web**, porque Jules reescribirá autónomamente su propio archivo `JULES_DYNAMIC_TASKS.md` en GitHub al concluir cada día.
 
 ---
 
-### 🟢 TAREA PROGRAMADA 1 DE 3 (INICIO DE DÍA, LECTURA DE MEMORIA Y LOG DE EJECUCIÓN)
-- **Frecuencia:** Diaria a las **02:30 AM** (Hora Argentina / Programada en Jules)
+### 🟢 TAREA PROGRAMADA 1 DE 3 (INICIO DE DÍA, LECTURA DE MEMORIA Y COBERTURA BASAL)
+- **Frecuencia:** Diaria a las **02:30 AM** (Hora Argentina / Programada en Jules Web UI)
 - **Prompt a copiar en el menú web:**
-> "Hola Jules. Iniciamos el ciclo diario de auto-evolución en el proyecto `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael**.
+> "Hola Jules. Iniciamos el ciclo diario de auto-evolución en el proyecto `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
 > 
 > Pasos de Inicialización y Memoria:
 > 1. Abre y lee `ARQUITECTURA_ESTADO.md` y `JULES_DYNAMIC_TASKS.md` para conocer el estado del código, módulos canónicos e inventario.
 > 2. Revisa `JULES_EXECUTION_LOG.md`. Si la sesión anterior terminó con algún error o tarea incompleta, toma nota del fallo para corregirlo prioritariamente.
-> 3. Si `JULES_DYNAMIC_TASKS.md` no existe o está vacío, créalo analizando los 6 módulos canónicos en disco (`src/cmre/modules/`).
-> 4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde).
+> 3. Sincroniza mentalmente con el nuevo `PLAYBOOK_DE_TRANSFERENCIA_SOTA_2026.md` y `canonical_code_snippets_catalog.json` generados por el Agente Spark en `knowledge_db/`, respetando la Regla 8 de convivencia anti-colisión (solo lectura, cero pisadas ni borrados).
+> 4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde, 85+ tests).
 > 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
 
 ---
 
-### ⚡ TAREA PROGRAMADA 2 DE 3 (EJECUCIÓN INTERMEDIA & REGLAS DE DOMINIO)
-- **Frecuencia:** Diaria a las **03:30 AM** (Hora Argentina / Programada en Jules)
+### ⚡ TAREA PROGRAMADA 2 DE 3 (EJECUCIÓN INTERMEDIA & MÓDULOS CANÓNICOS)
+- **Frecuencia:** Diaria a las **03:30 AM** (Hora Argentina / Programada en Jules Web UI)
 - **Prompt a copiar en el menú web:**
-> "Hola Jules. Continuamos con el desarrollo autónomo en `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael**.
+> "Hola Jules. Continuamos con el desarrollo autónomo en `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
 > 
 > Pasos de Ejecución Intermedia:
-> 1. Consulta las 7 reglas de arquitectura en `JULES_ARCHITECTURE_RULES.md` y las tareas dinámicas en `JULES_DYNAMIC_TASKS.md`.
-> 2. Ejecuta las tareas enfocadas en la misión principal del proyecto: Optimización de razonamiento ML, funciones de pérdida diferenciables, validación cruzada purgada, pipelines DICOM y kernels HPC.
-> 3. Refactoriza e incrementa los módulos principales (`src/cmre/modules/` y `src/cmre/services/`) sin romper funcionalidades previas ni alterar firmas públicas, asegurando resiliencia en la base de datos (fallback SQLite/PostgreSQL) y en los Servidores MCP de `AGENTS.md`.
-> 4. Corre `pytest tests/` y confirma pasaje al 100%. En caso de error, no te detengas; registra el diagnóstico parcial en `JULES_EXECUTION_LOG.md` y aplica la recuperación quirúrgica.
+> 1. Consulta las 8 reglas de arquitectura en `JULES_ARCHITECTURE_RULES.md` (con especial énfasis en la Regla 8 de no-pisada con Spark) y las super-tareas de `JULES_DYNAMIC_TASKS.md`.
+> 2. Toma las tareas pendientes de la backlog e implementa/refactoriza los componentes de `src/cmre/modules/` (Soft-F1 autograd, DICOM batch multithreading, purga temporal o kernels HPC Tanimoto/DSU) integrando de forma aditiva los patrones del `canonical_code_snippets_catalog.json`.
+> 3. NUNCA toques ni modifiques destructivamente los dossiers ni catálogos de Spark en `knowledge_db/`, `investigaciones/` o `writeups_oro/`.
+> 4. Escribe y corre `pytest tests/` confirmando que todos los tests pasen al 100%. En caso de error, no te detengas; registra el diagnóstico en `JULES_EXECUTION_LOG.md` y aplica la recuperación quirúrgica.
 > 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
 
 ---
 
 ### 🛑 TAREA PROGRAMADA 3 DE 3 (CIERRE, REGISTRO DE LOGS Y REESCRITURA AUTÓNOMA)
-- **Frecuencia:** Diaria a las **04:30 AM** (Hora Argentina / Programada en Jules)
+- **Frecuencia:** Diaria a las **04:30 AM** (Hora Argentina / Programada en Jules Web UI)
 - **Prompt a copiar en el menú web:**
-> "Hola Jules. Sesión final de cierre y auto-evolución en `0072-cmre-engine` para **Perez, Ernesto Rafael**.
+> "Hola Jules. Sesión final de cierre y auto-evolución en `0072-cmre-engine` para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
 > 
 > Pasos de Cierre, Registro de Log y Reescritura Autónoma:
 > 1. Ejecuta la suite completa de pruebas con `pytest tests/` y documenta el resultado de la sesión.
-> 2. **REGISTRO DE LOG DE EJECUCIÓN:** Registra una entrada en `JULES_EXECUTION_LOG.md` anotando la fecha, tareas completadas, pruebas pasadas y cualquier fallo o advertencia detectada con su plan de remediación.
-> 3. Actualiza `ARQUITECTURA_ESTADO.md` registrando la lista de módulos actualizados y el diff de arquitectura de hoy.
-> 4. **AUTO-REESCRITURA DINÁMICA:** Evalúa los requerimientos futuros del motor CMRE (HPC, kernels GPU, validadores de torneos), **Y REESCRIBE TOTALMENTE `JULES_DYNAMIC_TASKS.md` grabando entre 5 y 10 nuevas super-tareas autónomas para la sesión de mañana.**
-> 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
+> 2. **REGISTRO DE LOG DE EJECUCIÓN:** Registra una entrada en `JULES_EXECUTION_LOG.md` anotando la fecha, tareas completadas, pruebas pasadas y cualquier advertencia detectada con su remediación.
+> 3. Actualiza `ARQUITECTURA_ESTADO.md` registrando los módulos actualizados y el diff de arquitectura de hoy.
+> 4. **AUTO-REESCRITURA DINÁMICA:** Evalúa los requerimientos futuros del motor CMRE respetando la división de trabajo con Spark, **Y REESCRIBE TOTALMENTE `JULES_DYNAMIC_TASKS.md` grabando entre 5 y 10 nuevas super-tareas autónomas para la sesión de mañana.**
+> 5. Abre un Pull Request limpio y atómico hacia `main`.
+> 6. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
 
 ---
 [VINCIT_OMNIA_VERITAS]

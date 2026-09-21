@@ -29,8 +29,8 @@ SCHEDULED_TASKS = {
 Pasos de Inicialización y Memoria:
 1. Abre y lee `ARQUITECTURA_ESTADO.md` y `JULES_DYNAMIC_TASKS.md` para conocer el estado del código, módulos canónicos e inventario.
 2. Revisa `JULES_EXECUTION_LOG.md`. Si la sesión anterior terminó con algún error o tarea incompleta, toma nota del fallo para corregirlo prioritariamente.
-3. Si `JULES_DYNAMIC_TASKS.md` no existe o está vacío, créalo analizando los 6 módulos canónicos en disco (`src/cmre/modules/`).
-4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde).
+3. Sincroniza mentalmente con el nuevo `PLAYBOOK_DE_TRANSFERENCIA_SOTA_2026.md` y `canonical_code_snippets_catalog.json` generados por el Agente Spark en `knowledge_db/`, respetando la Regla 8 de convivencia anti-colisión (solo lectura, cero pisadas ni borrados).
+4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde, 85+ tests).
 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."""
     },
     2: {
@@ -39,10 +39,10 @@ Pasos de Inicialización y Memoria:
         "prompt": """Hola Jules. Continuamos con el desarrollo autónomo en `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
 
 Pasos de Ejecución Intermedia:
-1. Consulta las 7 reglas de arquitectura en `JULES_ARCHITECTURE_RULES.md` y las tareas dinámicas en `JULES_DYNAMIC_TASKS.md`.
-2. Ejecuta las tareas enfocadas en la misión principal del proyecto: Optimización de razonamiento ML, funciones de pérdida diferenciables, validación cruzada purgada, pipelines DICOM y kernels HPC.
-3. Refactoriza e incrementa los módulos principales (`src/cmre/modules/` y `src/cmre/services/`) sin romper funcionalidades previas ni alterar firmas públicas, asegurando resiliencia en la base de datos (fallback SQLite/PostgreSQL) y en los Servidores MCP de `AGENTS.md`.
-4. Corre `pytest tests/` y confirma pasaje al 100%. En caso de error, no te detengas; registra el diagnóstico parcial en `JULES_EXECUTION_LOG.md` y aplica la recuperación quirúrgica.
+1. Consulta las 8 reglas de arquitectura en `JULES_ARCHITECTURE_RULES.md` (con especial énfasis en la Regla 8 de no-pisada con Spark) y las super-tareas de `JULES_DYNAMIC_TASKS.md`.
+2. Toma las tareas pendientes de la backlog e implementa/refactoriza los componentes de `src/cmre/modules/` (Soft-F1 autograd, DICOM batch multithreading, purga temporal o kernels HPC Tanimoto/DSU) integrando de forma aditiva los patrones del `canonical_code_snippets_catalog.json`.
+3. NUNCA toques ni modifiques destructivamente los dossiers ni catálogos de Spark en `knowledge_db/`, `investigaciones/` o `writeups_oro/`.
+4. Escribe y corre `pytest tests/` confirmando que todos los tests pasen al 100%. En caso de error, no te detengas; registra el diagnóstico en `JULES_EXECUTION_LOG.md` y aplica la recuperación quirúrgica.
 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."""
     },
     3: {
@@ -52,10 +52,11 @@ Pasos de Ejecución Intermedia:
 
 Pasos de Cierre, Registro de Log y Reescritura Autónoma:
 1. Ejecuta la suite completa de pruebas con `pytest tests/` y documenta el resultado de la sesión.
-2. REGISTRO DE LOG DE EJECUCIÓN: Registra una entrada en `JULES_EXECUTION_LOG.md` anotando la fecha, tareas completadas, pruebas pasadas y cualquier fallo o advertencia detectada con su plan de remediación.
-3. Actualiza `ARQUITECTURA_ESTADO.md` registrando la lista de módulos actualizados y el diff de arquitectura de hoy.
-4. AUTO-REESCRITURA DINÁMICA: Evalúa los requerimientos futuros del motor CMRE (HPC, kernels GPU, validadores de torneos), Y REESCRIBE TOTALMENTE `JULES_DYNAMIC_TASKS.md` grabando entre 5 y 10 nuevas super-tareas autónomas para la sesión de mañana.
-5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."""
+2. **REGISTRO DE LOG DE EJECUCIÓN:** Registra una entrada en `JULES_EXECUTION_LOG.md` anotando la fecha, tareas completadas, pruebas pasadas y cualquier advertencia detectada con su remediación.
+3. Actualiza `ARQUITECTURA_ESTADO.md` registrando los módulos actualizados y el diff de arquitectura de hoy.
+4. **AUTO-REESCRITURA DINÁMICA:** Evalúa los requerimientos futuros del motor CMRE respetando la división de trabajo con Spark, **Y REESCRIBE TOTALMENTE `JULES_DYNAMIC_TASKS.md` grabando entre 5 y 10 nuevas super-tareas autónomas para la sesión de mañana.**
+5. Abre un Pull Request limpio y atómico hacia `main`.
+6. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."""
     }
 }
 
@@ -169,7 +170,6 @@ def run_daemon(source=DEFAULT_SOURCE):
         
         print(f"\n[ALERTA] Hora alcanzada: ejecutando Tarea {next_task}...")
         dispatch_task(next_task, source=source)
-        # Esperar 60 segundos para evitar re-disparos en el mismo minuto
         time.sleep(65)
 
 def print_windows_schtasks():
