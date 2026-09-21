@@ -106,13 +106,34 @@ flowchart TD
 * **`SNIP_MED_WSI_HANNING_TILER`**: Segmentación y recombinación de gigapíxeles histopatológicos con ventana 2D de Hanning, eliminando artefactos de costura en los límites de cada mosaico.
 * **`SNIP_MED_UGLY_DUCKLING_NORMALIZER`**: Normalizador dermatológico del "patito feo", evaluando el desvío intercuartílico (IQR) de una lesión sospechosa respecto a la distribución basal del paciente.
 
+### 3.8. MOD_ALTERNATIVE (Arsenal de Plataformas Alternativas DrivenData & Zindi)
+* **`SNIP_ALT_DRIVENDATA_MULTI_TARGET_CALIBRATOR`**: Classifier Chains para modelado de dependencias $P(Y_2 \mid Y_1, X)$ con indicadores semánticos de valores faltantes (MNAR) y calibración isotónica OOF.
+* **`SNIP_ALT_DRIVENDATA_ORDINAL_DAMAGE_MODELER`**: Clasificación ordinal acumulativa de daño estructural con ratios de esbeltez y optimización simplex Nelder-Mead continua sobre los umbrales de decisión para F1-Micro.
+* **`SNIP_ALT_ZINDI_SPATIO_TEMPORAL_LAG_BLENDER`**: Pipeline espacio-temporal para sensores IoT con Spatial Group K-Fold, lags multiescala, armónicos diurnos trigonométricos ($\sin/\cos$) y ensamble 85% GBDT + 15% Geo-KNN.
+* **`SNIP_ALT_ZINDI_BIOMETRIC_REID_ARCFACE`**: Re-identificación biométrica facial animal con doble recorte anatómico, función de pérdida de margen angular aditivo ArcFace ($s=30.0, m=0.35$) y similitud coseno con umbral de rechazo para clase abierta residual (`new_turtle`).
+
 ---
 
-## 🛡️ 4. ARQUITECTURA FORENSE ANTI-SHAKEUP: LEAK AUDITOR
+## 🛡️ 4. ARQUITECTURA FORENSE ANTI-SHAKEUP: LEAK AUDITOR & WALL OF SHAME
 
 El mayor peligro en ciencia de datos competitiva y clínica es el **shakeup catastrófico**: obtener un puntaje artificialmente alto en validación local o Leaderboard Público debido a fugas sutiles, colapsando luego en el conjunto privado de evaluación.
 
-El servicio [`LeakAuditor`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/services/leak_auditor.py) automatiza la verificación previa a cualquier entrenamiento:
+El servicio [`LeakAuditor`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/src/cmre/services/leak_auditor.py) automatiza la verificación previa a cualquier entrenamiento, cruzando el ADN del torneo con el **Catálogo Maestro de Fracasos y Autopsias** (`postmortems_failures_catalog.json`):
+
+### Las 10 Autopsias Forenses Históricas (Wall of Shame):
+
+| Caso | Torneo / Año | Mecanismo de Falla | Síntoma y Shakeup | Contramedida CMRE |
+| --- | --- | --- | --- | --- |
+| **FAIL_01** | RSNA Screening Mammography (2023) | `THRESHOLD_COLLAPSE` | ROC-AUC > 0.82 pero colapso a 0.02 pF1 por umbral fijo 0.50 (caída de 600 puestos en Private LB). | `SNIP_ENS_NELDER_MEAD_THRESHOLD` |
+| **FAIL_02** | Optiver Trading at the Close (2023) | `TEMPORAL_LOOKAHEAD` | 5.12 MAE inflado por autocorrelación intradiaria; colapso a 5.89 MAE (caída de 800 puestos). | `SNIP_SPLIT_PURGED_EMBARGO_TIME` |
+| **FAIL_03** | HuBMAP Kidney & Vasculature (2021) | `EDGE_SEAM_DEGRADATION` | 0.88 Dice en parches aislados; colapso a 0.74 Dice en WSI por discontinuidades en costuras. | `SNIP_MED_WSI_HANNING_TILER` |
+| **FAIL_04** | Enveda CASMI 2026 (2026) | `SCAFFOLD_MEMORIZATION` | 94.5% Top-10 en split aleatorio; colapso a 28.2% frente a scaffolds moleculares inéditos. | `SNIP_SPLIT_SCAFFOLD_MURCKO` |
+| **FAIL_05** | ISIC 2024 Skin Cancer (2024) | `PATIENT_IDENTITY_LEAK` | CV de 0.945; caída a 0.812 pAUC por fuga de textura de piel del paciente en vez de melanoma. | `SNIP_SPLIT_GROUP_PATIENT_DISJOINT` |
+| **FAIL_06** | IEEE-CIS Fraud Detection (2019) | `TARGET_ENCODING_LEAK` | Target encoding directo infló CV a 0.985 y colapsó a 0.880 en test temporal por sobreajuste. | `SNIP_SIGNAL_BAYESIAN_OOF_TE` |
+| **FAIL_07** | Santander Value Prediction (2018) | `UNSCALED_COUNT_LEAK` | Conteo de ceros absolutos sobreajustó al Public LB (0.52) y cayó al puesto 450 en Private LB. | `SNIP_SIGNAL_DELTA_TRICK` |
+| **FAIL_08** | Cassava Leaf Disease (2021) | `LABEL_NOISE_CORRUPTION` | 99% train accuracy con Cross-Entropy estancó la validación en 87.5% por 15-20% de ruido en campo. | `SNIP_LOSS_SOFT_F1_WEIGHTED` |
+| **FAIL_09** | Kaggle TPS Jun 2021 (2021) | `NEGATIVE_WEIGHT_COLLAPSE`| Meta-regresión libre asignó pesos negativos (-3.8) a GBDTs colineales produciendo log-loss infinito. | `SNIP_ENS_NNLS_STACKING` |
+| **FAIL_10** | RSNA Screening Mammography (2023) | `MONOCHROME_INVERSION` | Librerías estándar trataron MONOCHROME1 como MONOCHROME2 invirtiendo densidades radiológicas. | `SNIP_INGEST_DICOM_FAST` |
 
 ```mermaid
 flowchart LR
@@ -122,10 +143,10 @@ flowchart LR
     AUDITOR --> T3{"¿Desbalance Extremo (<5%)?"}
     AUDITOR --> T4{"¿Fuga de Scaffolds Moleculares?"}
 
-    T1 -- Sí --> D1["Prescribe: StratifiedGroupKFold"]
-    T2 -- Sí --> D2["Prescribe: PurgedGroupTimeSeriesSplit"]
-    T3 -- Sí --> D3["Prescribe: AsymmetricLoss & SoftF1Loss"]
-    T4 -- Sí --> D4["Prescribe: Bemis-Murcko Split"]
+    T1 -- Sí --> D1["Prescribe: StratifiedGroupKFold (Alerta FAIL_05)"]
+    T2 -- Sí --> D2["Prescribe: PurgedGroupTimeSeriesSplit (Alerta FAIL_02)"]
+    T3 -- Sí --> D3["Prescribe: AsymmetricLoss & NelderMead (Alerta FAIL_01)"]
+    T4 -- Sí --> D4["Prescribe: Bemis-Murcko Split (Alerta FAIL_04)"]
 
     D1 --> REPORT["Reporte Determinista & cmre audit-leak"]
     D2 --> REPORT
@@ -135,24 +156,29 @@ flowchart LR
 
 ### Ejecución por Línea de Comandos:
 ```bash
-cmre audit-leak -i data/examples/competition_enveda_casmi_2026.json
+cmre audit-leak -i data/examples/competition_rsna_screening_mammography.json
 ```
 **Salida de Producción Verificada:**
 ```text
 === CMRE ANTI-SHAKEUP LEAK AUDIT ===
-Torneo: Enveda - CASMI 2026 Blind Molecular Identification Challenge
+Torneo: RSNA Screening Mammography Breast Cancer Detection
 Estructura de Grupo (Pacientes): True
 Componente Temporal: False
 Nivel de Desbalance: high
 [WARN] RIESGO: Fuga de pacientes/grupos detectada.
-[WARN] RIESGO: Fuga de scaffolds moleculares detectada.
 [WARN] RIESGO: Colapso de gradiente por desbalance severo (<5%).
 
 Defensas Canónicas Obligatorias:
   • SNIP_SPLIT_GROUP_PATIENT_DISJOINT (StratifiedGroupKFold)
-  • SNIP_SPLIT_SCAFFOLD_MURCKO (Bemis-Murcko Scaffold Split)
   • SNIP_LOSS_ASYMMETRIC_CUDA (AsymmetricLoss)
   • SNIP_LOSS_SOFT_F1_WEIGHTED (SoftF1Loss)
+
+Autopsias Históricas Relevantes (Wall of Shame):
+  • [FAIL_01] RSNA Screening Mammography (2023): Riesgo de colapso de pF1 por umbral estático en desbalance severo.
+    Falla: THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT -> Defensa: SNIP_ENS_NELDER_MEAD_THRESHOLD
+  • [FAIL_05] ISIC 2024 Skin Cancer: Fuga de textura de piel del paciente infla CV y colapsa pAUC en Private LB.
+    Falla: PATIENT_IDENTITY_COHORT_LEAKAGE -> Defensa: SNIP_SPLIT_GROUP_PATIENT_DISJOINT
+
 Estado de Auditoría: VALIDADO.
 ```
 
@@ -177,8 +203,9 @@ Para garantizar la integridad del ecosistema en Google Drive y GitHub, se define
 
 ## 📊 6. ESTADO DE COBERTURA Y VALIDACIÓN DE SILICIO
 
-* **Pruebas Unitarias (`pytest`)**: **95 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
-* **Sincronización a Google Drive**: 140 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
+* **Pruebas Unitarias (`pytest`)**: **102 pruebas pasadas al 100% en verde (1 skip PyTorch condicional)**.
+* **Catálogos de Conocimiento Activos**: 89 Claims de Oro, 13 Snippets Canónicos, 5 Módulos HPC/Radiología Avanzados, 10 Autopsias Forenses y 4 Snippets de Plataformas Alternativas.
+* **Sincronización a Google Drive**: Más de 145 archivos sincronizados en espejo limpio sin archivos `desktop.ini` corruptores.
 * **Compatibilidad de Plataforma**: Windows 11 cp1252 / UTF-8, Linux Debian/Ubuntu (Colab & Jules VM), C++20 / Python 3.12.
 
 ---

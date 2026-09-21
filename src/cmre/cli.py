@@ -180,6 +180,8 @@ def cmd_audit_leak(
     console.print(f"Componente Temporal: {has_temporal}")
     console.print(f"Nivel de Desbalance: {imbalance}")
     
+    has_scaffolds = any("scaffold" in s.lower() for s in signals)
+    
     defenses = []
     if has_groups:
         console.print("[yellow][WARN] RIESGO: Fuga de pacientes/grupos detectada.[/yellow]")
@@ -187,7 +189,7 @@ def cmd_audit_leak(
     if has_temporal:
         console.print("[yellow][WARN] RIESGO: Lookahead bias temporal detectado.[/yellow]")
         defenses.append("SNIP_SPLIT_PURGED_EMBARGO_TIME (PurgedGroupTimeSeriesSplit)")
-    if any("scaffold" in s.lower() for s in signals):
+    if has_scaffolds:
         console.print("[yellow][WARN] RIESGO: Fuga de scaffolds moleculares detectada.[/yellow]")
         defenses.append("SNIP_SPLIT_SCAFFOLD_MURCKO (Bemis-Murcko Scaffold Split)")
     if imbalance in ("high", "severe", "extreme"):
@@ -198,7 +200,21 @@ def cmd_audit_leak(
     console.print("\n[bold green]Defensas Canónicas Obligatorias:[/bold green]")
     for d in defenses:
         console.print(f"  • [bold]{d}[/bold]")
-    console.print("[bold green]Estado de Auditoría: VALIDADO.[/bold green]\n")
+        
+    # Cruce con catálogo maestro de autopsias post-mortem
+    matched_autopsies = LeakAuditor.match_postmortem_autopsies(
+        has_groups=has_groups,
+        has_temporal=has_temporal,
+        has_scaffolds=has_scaffolds,
+        imbalance=imbalance
+    )
+    if matched_autopsies:
+        console.print("\n[bold red]Autopsias Históricas Relevantes (Wall of Shame):[/bold red]")
+        for m in matched_autopsies:
+            console.print(f"  • [{m['case_id']}] [bold]{m['competition']}[/bold]: {m['warning']}")
+            console.print(f"    Falla: {m['failure']} -> Defensa: {m['defense']}")
+            
+    console.print("\n[bold green]Estado de Auditoría: VALIDADO.[/bold green]\n")
 
 
 def main() -> None:
