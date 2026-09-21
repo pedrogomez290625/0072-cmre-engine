@@ -1,7 +1,7 @@
 # 🥋 GUÍA MAESTRA: INGENIERÍA Y COMPETICIÓN EN KAGGLE VÍA CLI & BATCH
 ### Ecosistema: `0072-cmre-engine` (Competitive ML Reasoning Engine)
 **Autor:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI  
-**Usuario de Kaggle Activo:** `ernestorafaelperez`  
+**Usuario de Kaggle Activo:** `pedrogomez001`  
 **Fecha:** Septiembre de 2026  
 **Aceleración Gratuita Semanal:** 30 horas GPU (Dual Tesla T4 / P100) + 20 horas TPU (v3-8)  
 
@@ -13,7 +13,7 @@ Tu entorno en Windows ya se encuentra **100% configurado, enlazado y probado con
 
 * **Token Activo:** `C:\Users\rafae\.kaggle\kaggle.json` (Vigente y autenticado).
 * **CLI Global:** `kaggle` se ejecuta directamente en cualquier terminal PowerShell o CMD.
-* **Usuario:** `ernestorafaelperez`.
+* **Usuario:** `pedrogomez001`.
 * **Cuota Semanal:**
   ```bash
   kaggle quota
@@ -70,7 +70,7 @@ experiments/exp01_rsna/
 ### Paso 3.2: El archivo `kernel-metadata.json`
 ```json
 {
-  "id": "ernestorafaelperez/cmre-rsna-mammography-exp01",
+  "id": "pedrogomez001/cmre-rsna-mammography-exp01",
   "title": "CMRE RSNA Mammography Exp01",
   "code_file": "train_model.py",
   "language": "python",
@@ -98,13 +98,13 @@ kaggle kernels push -p ./experiments/exp01_rsna
 ### Paso 3.4: Monitorear el progreso en tiempo real
 ```bash
 # Ver el estado: queued -> running -> complete (o error)
-kaggle kernels status ernestorafaelperez/cmre-rsna-mammography-exp01
+kaggle kernels status pedrogomez001/cmre-rsna-mammography-exp01
 ```
 
 ### Paso 3.5: Descargar los pesos entrenados y métricas
 Al terminar la ejecución, todo lo que tu script haya guardado en el directorio de trabajo (`/kaggle/working/`) se descarga con un solo comando:
 ```bash
-kaggle kernels output ernestorafaelperez/cmre-rsna-mammography-exp01 -p ./models_checkpoint/
+kaggle kernels output pedrogomez001/cmre-rsna-mammography-exp01 -p ./models_checkpoint/
 ```
 
 ---
@@ -150,7 +150,7 @@ En las competencias modernas más importantes (como *RSNA Mammography*, *ISIC Me
      {
        "enable_gpu": true,
        "enable_internet": false,
-       "dataset_sources": ["ernestorafaelperez/mis-pesos-modelo-cmre"],
+       "dataset_sources": ["pedrogomez001/mis-pesos-modelo-cmre"],
        "competition_sources": ["rsna-screening-mammography-detection"]
      }
      ```
