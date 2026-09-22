@@ -301,6 +301,62 @@ def cmd_validate_submission(
         raise typer.Exit(code=1)
 
 
+@app.command("harvest-kaggle")
+def cmd_harvest_kaggle(
+    competition: str = typer.Option(..., "--competition", "-c", help="Kaggle competition slug."),
+    top: int = typer.Option(10, "--top", "-n", help="Number of top notebooks to harvest and analyze."),
+    account: str = typer.Option("oficial", "--account", "-a", help="Credentials account ('oficial' or 'pedro')."),
+    sync_drive: bool = typer.Option(True, "--sync-drive/--no-drive", help="Sync results to Google Drive."),
+) -> None:
+    """Harvest and forensically analyze top-scoring competitor notebooks for any Kaggle tournament."""
+    from .connectors.kaggle import KaggleConnector
+    from .services.notebook_analyzer import NotebookAnalyzer
+
+    console.print(f"[bold cyan]CMRE Industrial Harvester: {competition}[/bold cyan]")
+    output_dir = Path(f"investigaciones/{competition}_notebooks")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    connector = KaggleConnector(account_type=account)
+    kernels = connector.list_top_kernels(competition, sort_by="scoreDescending", page_size=top)
+
+    downloaded = []
+    for k in kernels:
+        ref = k["ref"]
+        slug = k["slug"]
+        sub_dir = output_dir / slug
+        console.print(f"  [cyan]⬇ Descargando [{ref}]...[/cyan]")
+        saved = connector.download_kernel(ref, sub_dir)
+        if saved:
+            downloaded.append(saved)
+            console.print(f"    [green]✓ {saved.name} guardado.[/green]")
+
+    console.print(f"\n[bold green]Analizando {len(downloaded)} cuadernos con NotebookAnalyzer...[/bold green]")
+    analyzer = NotebookAnalyzer(downloaded)
+    batch = analyzer.run_batch_analysis()
+
+    json_path = output_dir / "MATRIZ_CONSENSO_SOTA.json"
+    json_path.write_text(json.dumps(batch, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    md_path = output_dir / f"DOSSIER_FORENSE_{competition.upper().replace('-', '_')}.md"
+    md_path.write_text(analyzer.generate_dossier_markdown(competition), encoding="utf-8")
+
+    if sync_drive:
+        gdrive_base = Path(r"G:\Mi unidad\🏛️ Ecosistema_Angelus_2026\0072-cmre-engine\investigaciones")
+        if gdrive_base.exists():
+            dest = gdrive_base / f"{competition}_notebooks"
+            dest.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(json_path, dest / json_path.name)
+            shutil.copy2(md_path, dest / md_path.name)
+            for f in downloaded:
+                target = dest / f.parent.name / f.name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f, target)
+            console.print(f"[green]✓ Sincronizado en Google Drive: {dest}[/green]")
+
+    console.print(f"[bold green]✓ Dossier generado en {md_path}[/bold green]")
+
+
+
 def main() -> None:
     app()
 

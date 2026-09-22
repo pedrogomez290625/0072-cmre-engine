@@ -45,3 +45,8 @@ reports/*.md
 # ML
 mlruns/
 wandb/
+
+# Cosechas y Scratch
+investigaciones/*/*.ipynb
+scratch/
+
