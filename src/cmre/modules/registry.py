@@ -103,6 +103,42 @@ CLAIM_MODULE_MAP: Dict[str, Dict[str, str]] = {
         "description": "Disjoint Set Union with path compression and rank union.",
         "template": CODE_TEMPLATE_HPC_SIMD,
     },
+    "C31": {
+        "module": "MOD_ENSEMBLE",
+        "mechanism": "classwise-asymmetric-blending",
+        "description": "Class-Wise Asymmetric Matrix Blending for multi-label radiology.",
+        "template": CODE_TEMPLATE_NNLS_BLEND,
+    },
+    "C32": {
+        "module": "MOD_HPC",
+        "mechanism": "latency-bounded-pruning",
+        "description": "Greedy Latency Budget Pruner for inference time guarantees.",
+        "template": CODE_TEMPLATE_HPC_SIMD,
+    },
+    "C33": {
+        "module": "MOD_SPLIT",
+        "mechanism": "sirius-absence-axiom",
+        "description": "SIRIUS neutral loss absence axiom filter against decoys.",
+        "template": CODE_TEMPLATE_PURGED_CV,
+    },
+    "C34": {
+        "module": "MOD_SIGNAL",
+        "mechanism": "sdsi-hybrid-arbitration",
+        "description": "Monotonic SDSI hybrid arbitration (symbolic + TTT neural).",
+        "template": CODE_TEMPLATE_TARGET_ENCODER,
+    },
+    "C35": {
+        "module": "MOD_SIGNAL",
+        "mechanism": "anti-identity-fallback-guard",
+        "description": "Guardián anti-identidad para prevenir colapso a 0.00 en grillas.",
+        "template": CODE_TEMPLATE_TARGET_ENCODER,
+    },
+    "C36": {
+        "module": "MOD_LOSS",
+        "mechanism": "cuda-fp16-sanitization",
+        "description": "Sanitización de tensores y normalización Float vs Double para FP16 CUDA.",
+        "template": CODE_TEMPLATE_ASYMMETRIC_LOSS,
+    },
 }
 
 

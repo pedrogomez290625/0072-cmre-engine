@@ -1,8 +1,8 @@
 {
   "author": "Perez, Ernesto Rafael (\"Rafa\") & Angelus AGI",
-  "version": "1.0.0",
-  "date": "2026-09-21",
-  "total_cases": 10,
+  "version": "1.1.0",
+  "date": "2026-09-25",
+  "total_cases": 14,
   "cases": [
     {
       "case_id": "FAIL_01",
@@ -133,6 +133,59 @@
       "countermeasure_snippet_id": "SNIP_INGEST_DICOM_FAST",
       "countermeasure_description": "Decodificador DICOM canónico con verificación obligatoria de PhotometricInterpretation y normalización a MONOCHROME2.",
       "lessons_learned": "En imágenes radiológicas, nunca tratar un archivo DICOM como un simple array de píxeles sin aplicar rigurosamente sus tablas Modality LUT y polaridad fotométrica."
+    },
+    {
+      "case_id": "FAIL_11",
+      "competition": "ARC Prize / ARC-AGI-2 Abstraction and Reasoning",
+      "platform": "Kaggle",
+      "year": 2026,
+      "metric": "Strict 2D Grid Exact Accuracy",
+      "failure_mechanism": "SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE",
+      "symptoms": "Pipeline híbrido V2 de búsqueda simbólica + heurísticas colapsó a un score oficial de 0.00 en Kaggle tras 17 horas de corrida.",
+      "root_cause_analysis": "Cuando el motor simbólico alcanzó su límite de profundidad y tiempo de CPU, el bloque de escape ejecutó fallback = test_input (copia idéntica de la grilla de entrada). En ARC-AGI, la grilla objetivo jamás es idéntica a la entrada; por tanto 0/240 intentos fueron correctos.",
+      "countermeasure_snippet_id": "SNIP_ARC_ANTI_IDENTITY_GUARD",
+      "countermeasure_description": "Guardián estricto anti-identidad que prohíbe la sumisión de grillas idénticas y conmuta a Test-Time Training (TTT) con aumentaciones D8 y transformaciones cromáticas/topológicas seguras.",
+      "lessons_learned": "En tareas de razonamiento inductivo discreto, devolver la entrada sin modificar como fallback garantiza un cero rotundo. Las transformaciones deben garantizar divergencia geométrica o cromática."
+    },
+    {
+      "case_id": "FAIL_12",
+      "competition": "RSNA Knee Abnormality Detection AI Challenge",
+      "platform": "Kaggle",
+      "year": 2026,
+      "metric": "Macro-Averaged ROC-AUC",
+      "failure_mechanism": "UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION",
+      "symptoms": "Pipeline multi-modelo con más de 30 sub-redes (DINO slot-attention, 5 folds A5, RadImageNet y 4 ramas CoAtNet) demoró más de 6.5 horas en el test set privado, rozando el timeout de 9 horas y arriesgando la pérdida de la sumisión.",
+      "root_cause_analysis": "Sobre-ingeniería de ensamble sin presupuestación de latencia de inferencia. La concatenación ciega de modelos pesados sin podado greedy degrada la velocidad sin aportar ganancia marginal de AUC.",
+      "countermeasure_snippet_id": "SNIP_ENS_LATENCY_BUDGET_PRUNING",
+      "countermeasure_description": "LatencyBudgetPruner podando el ensamble a una tríada quirúrgica (KneeSpecialistMONAI512 + CoAtNet + Raptor) reduciendo el tiempo de inferencia a 1.86s por estudio.",
+      "lessons_learned": "En competencias de código con límites estrictos de hardware, el ensamble debe optimizarse bajo restricción presupuestaria de tiempo."
+    },
+    {
+      "case_id": "FAIL_13",
+      "competition": "RSNA Knee Abnormality Detection AI Challenge",
+      "platform": "Kaggle",
+      "year": 2026,
+      "metric": "Macro-Averaged ROC-AUC",
+      "failure_mechanism": "CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH",
+      "symptoms": "Al ejecutar inferencia en Kaggle GPU (Tesla T4) con torch.autocast, el kernel falló con RuntimeError: expected scalar type Half but found Double.",
+      "root_cause_analysis": "Constantes de normalización ImageNet (mean/std) importadas como float64 (Double) en NumPy o PyTorch. Al interactuar con capas Half sin conversión explícita, CUDA aborta la ejecución.",
+      "countermeasure_snippet_id": "SNIP_GPU_FP16_PRECISION_SANITIZER",
+      "countermeasure_description": "Sanitización explícita forzando tensores y buffers de normalización a .float() antes del autocast a .half().",
+      "lessons_learned": "Nunca asumir que arrays de NumPy o tuplas de normalización heredan float32. La conversión estricta previa a CUDA previene fallas silenciosas en la nube."
+    },
+    {
+      "case_id": "FAIL_14",
+      "competition": "Enveda CASMI 2026 Blind Molecular Identification",
+      "platform": "CASMI / Enveda",
+      "year": 2026,
+      "metric": "Top-K Molecular Accuracy / Tanimoto Score",
+      "failure_mechanism": "UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD",
+      "symptoms": "Búsqueda ciega en bibliotecas masivas (400k LOTUS/COCONUT) saturó el Top-25 con moléculas decoy que compartían masa similar pero presentaban fórmulas incompatibles con las pérdidas neutras espectrales.",
+      "root_cause_analysis": "Filtrado basado exclusivamente en delta de masa monoisotópica sin validación de reglas biofísicas de fragmentación. Las moléculas con estructuras ajenas a las vías biológicas dominaban el ranking.",
+      "countermeasure_snippet_id": "SNIP_CHEM_SIRIUS_ABSENCE_FILTER",
+      "countermeasure_description": "Axioma de Ausencia SIRIUS que penaliza severamente candidatos que carecen de heteroátomos (O, N) requeridos para las pérdidas neutrales observadas (H2O, CO2, NH3).",
+      "lessons_learned": "En espectrometría de masas, la masa exacta no es suficiente para aislar la molécula verdadera. Las reglas biofísicas de neutral loss son indispensables para podar decoys."
     }
   ]
 }
+

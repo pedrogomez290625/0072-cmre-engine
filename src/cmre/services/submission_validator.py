@@ -471,3 +471,233 @@ class SubmissionIntegrityValidator:
             expected_columns=expected_columns,
             expected_rows=expected_rows,
         )
+
+    def validate_arc_json(
+        self,
+        submission_data: Union[Dict[str, Any], str, Path],
+        reference_tasks: Optional[Dict[str, Any]] = None,
+    ) -> ValidationReport:
+        """Audits ARC-AGI JSON submissions with strict Anti-Identity checks (Claim C40 / FAIL_11).
+        
+        Verifies:
+        1. Valid dictionary structure with task IDs.
+        2. Both attempt_1 and attempt_2 formatted as valid 2D grids (palette values 0-9).
+        3. Non-empty grids with dimensions <= 30x30.
+        4. Anti-Identity Guard: Flags errors if attempts are identical to input demonstration grids.
+        """
+        import json
+
+        issues: List[ValidationIssue] = []
+        raw_bytes = b""
+
+        if isinstance(submission_data, (str, Path)):
+            p = Path(submission_data)
+            if p.is_file():
+                raw_bytes = p.read_bytes()
+                try:
+                    data = json.loads(raw_bytes.decode("utf-8"))
+                except Exception as e:
+                    issues.append(
+                        ValidationIssue(
+                            level="ERROR",
+                            check="json_syntax",
+                            message=f"Corrupted or invalid JSON submission file: {e}",
+                        )
+                    )
+                    return ValidationReport(
+                        is_valid=False,
+                        sha256="0" * 64,
+                        row_count=0,
+                        column_count=0,
+                        issues=issues,
+                        errors_count=1,
+                        warnings_count=0,
+                    )
+            else:
+                raw_bytes = str(submission_data).encode("utf-8")
+                try:
+                    data = json.loads(submission_data)
+                except Exception as e:
+                    issues.append(
+                        ValidationIssue(
+                            level="ERROR",
+                            check="json_syntax",
+                            message=f"Invalid JSON string: {e}",
+                        )
+                    )
+                    return ValidationReport(
+                        is_valid=False,
+                        sha256="0" * 64,
+                        row_count=0,
+                        column_count=0,
+                        issues=issues,
+                        errors_count=1,
+                        warnings_count=0,
+                    )
+        elif isinstance(submission_data, dict):
+            data = submission_data
+            raw_bytes = json.dumps(data).encode("utf-8")
+        else:
+            issues.append(
+                ValidationIssue(
+                    level="ERROR",
+                    check="type_check",
+                    message=f"Unsupported submission data type: {type(submission_data)}",
+                )
+            )
+            return ValidationReport(
+                is_valid=False,
+                sha256="0" * 64,
+                row_count=0,
+                column_count=0,
+                issues=issues,
+                errors_count=1,
+                warnings_count=0,
+            )
+
+        sha256 = self.compute_sha256_bytes(raw_bytes)
+
+        if not data:
+            issues.append(
+                ValidationIssue(
+                    level="ERROR",
+                    check="empty_submission",
+                    message="ARC submission dictionary is empty.",
+                )
+            )
+            return ValidationReport(
+                is_valid=False,
+                sha256=sha256,
+                row_count=0,
+                column_count=0,
+                issues=issues,
+                errors_count=1,
+                warnings_count=0,
+            )
+
+        # Audit expected task IDs if reference tasks supplied
+        if reference_tasks is not None:
+            expected_keys = set(reference_tasks.keys())
+            actual_keys = set(data.keys())
+            missing = expected_keys - actual_keys
+            if missing:
+                issues.append(
+                    ValidationIssue(
+                        level="ERROR",
+                        check="task_coverage",
+                        message=f"Missing {len(missing)} tasks in ARC submission: {list(missing)[:5]}...",
+                    )
+                )
+
+        identity_violations = 0
+        grid_format_violations = 0
+
+        for task_id, attempts_entry in data.items():
+            # Attempts can be a dict {'attempt_1': ..., 'attempt_2': ...} or a list of dicts
+            item = attempts_entry[0] if isinstance(attempts_entry, list) and attempts_entry else attempts_entry
+
+            if not isinstance(item, dict):
+                issues.append(
+                    ValidationIssue(
+                        level="ERROR",
+                        check="attempt_format",
+                        message=f"Task '{task_id}' attempts must be a dict with attempt_1 and attempt_2.",
+                    )
+                )
+                grid_format_violations += 1
+                continue
+
+            for attempt_key in ["attempt_1", "attempt_2"]:
+                if attempt_key not in item:
+                    issues.append(
+                        ValidationIssue(
+                            level="ERROR",
+                            check="attempt_keys",
+                            message=f"Task '{task_id}' is missing required key '{attempt_key}'.",
+                        )
+                    )
+                    grid_format_violations += 1
+                    continue
+
+                grid = item[attempt_key]
+                if not isinstance(grid, list) or len(grid) == 0 or not isinstance(grid[0], list):
+                    issues.append(
+                        ValidationIssue(
+                            level="ERROR",
+                            check="grid_dimensions",
+                            message=f"Task '{task_id}' {attempt_key} is not a valid non-empty 2D list.",
+                        )
+                    )
+                    grid_format_violations += 1
+                    continue
+
+                h, w = len(grid), len(grid[0])
+                if h > 30 or w > 30:
+                    issues.append(
+                        ValidationIssue(
+                            level="ERROR",
+                            check="grid_bounds",
+                            message=f"Task '{task_id}' {attempt_key} exceeds 30x30 limits ({h}x{w}).",
+                        )
+                    )
+
+                # Check palette values
+                for row in grid:
+                    for val in row:
+                        if not isinstance(val, int) or val < 0 or val > 9:
+                            issues.append(
+                                ValidationIssue(
+                                    level="ERROR",
+                                    check="palette_domain",
+                                    message=f"Task '{task_id}' {attempt_key} contains invalid color value: {val}.",
+                                )
+                            )
+                            grid_format_violations += 1
+                            break
+
+                # Anti-identity check against input grid if reference task is supplied
+                if reference_tasks and task_id in reference_tasks:
+                    ref_task = reference_tasks[task_id]
+                    test_pair = ref_task.get("test", [{}])[0]
+                    inp_grid = test_pair.get("input", [])
+                    if grid == inp_grid:
+                        identity_violations += 1
+                        issues.append(
+                            ValidationIssue(
+                                level="ERROR",
+                                check="anti_identity_collapse",
+                                message=f"Task '{task_id}' {attempt_key} is IDENTICAL to input test grid (FAIL_11). Guarantees 0.00 score!",
+                            )
+                        )
+
+        errors_count = sum(1 for i in issues if i.level == "ERROR")
+        warnings_count = sum(1 for i in issues if i.level == "WARNING")
+
+        return ValidationReport(
+            is_valid=(errors_count == 0),
+            sha256=sha256,
+            row_count=len(data),
+            column_count=2,  # attempt_1 and attempt_2
+            issues=issues,
+            errors_count=errors_count,
+            warnings_count=warnings_count,
+        )
+
+    def validate_multilabel_schema(
+        self,
+        df: Any,
+        id_col: str,
+        expected_target_cols: List[str],
+        expected_rows: Optional[int] = None,
+    ) -> ValidationReport:
+        """Convenience auditor for multi-label competitions (such as RSNA Knee 12-class)."""
+        expected_columns = [id_col] + list(expected_target_cols)
+        return self.validate(
+            df=df,
+            id_col=id_col,
+            target_cols=expected_target_cols,
+            domain_type="probability",
+            expected_columns=expected_columns,
+            expected_rows=expected_rows,
+        )
+
