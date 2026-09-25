@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-SRC_DIR = Path(r"C:\Users\rafae\.gemini\01_PROYECTOS\0072-cmre-engine")
+SRC_DIR = Path(__file__).resolve().parent.parent
 DST_DIR = Path(r"G:\Mi unidad\🏛️ Ecosistema_Angelus_2026\0072-cmre-engine\github\0072-cmre-engine")
 
 EXCLUDE_PARTS = {'.git', '.venv', '__pycache__', '.pytest_cache'}

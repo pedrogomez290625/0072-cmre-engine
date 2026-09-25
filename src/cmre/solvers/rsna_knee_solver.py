@@ -16,20 +16,23 @@ from ..modules.ensemble import ClassWiseAsymmetricBlender, LatencyBudgetPruner
 from ..modules.loss import asymmetric_loss_numpy
 
 
-KNEE_ABNORMALITIES_12 = [
-    "acl_tear",
-    "pcl_tear",
-    "medial_meniscus_tear",
-    "lateral_meniscus_tear",
-    "medial_tibiofemoral_oa",
-    "lateral_tibiofemoral_oa",
-    "patellofemoral_oa",
-    "joint_effusion",
-    "synovitis",
-    "baker_cyst",
-    "bone_contusion",
-    "fracture",
+OFFICIAL_KNEE_COLUMNS = [
+    "ACL",
+    "MCL",
+    "Medial Meniscus",
+    "Lateral Meniscus",
+    "Medial OA",
+    "Lateral OA",
+    "PF OA",
+    "Effusion",
+    "Synovitis",
+    "Baker's",
+    "Contusion",
+    "Fracture",
 ]
+
+KNEE_ABNORMALITIES_12 = OFFICIAL_KNEE_COLUMNS
+
 
 
 class RSNAKneeSolver:
