@@ -1,13 +1,18 @@
-# ⚙️ GUÍA DE CONFIGURACIÓN DE TAREAS PROGRAMADAS EN JULES WEB UI
-### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
+# ⚙️ GUÍA DE CONFIGURACIÓN DE TAREAS PROGRAMADAS EN JULES WEB UI (MOTOR GENERAL AGNÓSTICO)
+### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE v0.5.0)
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI  
 **Institución:** CONICET / IQUIBA-NEA / Ecosistema Angelus 2026
+**Filosofía Central:** Motor de meta-aprendizaje y razonamiento competitivo universal. No se acopla a ningún torneo específico; lee el registro dinámico [`ACTIVE_COMPETITIONS.json`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/ACTIVE_COMPETITIONS.json) y forja la arquitectura general, los 6 módulos canónicos, la minería de write-ups y los solvers transferibles.
 
 ---
 
-## 🎯 DOMINIO Y MISIÓN DEL PROYECTO
-> **Área Objetivo:** Motor de razonamiento científico de élite para Machine Learning competitivo y salud digital. Transforma write-ups, papers y telemetría de competencias (Kaggle/RSNA/DrivenData) en planes de ejecución experimental óptimos, módulos de alto rendimiento a nivel de silicio (HPC, AVX2, Popcount bitsets), pipelines físicos DICOM mamográficos, funciones de pérdida asimétricas diferenciables y ensamblado no-negativo de modelos.  
-> **Módulos Principales:** `src/cmre/modules/ingest.py`, `src/cmre/modules/signal.py`, `src/cmre/modules/split.py`, `src/cmre/modules/loss.py`, `src/cmre/modules/ensemble.py`, `src/cmre/modules/hpc.py`, `src/cmre/modules/registry.py`, `src/cmre/services/seeder_claims.py`, `src/cmre/services/planner.py`, `src/cmre/services/reasoner.py`.
+## 🎯 DOMINIO Y MISIÓN DEL MOTOR GENERAL
+> **Misión Agnóstica:** Transformar cualquier competencia de Machine Learning (visión 2D/3D, audio, series temporales, grafos moleculares, texto, razonamiento AGI discreto o tabular) en:
+> 1. Perfilado de problema y deducción de *Problem DNA* (`src/cmre/services/problem_profiler.py`).
+> 2. Implementación de los 6 bloques canónicos (`MOD_INGEST`, `MOD_SIGNAL`, `MOD_SPLIT`, `MOD_ARCH`, `MOD_LOSS`, `MOD_ENSEMBLE`).
+> 3. Minería continua de write-ups ganadores y papers formalizados en Claims científicos (`data/knowledge/claims_cmre.json`).
+> 4. Defensas activas contra errores históricos y descalificaciones (`data/knowledge/postmortems_failures_catalog.json`).
+> 5. Forja de solvers modulares exportables hacia los repositorios de torneos cliente (ej. `0074`, `0075`, `0076`, etc.).
 
 ---
 
@@ -20,50 +25,61 @@
 ---
 
 ## 💡 CÓMO CONFIGURAR LAS 3 TAREAS PROGRAMADAS EN LA INTERFAZ WEB DE JULES
-> **Instrucción para Rafa y Victoria:** En el menú web de Jules (`Configure Repo -> Scheduled Task`), crea **únicamente 3 Tareas Programadas fijas**. Copia y pega los siguientes 3 prompts adaptados a este repositorio. **NUNCA tendrás que cambiarlos en la web**, porque Jules reescribirá autónomamente su propio archivo `JULES_DYNAMIC_TASKS.md` en GitHub al concluir cada día.
+> **Instrucción para Rafa y Victoria:** En el menú web de Jules (`Configure Repo -> Scheduled Task`), crea **únicamente estas 3 Tareas Programadas fijas**. Copia y pega los 3 prompts generales de abajo. **NUNCA tendrás que cambiarlos en la web**, porque Jules lee dinámicamente `ACTIVE_COMPETITIONS.json` y reescribe de forma autónoma su propio archivo `JULES_DYNAMIC_TASKS.md` al finalizar cada día.
 
 ---
 
-### 🟢 TAREA PROGRAMADA 1 DE 3 (INICIO DE DÍA, LECTURA DE MEMORIA Y COBERTURA BASAL)
+### 🟢 TAREA PROGRAMADA 1 DE 3 (INICIO DE DÍA, LECTURA DE COMPETENCIAS ACTIVAS Y MEMORIA BASAL)
 - **Frecuencia:** Diaria a las **02:30 AM** (Hora Argentina / Programada en Jules Web UI)
 - **Prompt a copiar en el menú web:**
-> "Hola Jules. Iniciamos el ciclo diario de auto-evolución en el proyecto `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
-> 
-> Pasos de Inicialización y Memoria:
-> 1. Abre y lee `ARQUITECTURA_ESTADO.md` y `JULES_DYNAMIC_TASKS.md` para conocer el estado del código, módulos canónicos e inventario.
-> 2. Revisa `JULES_EXECUTION_LOG.md`. Si la sesión anterior terminó con algún error o tarea incompleta, toma nota del fallo para corregirlo prioritariamente.
-> 3. Sincroniza mentalmente con el nuevo `PLAYBOOK_DE_TRANSFERENCIA_SOTA_2026.md` y `canonical_code_snippets_catalog.json` generados por el Agente Spark en `knowledge_db/`, respetando la Regla 8 de convivencia anti-colisión (solo lectura, cero pisadas ni borrados).
-> 4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde, 132+ tests aprobados, cubriendo solvers RSNA Knee, CASMI 2026 y ARC Prize).
-> 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
+```text
+Hola Jules. Iniciamos el ciclo diario de auto-evolución en el proyecto 0072-cmre-engine (Competitive ML Reasoning Engine) para Perez, Ernesto Rafael ("Rafa") y Victoria Perez.
+
+Pasos de Inicialización y Memoria Dinámica:
+1. Abre y lee ACTIVE_COMPETITIONS.json para descubrir dinámicamente qué competencias, modalidades de datos (visión 2D/3D, espectros MS/MS, NLP, AGI discreto, series de tiempo, grafos, audio) y métricas están actualmente activas en el ecosistema.
+2. Abre ARQUITECTURA_ESTADO.md y JULES_DYNAMIC_TASKS.md para conocer el estado actual de los 6 módulos canónicos (MOD_INGEST a MOD_ENSEMBLE) y las super-tareas pendientes.
+3. Revisa JULES_EXECUTION_LOG.md para identificar lecciones aprendidas o advertencias pendientes de la sesión anterior.
+4. Sincroniza mentalmente con los catálogos en data/knowledge/ y knowledge_db/ respetando la regla de convivencia anti-colisión con Spark (lectura e integración aditiva, sin sobrescribir ni borrar).
+5. Ejecuta pytest tests/ para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde, 132+ tests aprobados).
+6. Firma de autoría: Perez, Ernesto Rafael ("Rafa").
+```
 
 ---
 
-### ⚡ TAREA PROGRAMADA 2 DE 3 (EJECUCIÓN INTERMEDIA & MÓDULOS CANÓNICOS)
+### ⚡ TAREA PROGRAMADA 2 DE 3 (EJECUCIÓN INTERMEDIA, GENERALIZACIÓN ARQUITECTÓNICA Y MÓDULOS CANÓNICOS)
 - **Frecuencia:** Diaria a las **03:30 AM** (Hora Argentina / Programada en Jules Web UI)
 - **Prompt a copiar en el menú web:**
-> "Hola Jules. Continuamos con el desarrollo autónomo en `0072-cmre-engine` (Competitive ML Reasoning Engine) para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
-> 
-> Pasos de Ejecución Intermedia:
-> 1. Consulta las 8 reglas de arquitectura en `JULES_ARCHITECTURE_RULES.md` (con especial énfasis en la Regla 8 de no-pisada con Spark) y las super-tareas de `JULES_DYNAMIC_TASKS.md`.
-> 2. Toma las tareas pendientes de la backlog e implementa/refactoriza los componentes de `src/cmre/modules/` (Soft-F1 autograd, DICOM batch multithreading, purga temporal o kernels HPC Tanimoto/DSU) integrando de forma aditiva los patrones del `canonical_code_snippets_catalog.json`.
-> 3. NUNCA toques ni modifiques destructivamente los dossiers ni catálogos de Spark en `knowledge_db/`, `investigaciones/` o `writeups_oro/`.
-> 4. Escribe y corre `pytest tests/` confirmando que todos los tests pasen al 100%. En caso de error, no te detengas; registra el diagnóstico en `JULES_EXECUTION_LOG.md` y aplica la recuperación quirúrgica.
-> 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
+```text
+Hola Jules. Continuamos con el desarrollo autónomo en 0072-cmre-engine (Competitive ML Reasoning Engine) para Perez, Ernesto Rafael ("Rafa") y Victoria Perez.
+
+Pasos de Construcción General y Expansión Modular:
+1. Consulta las 8 reglas de arquitectura en JULES_ARCHITECTURE_RULES.md y toma las tareas pendientes de JULES_DYNAMIC_TASKS.md y .specify/tasks/latest.md.
+2. Tu objetivo central es fortalecer y generalizar el motor universal CMRE:
+   - Implementa o refactoriza los 6 bloques canónicos en src/cmre/modules/ para que sean agnósticos a la modalidad (ingesta streaming, señales/aumentaciones, validación anti-leakage, backbones/adaptadores, funciones de pérdida asimétricas/diferenciables, y ensemble/blending/poda de latencia).
+   - Desarrolla conectores y mineros de write-ups (src/cmre/connectors/) para extraer técnicas ganadoras de Kaggle/DrivenData y transformarlas en Claims científicos en data/knowledge/claims_cmre.json.
+   - Genera blueprints y plantillas de solvers reutilizables en src/cmre/solvers/ que puedan ser instanciados de forma limpia en los repositorios de torneos individuales registrados en ACTIVE_COMPETITIONS.json.
+3. Escribe y ejecuta pytest tests/ confirmando que todos los tests pasen al 100%. En caso de error, aplica auto-corrección inmediata y registra el diagnóstico en JULES_EXECUTION_LOG.md.
+4. Prohibido eliminar código, datos o módulos existentes (Axioma de No Borrado).
+5. Firma de autoría: Perez, Ernesto Rafael ("Rafa").
+```
 
 ---
 
-### 🛑 TAREA PROGRAMADA 3 DE 3 (CIERRE, REGISTRO DE LOGS Y REESCRITURA AUTÓNOMA)
+### 🛑 TAREA PROGRAMADA 3 DE 3 (CIERRE, BENCHMARKING UNIVERSAL Y AUTO-REESCRITURA DINÁMICA)
 - **Frecuencia:** Diaria a las **04:30 AM** (Hora Argentina / Programada en Jules Web UI)
 - **Prompt a copiar en el menú web:**
-> "Hola Jules. Sesión final de cierre y auto-evolución en `0072-cmre-engine` para **Perez, Ernesto Rafael ("Rafa")** y **Victoria Perez**.
-> 
-> Pasos de Cierre, Registro de Log y Reescritura Autónoma:
-> 1. Ejecuta la suite completa de pruebas con `pytest tests/` y documenta el resultado de la sesión.
-> 2. **REGISTRO DE LOG DE EJECUCIÓN:** Registra una entrada en `JULES_EXECUTION_LOG.md` anotando la fecha, tareas completadas, pruebas pasadas y cualquier advertencia detectada con su remediación.
-> 3. Actualiza `ARQUITECTURA_ESTADO.md` registrando los módulos actualizados y el diff de arquitectura de hoy.
-> 4. **AUTO-REESCRITURA DINÁMICA:** Evalúa los requerimientos futuros del motor CMRE respetando la división de trabajo con Spark, **Y REESCRIBE TOTALMENTE `JULES_DYNAMIC_TASKS.md` grabando entre 5 y 10 nuevas super-tareas autónomas para la sesión de mañana.**
-> 5. Abre un Pull Request limpio y atómico hacia `main`.
-> 6. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
+```text
+Hola Jules. Sesión final de cierre, benchmarking universal y auto-evolución en 0072-cmre-engine para Perez, Ernesto Rafael ("Rafa") y Victoria Perez.
+
+Pasos de Cierre, Benchmarking y Auto-Reescritura Dinámica:
+1. Ejecuta la suite completa de pruebas con pytest tests/ y documenta los resultados.
+2. REGISTRO DE LOG DE EJECUCIÓN: Registra una entrada en JULES_EXECUTION_LOG.md anotando la fecha, componentes creados o mejorados, pruebas pasadas y estado de la base de conocimiento.
+3. Actualiza ARQUITECTURA_ESTADO.md reflejando el diff de arquitectura y los nuevos capabilities del motor.
+4. AUTO-REESCRITURA DINÁMICA: Analiza las modalidades y desafíos presentes en ACTIVE_COMPETITIONS.json, evalúa qué le falta al motor para dominarlas (revisando data/knowledge/postmortems_failures_catalog.json), Y REESCRIBE TOTALMENTE JULES_DYNAMIC_TASKS.md grabando entre 5 y 10 nuevas super-tareas autónomas de ingeniería agnóstica para la sesión de mañana.
+5. Abre un Pull Request limpio y atómico hacia main.
+6. Firma de autoría: Perez, Ernesto Rafael ("Rafa").
+```
 
 ---
-[VINCIT_OMNIA_VERITAS]
+[VINCIT_OMNIA_VERITAS]  
+Autor: Perez, Ernesto Rafael ("Rafa") & Angelus AGI

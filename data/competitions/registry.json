@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "Registro Dinámico de Competencias Activas para CMRE Engine. Jules y el motor leen este archivo para auto-descubrir modalidades, métricas y restricciones sin acoplamiento de código.",
+  "last_updated": "2026-09-25T18:20:00-03:00",
+  "competitions": [
+    {
+      "id": "0075-rsna-knee-detection",
+      "name": "RSNA Knee Abnormality Detection 2026",
+      "platform": "kaggle",
+      "status": "active",
+      "domain": "medical_radiology_vision",
+      "modalities": ["image_2.5d_mri", "tabular_metadata"],
+      "target_type": "multilabel_classification",
+      "target_metric": "macro_averaged_roc_auc",
+      "target_classes_count": 12,
+      "latency_budget_per_sample_sec": 1.5,
+      "client_repo_local": "C:\\Users\\rafae\\.gemini\\01_PROYECTOS\\competencias\\03_TORNEO_RSNA_KNEE_2026\\0075-rsna-knee-detection",
+      "github_url": "https://github.com/pedrogomez290625/0075-rsna-knee-detection",
+      "key_challenges": ["severe_class_imbalance", "multi_view_ortho_alignment", "kaggle_timeout_risk"]
+    },
+    {
+      "id": "0074-enveda-casmi2026",
+      "name": "Enveda CASMI 2026 - Molecule ID from Mass Spectra",
+      "platform": "kaggle",
+      "status": "active",
+      "domain": "chemoinformatics_metabolomics",
+      "modalities": ["msms_peak_spectra", "molecular_smiles_graph"],
+      "target_type": "ranking_retrieval",
+      "target_metric": "mrr_at_25",
+      "target_classes_count": 400,
+      "latency_budget_per_sample_sec": 5.0,
+      "client_repo_local": "C:\\Users\\rafae\\.gemini\\01_PROYECTOS\\competencias\\01_TORNEO_ACTIVO_CASMI2026\\0074-enveda-casmi2026",
+      "github_url": "https://github.com/pedrogomez290625/0074-enveda-casmi2026",
+      "key_challenges": ["high_dimensional_decoys", "precursor_mass_ambiguity", "neutral_loss_absence"]
+    },
+    {
+      "id": "0076-arc-prize-2026",
+      "name": "ARC Prize 2026 - ARC-AGI-2",
+      "platform": "kaggle",
+      "status": "active",
+      "domain": "artificial_general_intelligence",
+      "modalities": ["discrete_grid_2d", "few_shot_demonstrations"],
+      "target_type": "program_synthesis_induction",
+      "target_metric": "exact_grid_match",
+      "target_classes_count": 240,
+      "latency_budget_per_sample_sec": 30.0,
+      "client_repo_local": "C:\\Users\\rafae\\.gemini\\01_PROYECTOS\\competencias\\04_TORNEO_ARC_PRIZE_2026\\0076-arc-prize-2026",
+      "github_url": "https://github.com/pedrogomez290625/0076-arc-prize-2026",
+      "key_challenges": ["zero_shot_generalization", "anti_identity_collapse", "mdl_program_complexity"]
+    }
+  ]
+}
