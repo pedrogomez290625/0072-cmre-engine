@@ -33,7 +33,7 @@
 > 1. Abre y lee `ARQUITECTURA_ESTADO.md` y `JULES_DYNAMIC_TASKS.md` para conocer el estado del código, módulos canónicos e inventario.
 > 2. Revisa `JULES_EXECUTION_LOG.md`. Si la sesión anterior terminó con algún error o tarea incompleta, toma nota del fallo para corregirlo prioritariamente.
 > 3. Sincroniza mentalmente con el nuevo `PLAYBOOK_DE_TRANSFERENCIA_SOTA_2026.md` y `canonical_code_snippets_catalog.json` generados por el Agente Spark en `knowledge_db/`, respetando la Regla 8 de convivencia anti-colisión (solo lectura, cero pisadas ni borrados).
-> 4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde, 85+ tests).
+> 4. Ejecuta `pytest tests/` para validar el estado de partida del repositorio (debe mantener el 100% de tests en verde, 132+ tests aprobados, cubriendo solvers RSNA Knee, CASMI 2026 y ARC Prize).
 > 5. Firma de autoría: `Perez, Ernesto Rafael ("Rafa")`."
 
 ---
