@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 0.5.0  
-**Estado:** STAGE_6_SOTA_TRIAD_AND_ANTI_COLLAPSE 🟢 (100% Tests Pasando: 132/132)  
-**Última Auditoría:** 25 de Septiembre de 2026  
+**Estado:** STAGE_6_SOTA_TRIAD_AND_ANTI_COLLAPSE 🟢 (100% Tests Pasando: 135/135)
+**Última Auditoría:** 26 de Septiembre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI  
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 132/132 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 135/135 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -35,7 +35,7 @@
 1. **`src/cmre/modules/ingest.py` (`MOD_INGEST`):** Ingesta física DICOM, aplicación estricta de Modality/VOI LUT, MONOCHROME1 inversion y recorte morfológico de ROI tisular.
 2. **`src/cmre/modules/signal.py` (`MOD_SIGNAL`):** Agregaciones jerárquicas delta (`feature - mean_group`), Target Encoder Bayesiano out-of-fold y arbitraje híbrido SDSI.
 3. **`src/cmre/modules/split.py` (`MOD_SPLIT`):** Particiones con cero fuga: K-Fold Disjunto por Grupos (`group_disjoint_kfold`), Series Temporales Purgadas con embargo (`purged_timeseries_split`) y Scaffold Molecular Bemis-Murcko (`molecular_scaffold_split`).
-4. **`src/cmre/modules/loss.py` (`MOD_LOSS`):** Asymmetric Loss (`asymmetric_loss_numpy`), Soft-F1 diferenciable y módulo PyTorch `AsymmetricLoss` para desbalance médico extremo.
+4. **`src/cmre/modules/loss.py` (`MOD_LOSS`):** Asymmetric Loss (`asymmetric_loss_numpy`), Soft-F1 diferenciable y módulos PyTorch `AsymmetricLoss` y `SoftF1Loss` analíticamente validados con `torch.autograd.gradcheck` para desbalance médico extremo (SUPER-TAREA CMRE-01 Completada).
 5. **`src/cmre/modules/ensemble.py` (`MOD_ENSEMBLE`):** Ensamble con regresión no-negativa NNLS (`SimpleNNLSBlender`), promediado de rangos percentiles (`rank_average_predictions`), **Class-Wise Asymmetric Matrix Blending** (`ClassWiseAsymmetricBlender`) y poda greedy por presupuesto de tiempo (`LatencyBudgetPruner`).
 6. **`src/cmre/modules/hpc.py` (`MOD_HPC`):** Optimización a nivel de silicio: Popcount de bitsets de alta dimensión (`BitsetFingerprint`) y Disjoint Set Union (`DisjointSetUnion`) con compresión de caminos.
 7. **`src/cmre/modules/registry.py`:** Mapeo determinista entre IDs de claims (`C01`-`C36`, `FC01`-`FC14`, `HPC01`-`HPC10`) y código ejecutable.
