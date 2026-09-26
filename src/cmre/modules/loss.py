@@ -58,6 +58,126 @@ def soft_f1_score_numpy(
     return f1
 
 
+
+import torch
+import torch.nn as nn
+
+class AsymmetricLoss(nn.Module):
+    """Asymmetric Loss for multi-label or extreme class imbalance in medical imaging."""
+    def __init__(self, gamma_neg=4.0, gamma_pos=1.0, clip=0.05, eps=1e-8):
+        super().__init__()
+        self.gamma_neg = gamma_neg
+        self.gamma_pos = gamma_pos
+        self.clip = clip
+        self.eps = eps
+
+    def forward(self, x, y):
+        """
+        Args:
+            x: Raw model logits [B, C] or any dimensions [B, C, ...]
+            y: Binary target targets [B, C] or any dimensions [B, C, ...] in {0, 1}
+        """
+        xs_pos = torch.sigmoid(x)
+        xs_neg = 1.0 - xs_pos
+
+        # Asymmetric clipping
+        if self.clip is not None and self.clip > 0:
+            xs_neg = (xs_neg + self.clip).clamp(max=1.0)
+
+        # Basic CE calculation
+        los_pos = y * torch.log(xs_pos.clamp(min=self.eps))
+        los_neg = (1.0 - y) * torch.log(xs_neg.clamp(min=self.eps))
+        loss = los_pos + los_neg
+
+        # Asymmetric focusing weights
+        if self.gamma_neg > 0 or self.gamma_pos > 0:
+            pt0 = xs_pos * y
+            pt1 = xs_neg * (1.0 - y)
+            pt = pt0 + pt1
+            one_sided_gamma = self.gamma_pos * y + self.gamma_neg * (1.0 - y)
+            one_sided_w = torch.pow(1.0 - pt, one_sided_gamma)
+            loss *= one_sided_w
+
+        return -loss.mean()
+
+class SoftF1Loss(nn.Module):
+    """Continuous differentiable soft F1/Dice Loss approximation with dynamic class weights."""
+    def __init__(self, eps=1e-7, class_weights=None):
+        super().__init__()
+        self.eps = eps
+        if class_weights is not None:
+            self.register_buffer('class_weights', torch.tensor(class_weights, dtype=torch.float32))
+        else:
+            self.class_weights = None
+
+    def forward(self, logits, targets):
+        """
+        Args:
+            logits: Model logits [B, C, ...]
+            targets: Binary targets [B, C, ...]
+        """
+        probs = torch.sigmoid(logits)
+
+        # Calculate Soft F1
+        # To support multidimensional batch, we sum over all dimensions except classes (dim=1)
+        # Assuming format is [B, C, d1, d2, ...]
+
+        if logits.dim() > 2:
+            dims_to_sum = tuple(range(2, logits.dim()))
+            dims_to_sum = (0,) + dims_to_sum
+        else:
+            dims_to_sum = (0,)
+
+        tp = (targets * probs).sum(dim=dims_to_sum)
+        fp = ((1.0 - targets) * probs).sum(dim=dims_to_sum)
+        fn = (targets * (1.0 - probs)).sum(dim=dims_to_sum)
+
+        f1 = (2.0 * tp) / (2.0 * tp + fp + fn + self.eps)
+
+        if self.class_weights is not None:
+            weights = self.class_weights.to(logits.dtype)
+            f1 = f1 * weights
+            loss = 1.0 - f1.sum() / weights.sum()
+        else:
+            loss = 1.0 - f1.mean()
+
+        return loss
+
+    def forward(self, logits, targets):
+        """
+        Args:
+            logits: Model logits [B, C, ...]
+            targets: Binary targets [B, C, ...]
+        """
+        probs = torch.sigmoid(logits)
+
+        # Calculate Soft F1
+        # To support multidimensional batch, we sum over all dimensions except classes (dim=1)
+        # Assuming format is [B, C, d1, d2, ...]
+
+        if logits.dim() > 2:
+            dims_to_sum = tuple(range(2, logits.dim()))
+            dims_to_sum = (0,) + dims_to_sum
+        else:
+            dims_to_sum = (0,)
+
+        tp = (targets * probs).sum(dim=dims_to_sum)
+        fp = ((1.0 - targets) * probs).sum(dim=dims_to_sum)
+        fn = (targets * (1.0 - probs)).sum(dim=dims_to_sum)
+
+        f1 = (2.0 * tp) / (2.0 * tp + fp + fn + self.eps)
+
+        if self.class_weights is not None:
+            weights = torch.tensor(self.class_weights, device=logits.device, dtype=logits.dtype)
+            f1 = f1 * weights
+            loss = 1.0 - f1.sum() / weights.sum()
+        else:
+            loss = 1.0 - f1.mean()
+
+        return loss
+
+
+# Keep the original template string as it's imported elsewhere
 CODE_TEMPLATE_ASYMMETRIC_LOSS = '''# [CMRE MOD_LOSS] Asymmetric Loss (ASL) for PyTorch
 import torch
 import torch.nn as nn

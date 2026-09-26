@@ -38,3 +38,10 @@
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
+
+## Log CMRE-01 Implementation
+Autor: Perez, Ernesto Rafael ("Rafa")
+- Resuelto SUPER-TAREA CMRE-01
+- Implementadas las clases `AsymmetricLoss` y `SoftF1Loss` heredando de `torch.nn.Module`.
+- Tests añadidos en `tests/test_modules.py` con `torch.autograd.gradcheck`.
+- Limpieza de logs y archivos temporales. Tests 100% (135/135 pasados).

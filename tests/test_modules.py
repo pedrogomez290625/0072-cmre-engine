@@ -213,3 +213,28 @@ def test_get_module_for_claim():
     info_c01 = get_module_for_claim("[C01] Group Disjoint Cv")
     assert info_c01 is not None
     assert info_c01["module"] == "MOD_SPLIT"
+
+# ---------------------------------------------------------------------------
+# PyTorch Module Gradcheck Tests
+# ---------------------------------------------------------------------------
+import torch
+
+def test_asymmetric_loss_gradcheck():
+    from cmre.modules.loss import AsymmetricLoss
+    # Use float64 for gradcheck
+    x = torch.randn(2, 3, dtype=torch.float64, requires_grad=True)
+    y = torch.randint(0, 2, (2, 3)).to(torch.float64)
+    loss_fn = AsymmetricLoss(gamma_neg=4.0, gamma_pos=1.0, clip=0.05, eps=1e-8)
+
+    # Check gradients using gradcheck
+    assert torch.autograd.gradcheck(loss_fn, (x, y), eps=1e-6, atol=1e-4)
+
+def test_soft_f1_loss_gradcheck():
+    from cmre.modules.loss import SoftF1Loss
+    # Use float64 for gradcheck
+    x = torch.randn(2, 3, dtype=torch.float64, requires_grad=True)
+    y = torch.randint(0, 2, (2, 3)).to(torch.float64)
+    loss_fn = SoftF1Loss(eps=1e-7)
+
+    # Check gradients using gradcheck
+    assert torch.autograd.gradcheck(loss_fn, (x, y), eps=1e-6, atol=1e-4)
