@@ -39,6 +39,18 @@
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
 
+## 🟢 ENTRADA 004 - LECTOR DINÁMICO DE COMPETENCIAS
+- **Fecha:** 26 de Septiembre de 2026
+- **Responsable:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI
+- **Estado de Pruebas:** 138/138 tests pasando (100% verde).
+- **Hitos Alcanzados:**
+  1. Resuelta la SUPER-TAREA CMRE-06.
+  2. Implementada la función `load_active_competitions` en `src/cmre/services/problem_profiler.py` que lee el archivo `ACTIVE_COMPETITIONS.json` para auto-descubrir y generar los correspondientes `ProblemDNA` y `ExperimentPlan`.
+  3. Añadidas 3 pruebas unitarias exhaustivas en `tests/test_active_competitions_loader.py` garantizando un manejo robusto ante JSON inválidos o inexistentes.
+---
+[VINCIT_OMNIA_VERITAS]
+Autor: Perez, Ernesto Rafael ("Rafa")
+
 ## Log CMRE-01 Implementation
 Autor: Perez, Ernesto Rafael ("Rafa")
 - Resuelto SUPER-TAREA CMRE-01
