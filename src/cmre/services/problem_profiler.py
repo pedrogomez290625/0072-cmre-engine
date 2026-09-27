@@ -10,11 +10,15 @@ from __future__ import annotations
 
 from typing import Optional
 
+import json
+import os
 import structlog
+from typing import Optional, Tuple
 
 from ..agents.base import LLMClient
 from ..schemas import (
     CompetitionInput,
+    ExperimentPlan,
     ProblemDNA,
     TASK_TYPES,
 )
@@ -288,3 +292,67 @@ def modality_baselines(modality: str) -> list[str]:
 
 def modality_validation(modality: str) -> list[str]:
     return list(_VALIDATION_BY_MODALITY.get(modality, []))
+
+
+def load_active_competitions(json_path: str = "ACTIVE_COMPETITIONS.json") -> dict[str, Tuple[ProblemDNA, ExperimentPlan]]:
+    """Loads active competitions from JSON and generates ProblemDNA and ExperimentPlan for each.
+
+    Returns a mapping of competition ID to a tuple (ProblemDNA, ExperimentPlan).
+    """
+    from .planner import generate_plan
+
+    if not os.path.exists(json_path):
+        log.warning("active_competitions_file_not_found", path=json_path)
+        return {}
+
+    try:
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as exc:
+        log.error("active_competitions_read_failed", error=str(exc))
+        return {}
+
+    competitions = data.get("competitions", [])
+    results = {}
+
+    for comp in competitions:
+        comp_id = comp.get("id")
+        if not comp_id:
+            continue
+
+        # Map some specific task types from JSON to our canonical list if needed
+        # Or let build_dna handle the fallback to "other".
+        raw_task = comp.get("target_type", "other")
+        task_map = {
+            "multilabel_classification": "multiclass_classification", # Approximate canonical mapping
+            "ranking_retrieval": "ranking",
+            "program_synthesis_induction": "generation",
+        }
+        task_type = task_map.get(raw_task, raw_task)
+
+        # Determine main modality from list if needed.
+        raw_modalities = comp.get("modalities", [])
+        modality = "tabular"
+        if "tabular_metadata" in raw_modalities and len(raw_modalities) == 1:
+            modality = "tabular"
+        elif any("image" in m for m in raw_modalities):
+            modality = "image"
+        elif any("msms" in m for m in raw_modalities) or any("smiles" in m for m in raw_modalities):
+            modality = "multimodal" # Chemoinformatics often multimodal
+        elif "discrete_grid_2d" in raw_modalities:
+            modality = "image" # AGI grids are treated like images often in reasoning tasks or 'other'
+
+        inp = CompetitionInput(
+            title=comp.get("name", comp_id),
+            platform=comp.get("platform", "other"),
+            task_type=task_type,
+            modality=modality,
+            metric=comp.get("target_metric", "custom"),
+            description=f"Challenges: {', '.join(comp.get('key_challenges', []))}",
+        )
+
+        dna = build_dna(inp)
+        plan = generate_plan(dna, [], max_techniques=5)
+        results[comp_id] = (dna, plan)
+
+    return results

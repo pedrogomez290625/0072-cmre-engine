@@ -24,9 +24,9 @@
    - Enriquecer `src/cmre/modules/hpc.py` con un kernel de similitud de Tanimoto vectorizado para matrices de bitsets de alta dimensión (ej: huellas moleculares ECFP4/Morgan o bitmasks).
    - Benchmark de rendimiento y cobertura de pruebas al 100%.
 
-5. **SUPER-TAREA CMRE-06: Lector Dinámico de Competencias Activas (`ACTIVE_COMPETITIONS.json`)**
-   - Integrar en `src/cmre/services/problem_profiler.py` una función `load_active_competitions()` que lea `ACTIVE_COMPETITIONS.json` y genere automáticamente el `ProblemDNA` y el plan de 6 fases para cualquier competencia listada en el registro.
-   - Test: `tests/test_active_competitions_loader.py`.
+5. **[COMPLETADA] SUPER-TAREA CMRE-06: Lector Dinámico de Competencias Activas (`ACTIVE_COMPETITIONS.json`)**
+   - Integrada en `src/cmre/services/problem_profiler.py` la función `load_active_competitions()` que lee `ACTIVE_COMPETITIONS.json` y genera automáticamente el `ProblemDNA` y el plan de 6 fases para cualquier competencia listada en el registro.
+   - Test: `tests/test_active_competitions_loader.py` pasando con éxito.
 
 6. **SUPER-TAREA CMRE-07: Adaptador Multimodal Cruzado para RSNA-Knee y CASMI**
    - Crear en `src/cmre/connectors/multimodal_adapter.py` un pipeline unificado que acepte tanto "image_2.5d_mri" como "msms_peak_spectra" fusionando un embedding vision-encoder con un Graph Neural Network.
