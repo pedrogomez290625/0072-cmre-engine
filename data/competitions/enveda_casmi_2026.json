@@ -1,0 +1,23 @@
+{
+  "title": "Enveda CASMI 2026",
+  "platform": "kaggle",
+  "task_type": "ranking",
+  "modality": "tabular",
+  "metric": "mrr",
+  "metric_family": "custom",
+  "has_temporal_component": false,
+  "has_group_structure": true,
+  "is_iid": false,
+  "external_data_allowed": true,
+  "pretrained_models_allowed": true,
+  "class_imbalance": "unknown",
+  "label_noise_risk": "low",
+  "distribution_shift_risk": "high",
+  "leak_risks": ["InChIKey"],
+  "compute_constraint": "medium",
+  "interpretability_required": false,
+  "risk_flags": ["chemical_leakage"],
+  "validation_recommendations": ["GroupKFold on InChIKey14"],
+  "anti_patterns": ["RandomSplit"],
+  "raw": {}
+}

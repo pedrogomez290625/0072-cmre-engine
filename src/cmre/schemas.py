@@ -213,6 +213,21 @@ METRIC_FAMILIES = {
 # Inputs
 # ---------------------------------------------------------------------------
 
+
+class ScrapedResource(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    title: str
+    url: str
+    platform: str
+    author: Optional[str] = None
+    cv_scheme: Optional[str] = None
+    feature_engineering: Optional[str] = None
+    architecture: Optional[str] = None
+    loss: Optional[str] = None
+    ensemble: Optional[str] = None
+    raw_text: Optional[str] = None
+
 class ArtifactCandidate(BaseModel):
     model_config = ConfigDict(extra="allow")
 

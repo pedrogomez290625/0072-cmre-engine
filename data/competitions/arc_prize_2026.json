@@ -1,0 +1,23 @@
+{
+  "title": "ARC Prize 2026",
+  "platform": "kaggle",
+  "task_type": "generation",
+  "modality": "multimodal",
+  "metric": "accuracy",
+  "metric_family": "accuracy",
+  "has_temporal_component": false,
+  "has_group_structure": false,
+  "is_iid": true,
+  "external_data_allowed": false,
+  "pretrained_models_allowed": true,
+  "class_imbalance": "unknown",
+  "label_noise_risk": "low",
+  "distribution_shift_risk": "high",
+  "leak_risks": [],
+  "compute_constraint": "high",
+  "interpretability_required": true,
+  "risk_flags": ["OOD"],
+  "validation_recommendations": ["Leave-One-Out", "Holdout Set"],
+  "anti_patterns": ["Standard CV"],
+  "raw": {}
+}

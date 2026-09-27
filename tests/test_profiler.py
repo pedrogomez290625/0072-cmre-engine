@@ -90,3 +90,25 @@ def test_dna_enrichment_with_llm_returns_valid_dna():
     # Mock returns empty payload; we still get a valid DNA back
     assert dna.title == "Test"
     assert isinstance(dna.validation_recommendations, list)
+
+import json
+
+def test_competitions_2026():
+    with open("data/competitions/rsna_knee_2026.json", "r") as f:
+        rsna_data = json.load(f)
+    rsna_dna = build_dna(CompetitionInput(**rsna_data))
+    assert rsna_dna.modality == "image"
+    assert rsna_dna.metric_family == "auc"
+    assert rsna_dna.has_group_structure is True
+
+    with open("data/competitions/enveda_casmi_2026.json", "r") as f:
+        casmi_data = json.load(f)
+    casmi_dna = build_dna(CompetitionInput(**casmi_data))
+    assert casmi_dna.modality == "tabular"
+    assert casmi_dna.has_group_structure is True
+
+    with open("data/competitions/arc_prize_2026.json", "r") as f:
+        arc_data = json.load(f)
+    arc_dna = build_dna(CompetitionInput(**arc_data))
+    assert arc_dna.modality == "multimodal"
+    assert arc_dna.is_iid is True

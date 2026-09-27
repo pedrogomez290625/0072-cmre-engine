@@ -1,0 +1,23 @@
+{
+  "title": "RSNA Knee 2026",
+  "platform": "kaggle",
+  "task_type": "multiclass_classification",
+  "modality": "image",
+  "metric": "auc",
+  "metric_family": "auc",
+  "has_temporal_component": false,
+  "has_group_structure": true,
+  "is_iid": false,
+  "external_data_allowed": false,
+  "pretrained_models_allowed": true,
+  "class_imbalance": "extreme",
+  "label_noise_risk": "high",
+  "distribution_shift_risk": "medium",
+  "leak_risks": ["patient_id"],
+  "compute_constraint": "gpu_only",
+  "interpretability_required": false,
+  "risk_flags": ["class_imbalance"],
+  "validation_recommendations": ["GroupKFold on patient_id", "StratifiedGroupKFold"],
+  "anti_patterns": ["RandomSplit"],
+  "raw": {}
+}
