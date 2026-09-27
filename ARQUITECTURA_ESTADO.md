@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
-**Versión:** 0.5.0  
-**Estado:** STAGE_6_SOTA_TRIAD_AND_ANTI_COLLAPSE 🟢 (100% Tests Pasando: 135/135)
+**Versión:** 0.6.0
+**Estado:** STAGE_7_DYNAMIC_BENCHMARKING_AND_AUTO_EVOLUTION 🟢 (100% Tests Pasando: 146/146)
 **Última Auditoría:** 26 de Septiembre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI  
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 135/135 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 146/146 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -25,7 +25,9 @@
 - **`src/cmre/schemas.py`:** Modelos Pydantic v2 inmutables para tipado de entrada y salida (`CompetitionInput`, `ProblemDNA`, `RankedClaim`, `ExperimentPlan`).
 - **`src/cmre/services/seeder_claims.py`:** Sembrador de 60 claims (36 canónicas + 14 forenses + 10 HPC extraídas de torneos mundiales 2026).
 - **`src/cmre/services/submission_validator.py`:** Guardián universal pre-envío con soporte CSV, multi-etiqueta (RSNA Knee 12 clases) y validación estricta de JSON ARC-AGI con detector de colapso por identidad (`anti_identity_collapse`).
-- **`src/cmre/services/problem_profiler.py`:** Extractor de ADN de problemas competitivos.
+- **`src/cmre/services/problem_profiler.py`:** Extractor de ADN de problemas competitivos con `load_active_competitions` dinámico (SUPER-TAREA CMRE-06 Completada).
+- **`src/cmre/services/ast_extractor.py`:** Extractor y clasificador de AST para destilar soluciones competitivas en componentes CMRE.
+- **`src/cmre/connectors.py`:** Conectores robustos (ej. KaggleWriteupConnector) para ingestión de discusiones de torneos.
 - **`src/cmre/services/scoring.py` y `recency.py`:** Algoritmos de scoring multidimensional y decaimiento temporal.
 - **`src/cmre/services/planner.py`:** Planificador en 6 fases competitivas integrando los 6 módulos canónicos.
 - **`src/cmre/services/reporter.py`:** Generador de reportes de torneo exhaustivos en Markdown.
@@ -62,3 +64,4 @@
 
 ---
 [VINCIT_OMNIA_VERITAS]
+Autor: Perez, Ernesto Rafael ("Rafa")
