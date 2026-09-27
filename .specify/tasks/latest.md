@@ -25,12 +25,12 @@
 ---
 
 ## 🚀 TAREAS PRIORITARIAS PARA JULES (FASE EVOLUTIVA):
-- [ ] **TASK-09 (Kaggle Discussion & Solution Writeups Connector):**
+- [x] **TASK-09 (Kaggle Discussion & Solution Writeups Connector):**
   - **Objetivo:** Desarrollar `src/cmre/connectors/kaggle_writeups.py` para parsear hilos y writeups ganadores de soluciones Kaggle (Top 1 a 5).
   - **Requerimiento:** Extraer secciones de CV scheme, feature engineering, arquitectura, loss y ensemble. Retornar objetos `ScrapedResource` tipados.
   - **Test:** Crear `tests/test_kaggle_writeups.py` con mocks de respuestas HTML/JSON de Kaggle Forum.
 
-- [ ] **TASK-10 (Catálogo Estructurado de Problem DNA para Torneos 2026):**
+- [x] **TASK-10 (Catálogo Estructurado de Problem DNA para Torneos 2026):**
   - **Objetivo:** Crear archivos JSON de Problem DNA en `data/competitions/`:
     - `rsna_knee_2026.json` (Visión médica 2.5D, desbalance severo, AUC macro-promediado).
     - `enveda_casmi_2026.json` (MS/MS espectrometría, ranking MRR@25, quimioinformática).
@@ -41,11 +41,11 @@
   - **Objetivo:** Extender `scripts/gdrive_hub.py` para sincronizar automáticamente nuevos claims y postmortems generados por Jules hacia Google Sheets y Google Drive.
   - **Test:** `tests/test_gdrive_hub_mock.py` con requests mockeados al endpoint de GAS.
 
-- [ ] **TASK-12 (Extractor AST de Módulos PyTorch):**
+- [x] **TASK-12 (Extractor AST de Módulos PyTorch):**
   - **Objetivo:** Construir `src/cmre/services/ast_extractor.py` usando el módulo `ast` de Python para descomponer notebooks y scripts ganadores en funciones/clases correspondientes a los 6 módulos canónicos (`MOD_INGEST` a `MOD_ENSEMBLE`).
   - **Test:** Crear `tests/test_ast_extractor.py` validando la extracción sobre scripts de ejemplo.
 
-- [ ] **TASK-13 (Suite de Benchmark Sintético para Solvers):**
+- [x] **TASK-13 (Suite de Benchmark Sintético para Solvers):**
   - **Objetivo:** Crear `tests/test_solvers_benchmarks.py` que genere volúmenes sintéticos de resonancia y espectros de prueba, evaluando latencia, precisión y comportamiento de los solvers `RSNAKneeSolver`, `EnvedaCASMISolver` y `ARCAGIHybridSolver`.
   - **Aceptación:** 100% de tests pasando en <5 segundos.
 

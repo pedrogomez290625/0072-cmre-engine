@@ -71,3 +71,11 @@ Autor: Perez, Ernesto Rafael ("Rafa")
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
+
+### Exito de Tareas - 0072-cmre-engine v0.6.0
+**Autor:** Perez, Ernesto Rafael ("Rafa")
+- **TASK-09 COMPLETADA:** Se implementó `KaggleWriteupConnector` y `ScrapedResource` para parsear discusiones y write-ups con `tests/test_kaggle_writeups.py` verificado.
+- **TASK-10 COMPLETADA:** Se crearon JSONs estructurales en `data/competitions/` (RSNA, Enveda CASMI y ARC) mapeados a `ProblemDNA` y evaluados en `tests/test_profiler.py`.
+- **TASK-12 COMPLETADA:** Se creó `src/cmre/services/ast_extractor.py` usando `ast` para extraer y clasificar código en módulos canónicos CMRE, validado por `tests/test_ast_extractor.py`.
+- **TASK-13 COMPLETADA:** Se escribieron los benchmarks sintéticos rápidos para solvers (RSNA, CASMI, ARC) dentro de `tests/test_solvers_benchmarks.py`.
+- **Tests Completos:** Todo el conjunto de pruebas pasa correctamente al 100% (146/146).
