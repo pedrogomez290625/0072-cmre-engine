@@ -56,3 +56,8 @@
 2. Toda nueva funcionalidad debe incluir su test unitario en `tests/`.
 3. Prohibido eliminar código o datos existentes (Axioma de No Borrado).
 4. Abrir PR con título format: `feat(jules): [TASK-ID] <descripción breve>`.
+
+- [x] **TASK-INIT-006 (Inicialización y Memoria Dinámica 28 Sept):**
+  - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
+  - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (146 pasando) y asentar log en JULES_EXECUTION_LOG.md.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
