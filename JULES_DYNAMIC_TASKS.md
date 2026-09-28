@@ -1,43 +1,61 @@
-# 📋 JULES DYNAMIC SUPER-TASKS BACKLOG (MOTOR GENERAL AGNÓSTICO)
-### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE v0.6.0)
-**Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI
-**Fuente de Verdad de Torneos:** [`ACTIVE_COMPETITIONS.json`](file:///C:/Users/rafae/.gemini/01_PROYECTOS/0072-cmre-engine/ACTIVE_COMPETITIONS.json)
+# 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
+### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
+**Iteración:** Sesión Post-Benchmarking (28 de Septiembre 2026)
+**Autor:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI
+
+Este archivo es reescrito por el motor tras cada cierre de sesión. Las tareas de ingeniería han sido destiladas analizando el archivo `ACTIVE_COMPETITIONS.json` y el `data/knowledge/postmortems_failures_catalog.json`.
 
 ---
 
-## 🎯 PRÓXIMAS SUPER-TAREAS AUTÓNOMAS DE INGENIERÍA AGNÓSTICA (SESIÓN POST-CIERRE):
+## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-1. **SUPER-TAREA CMRE-10: Pipeline de Ingestión Tensional y Rescale en Float32 para `MOD_INGEST`**
-   - **Contexto:** Post-mortem `FAIL_10` (MONOCHROME inversion) y `FAIL_13` (FP16 vs Double mismatch).
-   - **Acción:** Extender `src/cmre/modules/ingest.py` para implementar una función `batch_process_dicoms` usando `concurrent.futures.ThreadPoolExecutor`. Debe asegurar la normalización estricta de metadatos de rescale (Slope/Intercept) convirtiendo siempre a `float32` antes de devolver el tensor, evitando los cuelgues (RuntimeError de PyTorch) observados en CUDA.
+### [ ] SUPER-TAREA CMRE-07: Guardián Estricto Anti-Identidad ARC-AGI
+- **Origen:** Postmortem `FAIL_11` (Kaggle ARC Prize 2026).
+- **Problema:** Un pipeline híbrido simbólico/neuronal colapsó al agotar el tiempo, activando un fallback pasivo que devolvía la grilla de entrada sin modificar, garantizando 0 aciertos.
+- **Implementación:** Desarrollar en `src/cmre/modules/ensemble.py` o `src/cmre/services/submission_validator.py` un `AntiIdentityGuard` que intercepte cualquier predicción idéntica a la entrada y conmute automáticamente a perturbaciones seguras (TTT, D8 o cambio topológico mínimo).
+- **Verificación:** `tests/test_arc_anti_identity.py` (simular timeout simbólico y verificar conmutación).
 
-2. **SUPER-TAREA CMRE-11: Validadores Estrictos Multi-Centro con Purga Temporal en `MOD_SPLIT`**
-   - **Contexto:** Post-mortem `FAIL_02` (Temporal Leakage) y `FAIL_05` (Patient Leakage).
-   - **Acción:** Integrar en `src/cmre/modules/split.py` un `PurgedMultiCenterGroupSplit`. Esta función debe forzar que muestras del mismo paciente/centro se asignen siempre al mismo pliegue y garantizar que exista un "embargo temporal" estricto (cero solapamiento de ventanas en el tiempo) entre datos de entrenamiento y validación.
+### [ ] SUPER-TAREA CMRE-08: Podador de Ensamble por Presupuesto de Latencia
+- **Origen:** Postmortem `FAIL_12` (RSNA Knee Abnormality 2026).
+- **Problema:** Riesgo inminente de timeout en inferencia Kaggle (>6.5 horas) debido al ensamble ciego de más de 30 sub-redes masivas (ViT, DINO, CoAtNet) sobre imágenes multi-vista.
+- **Implementación:** Refinar en `src/cmre/modules/ensemble.py` el componente `LatencyBudgetPruner` para que perfile en milisegundos cada modelo en inferencia y ejecute una poda greedy, limitando el tamaño del ensamble para mantenerse por debajo del `latency_budget_per_sample_sec` definido en el `ACTIVE_COMPETITIONS.json`.
+- **Verificación:** `tests/test_latency_pruner.py` asegurando respeto al budget.
 
-3. **SUPER-TAREA CMRE-12: Target Encoder Bayesiano Jerárquico en `MOD_SIGNAL`**
-   - **Contexto:** Post-mortem `FAIL_06` (High Cardinality Leakage).
-   - **Acción:** Mejorar `src/cmre/modules/signal.py` añadiendo un target encoder que funcione con múltiples niveles jerárquicos (ej: hospital -> escáner -> paciente) aplicando M-Estimate (Dirichlet) y garantizando que las estadísticas de grupo se extraigan de forma "out-of-fold" estricta para evitar sobreajuste.
+### [ ] SUPER-TAREA CMRE-09: Interceptor Global de Precisión (Float vs Double) para CUDA
+- **Origen:** Postmortem `FAIL_13` (RSNA Knee 2026, Runtime Error).
+- **Problema:** Fallas de CUDA `expected scalar type Half but found Double` inducidas por constantes de normalización ImageNet que numpy exporta como float64.
+- **Implementación:** En `src/cmre/modules/ingest.py` y el motor central de tensores, inyectar un decorador o hook global `sanitize_tensor_dtypes` que escanee todos los diccionarios, arrays y tensores forzando su casting a `.float()` pre-inferencia, antes de entrar al scope `torch.autocast()`.
+- **Verificación:** `tests/test_cuda_type_sanitizer.py`.
 
-4. **SUPER-TAREA CMRE-13: Vectorización Tanimoto y Aceleración SIMD en `MOD_HPC`**
-   - **Contexto:** Reto `high_dimensional_decoys` de CASMI 2026.
-   - **Acción:** Optimizar `src/cmre/modules/hpc.py` añadiendo un kernel rápido para el cálculo del coeficiente de similitud de Tanimoto sobre bitsets (ej. ECFP4 o Morgan). Implementar un fallback seguro si SIMD nativo falla, maximizando el throughput para reducir la latencia (enfocado en el presupuesto de 5.0s por muestra de CASMI).
+### [ ] SUPER-TAREA CMRE-10: Filtro Axiomático Biofísico (SIRIUS) en CASMI
+- **Origen:** Postmortem `FAIL_14` (Enveda CASMI 2026).
+- **Problema:** Saturación en Top-25 por moléculas decoy químicamente inviables; masas compatibles pero fórmulas incoherentes con pérdidas de agua (H2O) o amoníaco (NH3).
+- **Implementación:** Añadir en el componente molecular (`src/cmre/modules/hpc.py` o de parseo químico) la validación estructurada `NeutralLossBiophysicsFilter`. Si el espectro acusa pérdida de H2O, se descarta todo candidato sin átomos de Oxígeno en su SMILES.
+- **Verificación:** `tests/test_biophysics_sirius_filter.py`.
 
-5. **SUPER-TAREA CMRE-14: Reductores de Latencia Greedy y Poda de Ensambles en `MOD_ENSEMBLE`**
-   - **Contexto:** Post-mortem `FAIL_12` (Latency Explosion, >6.5h en RSNA Knee).
-   - **Acción:** Escribir en `src/cmre/modules/ensemble.py` un algoritmo de poda (Greedy Ensemble Pruning) asociado al `LatencyBudgetPruner`. Esta lógica analizará el presupuesto máximo de inferencia listado en `ACTIVE_COMPETITIONS.json` (ej: 1.5s/muestra para Knee) y cortocircuitará ramas pesadas del ensamble si se proyecta un timeout inminente.
+### [ ] SUPER-TAREA CMRE-11: Estratificación Inflexible por Identidad (Paciente/Sujeto)
+- **Origen:** Postmortem `FAIL_05` (ISIC 2024).
+- **Problema:** Sobreajuste y fuga de datos en Kaggle al mezclar el fondo de la piel del paciente en pliegues de entrenamiento y validación.
+- **Implementación:** Robustecer el módulo `MOD_SPLIT` (`src/cmre/modules/split.py`) forzando la obligatoriedad de que la variable `group_id` (e.g., patient_id, subject_id) lance una alerta `LeakageWarning` o error estricto si se detecta entropía mayor a 0 en la distribución del mismo ID a través de los folds OOF.
+- **Verificación:** `tests/test_strict_patient_isolation.py`.
 
-6. **SUPER-TAREA CMRE-15: Auto-Generador de Fallbacks Anti-Identidad en AGI (`MOD_LOSS`/`MOD_ENSEMBLE`)**
-   - **Contexto:** Post-mortem `FAIL_11` (Symbolic Timeout Identity Fallback en ARC).
-   - **Acción:** Implementar un servicio transversal `anti_identity_guard_generator` que, en tareas de síntesis como ARC-AGI, analice los fallbacks del sistema. En lugar de devolver la matriz original ante un timeout, el sistema aplicará automáticamente transformaciones de cromatismo o topológicas seguras para evitar el 0 absoluto en evaluación.
+### [ ] SUPER-TAREA CMRE-12: Ventanas Cosenoidales para Reconstrucción Gigapíxel
+- **Origen:** Postmortem `FAIL_03` (HuBMAP Kidney WSI).
+- **Problema:** Discontinuidades catastróficas en costuras de patches (tiling simple), degradando el Dice al reconstruir la imagen macro.
+- **Implementación:** Implementar `HanningWindowTiler` en `src/cmre/modules/ingest.py`, generando máscaras de solapamiento suaves 2D mediante pesos separable cosenoidales para predicción sin efecto cuadrícula.
+- **Verificación:** `tests/test_hanning_window_tiler.py` sobre imagen sintética WSI.
 
-7. **SUPER-TAREA CMRE-16: Sistema de Checkpoints Dinámicos OOM-Guard**
-   - **Contexto:** Fugas y fallos crónicos de "Out of Memory" en iteraciones pesadas.
-   - **Acción:** Desarrollar `src/cmre/services/oom_guard.py` que capture dinámicamente las excepciones `RuntimeError` originadas por saturación en VRAM de CUDA. Reducirá el batch-size automáticamente a la mitad, purgará la caché de PyTorch (`torch.cuda.empty_cache()`) y resumirá desde el último batch fallido sin romper el proceso global.
+### [ ] SUPER-TAREA CMRE-13: Regresor No-Negativo (NNLS) sobre Predicciones Colineales
+- **Origen:** Postmortem `FAIL_09` (Kaggle Tabular Playground).
+- **Problema:** Predicciones de OLS negativas en tareas probabilísticas (Log-Loss Infinito) a causa de multicolinealidad severa entre meta-modelos OOF de Boosting.
+- **Implementación:** Validar exhaustivamente y expandir los tests del `SimpleNNLSBlender` ya existente en `MOD_ENSEMBLE` para que ofrezca API compatible con scikit-learn y emita log-loss estricto acotado en el simplex positivo.
+- **Verificación:** Refactor de `tests/test_nnls_blender.py`.
 
-8. **SUPER-TAREA CMRE-17: Optimizador Universal Nelder-Mead para Asymmetric Loss**
-   - **Contexto:** Post-mortem `FAIL_01` (Threshold Collapse).
-   - **Acción:** Añadir en `src/cmre/services/auto_tune.py` un envoltorio para sintonización (Auto-Tune) de hiperparámetros. Usará un optimizador continuo simplex (Nelder-Mead) para calibrar el umbral óptimo de binarización basado en asimetría clínica, desplazándolo del umbral ingenuo `0.5` en problemas de extremado desbalance (<5% positivos).
+### [ ] SUPER-TAREA CMRE-14: Lector DICOM Universal y Seguro (MONOCHROME)
+- **Origen:** Postmortem `FAIL_10` (RSNA Mammography).
+- **Problema:** Inversión térmica de tejidos blancos y negros por ignorar la metadata `PhotometricInterpretation`.
+- **Implementación:** Expandir el `MOD_INGEST` actual que procesa DICOMs. Añadir el manejador estricto que lea si es `MONOCHROME1` e invierta pasivamente el array `(np.max(pixel_array) - pixel_array)` normalizándolo unificadamente hacia el estándar `MONOCHROME2`.
+- **Verificación:** `tests/test_dicom_monochrome_inversion.py`.
 
 ---
 [VINCIT_OMNIA_VERITAS]
