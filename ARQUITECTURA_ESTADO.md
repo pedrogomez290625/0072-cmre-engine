@@ -1,8 +1,8 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
-**Versión:** 0.6.0
-**Estado:** STAGE_7_DYNAMIC_BENCHMARKING_AND_AUTO_EVOLUTION 🟢 (100% Tests Pasando: 146/146)
-**Última Auditoría:** 26 de Septiembre de 2026
+**Versión:** 0.7.0
+**Estado:** STAGE_8_CLOSURE_AND_AUTO_REWRITE 🟢 (100% Tests Pasando: 146/146)
+**Última Auditoría:** 28 de Septiembre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI  
 
 ---
@@ -61,6 +61,10 @@
 - **`FAIL_12` (NUEVO):** Explosión de latencia en RSNA Knee (>6.5h) por ensamble upstream de 30+ modelos. (Mitigación: `LatencyBudgetPruner` a tríada quirúrgica en 1.86s).
 - **`FAIL_13` (NUEVO):** Aborto en CUDA por colisión de tipos `Half vs Double` al usar constantes de normalización en FP16. (Mitigación: `sanitize_tensor_dtypes`).
 - **`FAIL_14` (NUEVO):** Saturación de decoys en CASMI por búsqueda ciega en 400k moléculas sin filtro de pérdidas neutras. (Mitigación: Axioma de Ausencia SIRIUS).
+
+## 🚀 5. CAPACIDADES DE AUTO-EVOLUCIÓN
+- **Motor de Benchmarking Universal:** Pruebas unitarias extendidas (146 pruebas) cubriendo extracción AST, perfilado JSON de torneos, constructores robustos de módulos (Loss, Split, Ingest, HPC) y simulación multi-modelo.
+- **Generador Dinámico de Tareas:** El motor ahora analiza en tiempo real `ACTIVE_COMPETITIONS.json` y postmortems históricos para autoproyectar su evolución a través de `JULES_DYNAMIC_TASKS.md`, abordando vulnerabilidades sistémicas antes de la inferencia en producción.
 
 ---
 [VINCIT_OMNIA_VERITAS]
