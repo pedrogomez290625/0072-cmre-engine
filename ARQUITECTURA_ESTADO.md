@@ -1,9 +1,9 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
-**Versión:** 0.7.0
-**Estado:** STAGE_8_CLOSURE_AND_AUTO_REWRITE 🟢 (100% Tests Pasando: 146/146)
-**Última Auditoría:** 28 de Septiembre de 2026
-**Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Angelus AGI  
+**Versión:** 0.8.0
+**Estado:** STAGE_9_FINAL_CLOSURE_AND_AUTO_EVOLUTION 🟢 (100% Tests Pasando: 146/146)
+**Última Auditoría:** 29 de Septiembre de 2026
+**Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 ---
 
@@ -37,7 +37,7 @@
 1. **`src/cmre/modules/ingest.py` (`MOD_INGEST`):** Ingesta física DICOM, aplicación estricta de Modality/VOI LUT, MONOCHROME1 inversion y recorte morfológico de ROI tisular.
 2. **`src/cmre/modules/signal.py` (`MOD_SIGNAL`):** Agregaciones jerárquicas delta (`feature - mean_group`), Target Encoder Bayesiano out-of-fold y arbitraje híbrido SDSI.
 3. **`src/cmre/modules/split.py` (`MOD_SPLIT`):** Particiones con cero fuga: K-Fold Disjunto por Grupos (`group_disjoint_kfold`), Series Temporales Purgadas con embargo (`purged_timeseries_split`) y Scaffold Molecular Bemis-Murcko (`molecular_scaffold_split`).
-4. **`src/cmre/modules/loss.py` (`MOD_LOSS`):** Asymmetric Loss (`asymmetric_loss_numpy`), Soft-F1 diferenciable y módulos PyTorch `AsymmetricLoss` y `SoftF1Loss` analíticamente validados con `torch.autograd.gradcheck` para desbalance médico extremo (SUPER-TAREA CMRE-01 Completada).
+4. **`src/cmre/modules/loss.py` (`MOD_LOSS`):** Asymmetric Loss (`asymmetric_loss_numpy`), Soft-F1 diferenciable y módulos PyTorch `AsymmetricLoss` y `SoftF1Loss` analíticamente validados con `torch.autograd.gradcheck` para desbalance médico extremo.
 5. **`src/cmre/modules/ensemble.py` (`MOD_ENSEMBLE`):** Ensamble con regresión no-negativa NNLS (`SimpleNNLSBlender`), promediado de rangos percentiles (`rank_average_predictions`), **Class-Wise Asymmetric Matrix Blending** (`ClassWiseAsymmetricBlender`) y poda greedy por presupuesto de tiempo (`LatencyBudgetPruner`).
 6. **`src/cmre/modules/hpc.py` (`MOD_HPC`):** Optimización a nivel de silicio: Popcount de bitsets de alta dimensión (`BitsetFingerprint`) y Disjoint Set Union (`DisjointSetUnion`) con compresión de caminos.
 7. **`src/cmre/modules/registry.py`:** Mapeo determinista entre IDs de claims (`C01`-`C36`, `FC01`-`FC14`, `HPC01`-`HPC10`) y código ejecutable.
@@ -57,10 +57,10 @@
 
 ## 🛡️ 4. CATÁLOGO DE AUTOPSIAS (WALL OF SHAME - 14 CASOS)
 - **`FAIL_01` a `FAIL_10`:** Desalineación de umbrales pF1, fuga temporal por autocorrelación, discontinuidad de bordes en WSI histopatológicas, memorización de scaffolds, multicolinealidad negativa OLS, inversión errónea MONOCHROME1.
-- **`FAIL_11` (NUEVO):** Colapso a score 0.00 en ARC-AGI-2 por escape simbólico hacia grilla idéntica a la entrada. (Mitigación: Guardián Anti-Identidad + TTT D8).
-- **`FAIL_12` (NUEVO):** Explosión de latencia en RSNA Knee (>6.5h) por ensamble upstream de 30+ modelos. (Mitigación: `LatencyBudgetPruner` a tríada quirúrgica en 1.86s).
-- **`FAIL_13` (NUEVO):** Aborto en CUDA por colisión de tipos `Half vs Double` al usar constantes de normalización en FP16. (Mitigación: `sanitize_tensor_dtypes`).
-- **`FAIL_14` (NUEVO):** Saturación de decoys en CASMI por búsqueda ciega en 400k moléculas sin filtro de pérdidas neutras. (Mitigación: Axioma de Ausencia SIRIUS).
+- **`FAIL_11`:** Colapso a score 0.00 en ARC-AGI-2 por escape simbólico hacia grilla idéntica a la entrada. (Mitigación actual en pipeline: Guardián Anti-Identidad + TTT D8).
+- **`FAIL_12`:** Explosión de latencia en RSNA Knee (>6.5h) por ensamble upstream de 30+ modelos. (Mitigación actual: `LatencyBudgetPruner` a tríada quirúrgica en 1.86s).
+- **`FAIL_13`:** Aborto en CUDA por colisión de tipos `Half vs Double` al usar constantes de normalización en FP16. (Mitigación en radar: `sanitize_tensor_dtypes`).
+- **`FAIL_14`:** Saturación de decoys en CASMI por búsqueda ciega en 400k moléculas sin filtro de pérdidas neutras. (Mitigación actual: Axioma de Ausencia SIRIUS).
 
 ## 🚀 5. CAPACIDADES DE AUTO-EVOLUCIÓN
 - **Motor de Benchmarking Universal:** Pruebas unitarias extendidas (146 pruebas) cubriendo extracción AST, perfilado JSON de torneos, constructores robustos de módulos (Loss, Split, Ingest, HPC) y simulación multi-modelo.
@@ -68,4 +68,4 @@
 
 ---
 [VINCIT_OMNIA_VERITAS]
-Autor: Perez, Ernesto Rafael ("Rafa")
+Autor: Perez, Ernesto Rafael ("Rafa") & Victoria Perez
