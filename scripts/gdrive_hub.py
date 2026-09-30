@@ -60,10 +60,13 @@ def report_status(estado=None, progreso=None, tarea=None, notas=None):
         r = requests.post(WEB_APP_URL, json=payload, timeout=30, allow_redirects=True)
         if r.status_code == 200:
             print(f"[+] Éxito: {r.json().get('message', 'Telemetría enviada')}")
+            return True
         else:
             print(f"[!] Error {r.status_code}: {r.text}")
+            return False
     except Exception as e:
         print(f"[!] Error de conexión: {e}")
+        return False
 
 def upload_file_to_drive(file_path_str):
     p = Path(file_path_str)
@@ -112,6 +115,31 @@ def upload_file_to_drive(file_path_str):
         print(f"[!] Error enviando a Drive: {e}")
         return False
 
+def sync_claims_and_postmortems():
+    """
+    Sincroniza automáticamente nuevos claims y postmortems generados por Jules
+    hacia Google Drive.
+    """
+    claims_path = REPO_ROOT / "data/knowledge/claims_cmre.json"
+    postmortems_path = REPO_ROOT / "data/knowledge/postmortems_failures_catalog.json"
+
+    success_claims = False
+    success_postmortems = False
+
+    if claims_path.exists():
+        print(f"[*] Iniciando sincronización de {claims_path.name}...")
+        success_claims = upload_file_to_drive(str(claims_path))
+    else:
+        print(f"[!] Archivo {claims_path.name} no encontrado para sincronización.")
+
+    if postmortems_path.exists():
+        print(f"[*] Iniciando sincronización de {postmortems_path.name}...")
+        success_postmortems = upload_file_to_drive(str(postmortems_path))
+    else:
+        print(f"[!] Archivo {postmortems_path.name} no encontrado para sincronización.")
+
+    return success_claims and success_postmortems
+
 def main():
     parser = argparse.ArgumentParser(description="Hub de Google Drive y Telemetría para Jules/Angelus")
     subparsers = parser.add_subparsers(dest="cmd")
@@ -125,12 +153,16 @@ def main():
     upload_parser = subparsers.add_parser("upload", help="Subir archivo a Google Drive")
     upload_parser.add_argument("file", type=str, help="Ruta al archivo a subir")
 
+    sync_parser = subparsers.add_parser("sync", help="Sincronizar claims y postmortems a Google Drive")
+
     args = parser.parse_args()
 
     if args.cmd == "report":
         report_status(args.estado, args.progreso, args.tarea, args.notas)
     elif args.cmd == "upload":
         upload_file_to_drive(args.file)
+    elif args.cmd == "sync":
+        sync_claims_and_postmortems()
     else:
         parser.print_help()
 
