@@ -36,7 +36,7 @@ Jules DEBE consultar `ARQUITECTURA_ESTADO.md` y `.specify/tasks/latest.md` al in
     - `arc_prize_2026.json` (Razonamiento discreto AGI, síntesis DSL, TTT).
   - Test: verificar inferencia de los 6 módulos canónicos correctos para cada torneo.
 
-- [ ] **TASK-11 (Puente Continuo Google Drive & Apps Script):**
+- [x] **TASK-11 (Puente Continuo Google Drive & Apps Script):**
   - Extender `scripts/gdrive_hub.py` para sincronizar automáticamente nuevos claims y postmortems generados por Jules hacia Google Sheets y Google Drive.
   - Test unitario mockeado en `tests/test_gdrive_hub_mock.py`.
 

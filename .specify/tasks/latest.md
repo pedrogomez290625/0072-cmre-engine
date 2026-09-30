@@ -37,7 +37,7 @@
     - `arc_prize_2026.json` (Razonamiento discreto AGI, sintesis DSL, TTT).
   - **Test:** Verificar con `test_problem_profiler.py` que el motor infiere automáticamente los 6 módulos canónicos correctos para cada torneo.
 
-- [ ] **TASK-11 (Google Drive & Google Apps Script Continuous Bridge):**
+- [x] **TASK-11 (Google Drive & Google Apps Script Continuous Bridge):**
   - **Objetivo:** Extender `scripts/gdrive_hub.py` para sincronizar automáticamente nuevos claims y postmortems generados por Jules hacia Google Sheets y Google Drive.
   - **Test:** `tests/test_gdrive_hub_mock.py` con requests mockeados al endpoint de GAS.
 

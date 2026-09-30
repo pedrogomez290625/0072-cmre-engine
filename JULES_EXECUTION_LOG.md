@@ -164,3 +164,13 @@ Autor: Perez, Ernesto Rafael ("Rafa")
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa") & Victoria Perez
+
+## Ejecución Jules (Google Cloud) - Extensión de Puente Google Drive
+- **Autor:** Perez, Ernesto Rafael ("Rafa")
+- **Tarea completada:** TASK-11 (Google Drive & Google Apps Script Continuous Bridge)
+- **Detalles:**
+  - Se extendió `scripts/gdrive_hub.py` añadiendo la función `sync_claims_and_postmortems` que hace uso de `upload_file_to_drive` para subir directamente `data/knowledge/claims_cmre.json` y `data/knowledge/postmortems_failures_catalog.json` a Google Drive.
+  - Se incluyó la opción `sync` en la interfaz de línea de comandos del script.
+  - Se añadieron tests unitarios en `tests/test_gdrive_hub_mock.py` usando patches (mocking de `requests.post`) para simular la interacción con la API de Google Apps Script.
+  - La suite de tests fue validada, pasando todos los escenarios (155 tests, 100% éxito) de forma aislada.
+  - Se actualizaron los estados en los tableros `JULES_PENDING_TASKS.md` y `.specify/tasks/latest.md`.
