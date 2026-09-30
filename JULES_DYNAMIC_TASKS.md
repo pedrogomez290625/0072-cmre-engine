@@ -1,6 +1,6 @@
 # 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
-**Iteración:** Sesión Final de Cierre y Benchmarking (29 de Septiembre 2026)
+**Iteración:** Sesión Final de Cierre y Benchmarking (30 de Septiembre 2026)
 **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS.json` y el `data/knowledge/postmortems_failures_catalog.json`. Su objetivo es proyectar las mitigaciones a las vulnerabilidades encontradas y potenciar los solvers de las competencias activas (RSNA Knee, CASMI, ARC-AGI).
@@ -8,12 +8,6 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 ---
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
-
-### [x] SUPER-TAREA CMRE-15: Expansión de Guardián Estricto Anti-Identidad ARC-AGI
-- **Origen:** Postmortem `FAIL_11` (Kaggle ARC Prize 2026) y `ACTIVE_COMPETITIONS.json` (ARC-AGI-2).
-- **Problema:** Colapso a 0 por fallbacks pasivos. Aunque ya mitigado en un nivel, se necesita un sistema cromático y geométrico robusto.
-- **Implementación:** Mejorar `AntiIdentityGuard` en `src/cmre/services/submission_validator.py` para forzar transformaciones geométricas (reflexiones D8) y mapeo cromático determinista antes de someter, cuando se detecta colapso de similitud (99%).
-- **Verificación:** Añadir `tests/test_arc_anti_identity_advanced.py`.
 
 ### [ ] SUPER-TAREA CMRE-16: Refactor Profiling Latency Budget
 - **Origen:** Postmortem `FAIL_12` y presupuesto definido en `ACTIVE_COMPETITIONS.json` (Ej: RSNA Knee 1.5s).
@@ -56,6 +50,18 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 - **Problema:** Inversión de tejidos (tejido tumoral negro).
 - **Implementación:** Obligar en la carga de DICOMs de `MOD_INGEST` la lectura e inversión si `PhotometricInterpretation == 'MONOCHROME1'`, fallando la carga si el flag no existe en la cabecera.
 - **Verificación:** `tests/test_dicom_monochrome_strict.py`.
+
+### [ ] SUPER-TAREA CMRE-23: Sistema Dinámico de Agrupación Temporal (Purged Time Series)
+- **Origen:** Postmortem `FAIL_06` (IEEE-CIS Fraud Detection).
+- **Problema:** Fuga de variable objetivo en target encoding sin embargo temporal adecuado.
+- **Implementación:** Introducir `PurgedGroupTimeSeriesSplit` en `src/cmre/modules/split.py` que aplique periodos de cuarentena (embargo) garantizando que variables bayesianas no filtren identidad futura.
+- **Verificación:** `tests/test_purged_time_split.py`.
+
+### [ ] SUPER-TAREA CMRE-24: Auto-Sanitizador de Pérdidas por Ruido de Etiqueta (Soft-F1/Bi-Tempered)
+- **Origen:** Postmortem `FAIL_08` (Cassava Leaf Disease).
+- **Problema:** Memorización de etiquetas erróneas y colapso de validación mediante Cross-Entropy estándar.
+- **Implementación:** Escalar `SoftF1Loss` y agregar soporte a `BiTemperedLogisticLoss` en `src/cmre/modules/loss.py` como capas canónicas PyTorch que supriman las penalizaciones exponenciales en el extremo superior.
+- **Verificación:** `tests/test_bitempered_softf1_noise.py`.
 
 ---
 [VINCIT_OMNIA_VERITAS]
