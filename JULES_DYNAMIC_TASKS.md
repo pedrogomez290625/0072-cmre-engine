@@ -9,7 +9,7 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-15: Expansión de Guardián Estricto Anti-Identidad ARC-AGI
+### [x] SUPER-TAREA CMRE-15: Expansión de Guardián Estricto Anti-Identidad ARC-AGI
 - **Origen:** Postmortem `FAIL_11` (Kaggle ARC Prize 2026) y `ACTIVE_COMPETITIONS.json` (ARC-AGI-2).
 - **Problema:** Colapso a 0 por fallbacks pasivos. Aunque ya mitigado en un nivel, se necesita un sistema cromático y geométrico robusto.
 - **Implementación:** Mejorar `AntiIdentityGuard` en `src/cmre/services/submission_validator.py` para forzar transformaciones geométricas (reflexiones D8) y mapeo cromático determinista antes de someter, cuando se detecta colapso de similitud (99%).
