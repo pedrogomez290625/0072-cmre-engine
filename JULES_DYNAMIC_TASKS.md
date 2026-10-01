@@ -1,6 +1,6 @@
 # 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
-**Iteración:** Sesión Final de Cierre y Benchmarking (30 de Septiembre 2026)
+**Iteración:** Sesión Final de Cierre y Benchmarking (2 de Octubre 2026)
 **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS.json` y el `data/knowledge/postmortems_failures_catalog.json`. Su objetivo es proyectar las mitigaciones a las vulnerabilidades encontradas y potenciar los solvers de las competencias activas (RSNA Knee, CASMI, ARC-AGI).
@@ -9,59 +9,41 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-16: Refactor Profiling Latency Budget
-- **Origen:** Postmortem `FAIL_12` y presupuesto definido en `ACTIVE_COMPETITIONS.json` (Ej: RSNA Knee 1.5s).
-- **Problema:** Ensamble lento en hardware estricto.
-- **Implementación:** En `src/cmre/modules/ensemble.py`, el `LatencyBudgetPruner` debe perfilar estáticamente el FLOPs de cada modelo y ejecutar un Knapsack 0/1 para maximizar la diversidad (ROC-AUC) sin superar el budget `latency_budget_per_sample_sec`.
-- **Verificación:** `tests/test_latency_knapsack_pruner.py`.
+### [ ] SUPER-TAREA CMRE-25: Sistema Avanzado de Detección OOD (Out-of-Distribution)
+- **Origen:** Evaluación transversal de competiciones en `ACTIVE_COMPETITIONS.json`.
+- **Problema:** Desviaciones entre los datos públicos (LB) y privados generan regresiones no anticipadas (Ej: FAIL_07).
+- **Implementación:** Introducir un módulo en `src/cmre/modules/ood.py` para analizar y reportar el divergence score entre train y las distribuciones entrantes durante inferencia.
+- **Verificación:** `tests/test_ood_detection.py`.
 
-### [ ] SUPER-TAREA CMRE-17: Sistema Universal de Sanitización CUDA (FP16/FP32)
-- **Origen:** Postmortem `FAIL_13`.
-- **Problema:** Incompatibilidad silente de `float64` (Double) proveniente de diccionarios de normalización en operaciones autocast de torch.
-- **Implementación:** Implementar un hook `sanitize_tensor_dtypes` en el pipeline de `MOD_INGEST` o un decorador en las capas inferenciales para castear automáticamente buffers NumPy/Dict a `float32` antes del paso a `half()`.
-- **Verificación:** `tests/test_cuda_type_sanitizer.py`.
+### [ ] SUPER-TAREA CMRE-26: Attention-guided Patch Extraction para WSI
+- **Origen:** Postmortem `FAIL_03` (HuBMAP) y retos de visión grandes.
+- **Problema:** Inferencia ingenua gigapíxel desperdicia cómputo en zonas irrelevantes.
+- **Implementación:** Ampliar `MOD_INGEST` o crear `MOD_VISION` integrando una red de atención liviana (ej: Clam/Mil) que prediga la saliencia de los parches antes del crop de alta resolución, reduciendo la memoria requerida.
+- **Verificación:** `tests/test_attention_wsi_crop.py`.
 
-### [ ] SUPER-TAREA CMRE-18: Filtro Biofísico Molecular (SIRIUS v2)
-- **Origen:** Postmortem `FAIL_14` y `ACTIVE_COMPETITIONS.json` (Enveda CASMI).
-- **Problema:** Decoys de masa exacta en la búsqueda de lotes en bases de datos moleculares.
-- **Implementación:** Refinar el `NeutralLossBiophysicsFilter` para no solo usar Oxígeno/Nitrógeno, sino también verificar penalizaciones de Ring Double Bond Equivalent (RDBE) si se sospecha de aromaticidad basada en la pérdida espectral.
-- **Verificación:** `tests/test_biophysics_sirius_v2.py`.
+### [ ] SUPER-TAREA CMRE-27: Grafo Molecular Extendido y Aumentación para CASMI
+- **Origen:** Enveda CASMI 2026 y Postmortem `FAIL_14`.
+- **Problema:** Fragmentación y decoys difíciles de discriminar solo con Tanimoto.
+- **Implementación:** Extender `EnvedaCasmiSolver` para integrar embeddings de subestructuras (Morgan / MACCS extendidos) y simular ruido instrumental en entrenamiento (aumentación espectral).
+- **Verificación:** `tests/test_molecular_graph_augmentation.py`.
 
-### [ ] SUPER-TAREA CMRE-19: Extractor Automático de Fugas por Identidad
-- **Origen:** Postmortem `FAIL_05` (Kaggle ISIC 2024).
-- **Problema:** Fuga del paciente en la validación cruzada.
-- **Implementación:** Crear en `src/cmre/modules/split.py` un `PatientIsolationValidator` que arroje `StrictLeakageException` si el hash de un identificador de paciente aparece tanto en train como en validación del mismo fold.
-- **Verificación:** `tests/test_patient_isolation_validator.py`.
+### [ ] SUPER-TAREA CMRE-28: Meta-Controlador de Paradas Tempranas Múltiples (Multi-Metric Early Stopping)
+- **Origen:** Optimización genérica en todo el motor CMRE.
+- **Problema:** El Early Stopping en un solver a menudo se basa en una sola métrica de validación, ignorando el trade-off entre precision/recall (Ej: RSNA Mammography FAIL_10 relacionado a thresholds).
+- **Implementación:** Añadir `MultiMetricEarlyStopping` en `MOD_LOSS` (o módulo callback) que monitoree tanto la pérdida como métricas secundarias (pAUC, F1), deteniendo el entrenamiento solo cuando hay consenso.
+- **Verificación:** `tests/test_multimetric_early_stopping.py`.
 
-### [ ] SUPER-TAREA CMRE-20: Reconstrucción Hanning WSI
-- **Origen:** Postmortem `FAIL_03` (HuBMAP Kidney WSI).
-- **Problema:** Discontinuidades en inferencia gigapíxel.
-- **Implementación:** Ampliar `MOD_INGEST` con `HanningWindowTiler` que aplique filtros paso-bajo espaciales en los bordes de los patches antes de ensamblarlos.
-- **Verificación:** `tests/test_hanning_wsi.py`.
+### [ ] SUPER-TAREA CMRE-29: Dynamic Time-Warping y Cross-Validation Robusta en Series Temporales
+- **Origen:** Postmortem `FAIL_06` (Fuga temporal en target encoding) y Zindi AirQo.
+- **Problema:** Los esquemas actuales de CV de purga asumen estacionariedad tras el embargo, fallando en regímenes dinámicos.
+- **Implementación:** Mejorar `PurgedGroupTimeSeriesSplit` introduciendo particiones guiadas por alineamiento DTW (Dynamic Time Warping) en lugar de cortes de tiempo estrictos.
+- **Verificación:** `tests/test_dtw_timeseries_split.py`.
 
-### [ ] SUPER-TAREA CMRE-21: Regresor NNLS Robusto (Simplex-Bound)
-- **Origen:** Postmortem `FAIL_09` (Tabular Playground).
-- **Problema:** Pesos negativos en ensambles correlacionados.
-- **Implementación:** Robustecer `SimpleNNLSBlender` con una API Sklearn compatible y barreras explícitas de regularización L1 para forzar dispersión en los pesos positivos.
-- **Verificación:** Refactor de `tests/test_nnls_blender.py`.
-
-### [ ] SUPER-TAREA CMRE-22: MONOCHROME1 Dicom Normalizer Estricto
-- **Origen:** Postmortem `FAIL_10` (RSNA Mammography).
-- **Problema:** Inversión de tejidos (tejido tumoral negro).
-- **Implementación:** Obligar en la carga de DICOMs de `MOD_INGEST` la lectura e inversión si `PhotometricInterpretation == 'MONOCHROME1'`, fallando la carga si el flag no existe en la cabecera.
-- **Verificación:** `tests/test_dicom_monochrome_strict.py`.
-
-### [ ] SUPER-TAREA CMRE-23: Sistema Dinámico de Agrupación Temporal (Purged Time Series)
-- **Origen:** Postmortem `FAIL_06` (IEEE-CIS Fraud Detection).
-- **Problema:** Fuga de variable objetivo en target encoding sin embargo temporal adecuado.
-- **Implementación:** Introducir `PurgedGroupTimeSeriesSplit` en `src/cmre/modules/split.py` que aplique periodos de cuarentena (embargo) garantizando que variables bayesianas no filtren identidad futura.
-- **Verificación:** `tests/test_purged_time_split.py`.
-
-### [ ] SUPER-TAREA CMRE-24: Auto-Sanitizador de Pérdidas por Ruido de Etiqueta (Soft-F1/Bi-Tempered)
-- **Origen:** Postmortem `FAIL_08` (Cassava Leaf Disease).
-- **Problema:** Memorización de etiquetas erróneas y colapso de validación mediante Cross-Entropy estándar.
-- **Implementación:** Escalar `SoftF1Loss` y agregar soporte a `BiTemperedLogisticLoss` en `src/cmre/modules/loss.py` como capas canónicas PyTorch que supriman las penalizaciones exponenciales en el extremo superior.
-- **Verificación:** `tests/test_bitempered_softf1_noise.py`.
+### [ ] SUPER-TAREA CMRE-30: Guardián Simbólico Híbrido con Auto-Atención para ARC-AGI
+- **Origen:** ARC-AGI 2026 y Postmortem `FAIL_11`.
+- **Problema:** Modelos TTT o simbólicos puros colapsan frente a reglas de abstracción complejas de largo alcance.
+- **Implementación:** Integrar una capa de Auto-Atención (Self-Attention) direccional en el iterador simbólico de `ArcAgiHybridSolver` para ponderar la relevancia de transformaciones geométricas previas.
+- **Verificación:** `tests/test_arc_self_attention_guard.py`.
 
 ---
 [VINCIT_OMNIA_VERITAS]
