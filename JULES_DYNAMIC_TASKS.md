@@ -9,41 +9,35 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [x] SUPER-TAREA CMRE-25: Sistema Avanzado de Detección OOD (Out-of-Distribution)
-- **Origen:** Evaluación transversal de competiciones en `ACTIVE_COMPETITIONS.json`.
-- **Problema:** Desviaciones entre los datos públicos (LB) y privados generan regresiones no anticipadas (Ej: FAIL_07).
-- **Implementación:** Introducir un módulo en `src/cmre/modules/ood.py` para analizar y reportar el divergence score entre train y las distribuciones entrantes durante inferencia.
-- **Verificación:** `tests/test_ood_detection.py`.
+### [ ] SUPER-TAREA CMRE-31: Optimizador de Latencia Adaptativa Multimodelo (Adaptive Latency Pruner)
+- **Origen:** Postmortem `FAIL_12` y competencia `0075-rsna-knee-detection` con presupuestos estrictos de latencia de inferencia (1.5s / muestra).
+- **Problema:** Ensamble multimodelo ciego explota los límites de tiempo de inferencia (timeout risks) en test, sin lograr maximizar la ganancia marginal del ROC-AUC.
+- **Implementación:** Mejorar `LatencyBudgetPruner` en `MOD_ENSEMBLE` usando un optimizador greedy que seleccione los pesos del ensamblaje iterativamente penalizando marginalmente la latencia para ajustarse a los 1.5s indicados en el perfil de competencia, integrando fallback para un único modelo especialista en caso de que un fold tarde demasiado.
+- **Verificación:** `tests/test_adaptive_latency_pruner.py`.
 
-### [ ] SUPER-TAREA CMRE-26: Attention-guided Patch Extraction para WSI
-- **Origen:** Postmortem `FAIL_03` (HuBMAP) y retos de visión grandes.
-- **Problema:** Inferencia ingenua gigapíxel desperdicia cómputo en zonas irrelevantes.
-- **Implementación:** Ampliar `MOD_INGEST` o crear `MOD_VISION` integrando una red de atención liviana (ej: Clam/Mil) que prediga la saliencia de los parches antes del crop de alta resolución, reduciendo la memoria requerida.
-- **Verificación:** `tests/test_attention_wsi_crop.py`.
+### [ ] SUPER-TAREA CMRE-32: Filtro Biofísico Mejorado para Decoys CASMI (Neutral Loss Checker)
+- **Origen:** Postmortem `FAIL_14` y competencia `0074-enveda-casmi2026`.
+- **Problema:** La búsqueda exhaustiva de moléculas introduce excesivos decoys. La validación con Tanimoto aislada no es suficiente porque ignora principios de fragmentación biofísica.
+- **Implementación:** Ampliar `EnvedaCasmiSolver` o introducir en `MOD_SIGNAL` un "Neutral Loss Checker" que descarte o penalice severamente predicciones que no satisfagan los axiomas de presencia de heterotómos requeridos en la fragmentación observada (e.g. presencia obligatoria de N si se reporta pérdida neutra de NH3).
+- **Verificación:** `tests/test_neutral_loss_checker.py`.
 
-### [ ] SUPER-TAREA CMRE-27: Grafo Molecular Extendido y Aumentación para CASMI
-- **Origen:** Enveda CASMI 2026 y Postmortem `FAIL_14`.
-- **Problema:** Fragmentación y decoys difíciles de discriminar solo con Tanimoto.
-- **Implementación:** Extender `EnvedaCasmiSolver` para integrar embeddings de subestructuras (Morgan / MACCS extendidos) y simular ruido instrumental en entrenamiento (aumentación espectral).
-- **Verificación:** `tests/test_molecular_graph_augmentation.py`.
-
-### [x] SUPER-TAREA CMRE-28: Meta-Controlador de Paradas Tempranas Múltiples (Multi-Metric Early Stopping)
-- **Origen:** Optimización genérica en todo el motor CMRE.
-- **Problema:** El Early Stopping en un solver a menudo se basa en una sola métrica de validación, ignorando el trade-off entre precision/recall (Ej: RSNA Mammography FAIL_10 relacionado a thresholds).
-- **Implementación:** Añadir `MultiMetricEarlyStopping` en `MOD_LOSS` (o módulo callback) que monitoree tanto la pérdida como métricas secundarias (pAUC, F1), deteniendo el entrenamiento solo cuando hay consenso.
-- **Verificación:** `tests/test_multimetric_early_stopping.py`.
-
-### [x] SUPER-TAREA CMRE-29: Dynamic Time-Warping y Cross-Validation Robusta en Series Temporales
-- **Origen:** Postmortem `FAIL_06` (Fuga temporal en target encoding) y Zindi AirQo.
-- **Problema:** Los esquemas actuales de CV de purga asumen estacionariedad tras el embargo, fallando en regímenes dinámicos.
-- **Implementación:** Mejorar `PurgedGroupTimeSeriesSplit` introduciendo particiones guiadas por alineamiento DTW (Dynamic Time Warping) en lugar de cortes de tiempo estrictos.
-- **Verificación:** `tests/test_dtw_timeseries_split.py`.
-
-### [ ] SUPER-TAREA CMRE-30: Guardián Simbólico Híbrido con Auto-Atención para ARC-AGI
-- **Origen:** ARC-AGI 2026 y Postmortem `FAIL_11`.
-- **Problema:** Modelos TTT o simbólicos puros colapsan frente a reglas de abstracción complejas de largo alcance.
-- **Implementación:** Integrar una capa de Auto-Atención (Self-Attention) direccional en el iterador simbólico de `ArcAgiHybridSolver` para ponderar la relevancia de transformaciones geométricas previas.
+### [ ] SUPER-TAREA CMRE-33: Arquitectura Híbrida TTT D8 + Self-Attention para ARC-AGI
+- **Origen:** Competencia `0076-arc-prize-2026` y Postmortem `FAIL_11`.
+- **Problema:** La generalización zero-shot en ARC falla en patrones relacionales remotos.
+- **Implementación:** Añadir `SelfAttentionGridTransformer` a la búsqueda simbólica de `ArcAgiHybridSolver`. Enlazar este Transformer tras la fase TTT con aumentaciones D8 para construir secuencias con pesos sobre sub-parches de 3x3 de la grilla 2D.
 - **Verificación:** `tests/test_arc_self_attention_guard.py`.
+
+### [ ] SUPER-TAREA CMRE-34: Sanitizador de Precisión Numérica Inter-Modulo (FP16/FP64)
+- **Origen:** Postmortem `FAIL_13` (Error de `Half vs Double` en T4).
+- **Problema:** Errores de RuntimeError al usar constantes calculadas en Float64 con Numpy pasadas inadvertidamente a tensores de red en Half (FP16).
+- **Implementación:** Implementar un middleware robusto `FP16PrecisionSanitizer` en `MOD_INGEST` y el núcleo `schemas.py` que envuelva y baje de precisión los valores de metadata normalizada justo antes de que entren al autocast de CUDA en los solvers radiológicos.
+- **Verificación:** `tests/test_fp16_precision_sanitizer.py`.
+
+### [ ] SUPER-TAREA CMRE-35: Ventana Cosenoidal (Hanning) WSI con Atención (Attention WSI Crop)
+- **Origen:** Postmortem `FAIL_03` (Artefactos en el borde de mosaico de WSI).
+- **Problema:** Recorte sin overlap ni suavizado afecta la métrica Dice Global en inferencia sobre parches gigantes de alta resolución.
+- **Implementación:** Enlazar en `MOD_INGEST` un Tiler de mosaicos con una función de suavizado cosenoidal de Hanning para superposiciones, minimizando discontinuidades de bordes en el parcheado para `RSNAKneeSolver` y problemas morfológicos análogos.
+- **Verificación:** `tests/test_attention_wsi_crop.py`.
 
 ---
 [VINCIT_OMNIA_VERITAS]
