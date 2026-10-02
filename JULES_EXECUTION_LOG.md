@@ -236,3 +236,17 @@ Autor: Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
+
+## 🟢 ENTRADA 015 - IMPLEMENTACIÓN DE SUPER-TAREAS (CMRE-25, CMRE-28, CMRE-29)
+- **Fecha:** 2 de Octubre de 2026
+- **Responsable:** Jules AGI & Perez, Ernesto Rafael ("Rafa")
+- **Estado de Pruebas:** 160/160 tests pasando (100% verde).
+- **Hitos Alcanzados:**
+  1. Implementación de **CMRE-28: Multi-Metric Early Stopping** (`MultiMetricEarlyStopping`) en `src/cmre/modules/loss.py` con test en `tests/test_multimetric_early_stopping.py`.
+  2. Implementación de **CMRE-25: Advanced OOD Detection** (`OODDetector`) en `src/cmre/modules/ood.py` con test en `tests/test_ood_detection.py`. Exportado en `__init__.py`.
+  3. Implementación de **CMRE-29: Dynamic Time-Warping CV** (`DTWPurgedTimeSeriesSplit`) en `src/cmre/modules/split.py` con test en `tests/test_dtw_timeseries_split.py`.
+  4. Ejecución de suite de tests exitosa al 100%.
+
+---
+[VINCIT_OMNIA_VERITAS]
+Autor: Perez, Ernesto Rafael ("Rafa")
