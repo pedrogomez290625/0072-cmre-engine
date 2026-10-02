@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
-**Versión:** 0.9.0
-**Estado:** STAGE_11_FINAL_CLOSURE_AND_BENCHMARKING 🟢 (100% Tests Pasando: 155/155)
+**Versión:** 1.0.0
+**Estado:** STAGE_12_FINAL_CLOSURE_AND_BENCHMARKING 🟢 (100% Tests Pasando: 160/160)
 **Última Auditoría:** 2 de Octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 155/155 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 160/160 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -67,10 +67,11 @@
 - **Motor de Benchmarking Universal:** Pruebas unitarias extendidas (155 pruebas) cubriendo extracción AST, perfilado JSON de torneos, constructores robustos de módulos (Loss, Split, Ingest, HPC) y simulación multi-modelo. Integrado exhaustivamente para prevenir regresiones.
 - **Generador Dinámico de Tareas:** El motor analiza en tiempo real `ACTIVE_COMPETITIONS.json` y postmortems históricos para autoproyectar su evolución a través de `JULES_DYNAMIC_TASKS.md`, abordando vulnerabilidades sistémicas antes de la inferencia en producción y permitiendo reescritura constante de su backlog de ingeniería.
 
-## 🌟 6. ACTUALIZACIONES RECIENTES (v0.9.0+)
+## 🌟 6. ACTUALIZACIONES RECIENTES (v1.0.0+)
+- **Módulos Avanzados (CMRE-25, CMRE-28, CMRE-29)**: Integración de `OODDetector` para validación OOD (CMRE-25), `MultiMetricEarlyStopping` para paradas tempranas seguras (CMRE-28), y `DTWPurgedTimeSeriesSplit` para robustez temporal dinámica (CMRE-29).
 - **AntiIdentityGuard**: Implementado en `src/cmre/services/submission_validator.py` para prevenir colapsos a 0.00 en Kaggle ARC-AGI, forzando transformaciones geométricas (D8) y cromáticas deterministas frente a inferencias idénticas a la entrada (Postmortem FAIL_11).
 - **Google Drive Continuous Bridge**: Herramienta CLI (`scripts/gdrive_hub.py`) ahora incluye comando `sync` que transfiere `claims_cmre.json` y `postmortems_failures_catalog.json` directo a la nube.
-- Pruebas incrementadas de 146 a 155 garantizando cobertura en las mitigaciones (100% de tests pasando de forma aislada).
+- Pruebas incrementadas garantizando cobertura en las mitigaciones (100% de tests pasando de forma aislada, un total de 160/160 pasados).
 
 ---
 [VINCIT_OMNIA_VERITAS]
