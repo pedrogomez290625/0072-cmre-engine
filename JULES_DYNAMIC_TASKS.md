@@ -9,7 +9,7 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-25: Sistema Avanzado de Detección OOD (Out-of-Distribution)
+### [x] SUPER-TAREA CMRE-25: Sistema Avanzado de Detección OOD (Out-of-Distribution)
 - **Origen:** Evaluación transversal de competiciones en `ACTIVE_COMPETITIONS.json`.
 - **Problema:** Desviaciones entre los datos públicos (LB) y privados generan regresiones no anticipadas (Ej: FAIL_07).
 - **Implementación:** Introducir un módulo en `src/cmre/modules/ood.py` para analizar y reportar el divergence score entre train y las distribuciones entrantes durante inferencia.
@@ -27,13 +27,13 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 - **Implementación:** Extender `EnvedaCasmiSolver` para integrar embeddings de subestructuras (Morgan / MACCS extendidos) y simular ruido instrumental en entrenamiento (aumentación espectral).
 - **Verificación:** `tests/test_molecular_graph_augmentation.py`.
 
-### [ ] SUPER-TAREA CMRE-28: Meta-Controlador de Paradas Tempranas Múltiples (Multi-Metric Early Stopping)
+### [x] SUPER-TAREA CMRE-28: Meta-Controlador de Paradas Tempranas Múltiples (Multi-Metric Early Stopping)
 - **Origen:** Optimización genérica en todo el motor CMRE.
 - **Problema:** El Early Stopping en un solver a menudo se basa en una sola métrica de validación, ignorando el trade-off entre precision/recall (Ej: RSNA Mammography FAIL_10 relacionado a thresholds).
 - **Implementación:** Añadir `MultiMetricEarlyStopping` en `MOD_LOSS` (o módulo callback) que monitoree tanto la pérdida como métricas secundarias (pAUC, F1), deteniendo el entrenamiento solo cuando hay consenso.
 - **Verificación:** `tests/test_multimetric_early_stopping.py`.
 
-### [ ] SUPER-TAREA CMRE-29: Dynamic Time-Warping y Cross-Validation Robusta en Series Temporales
+### [x] SUPER-TAREA CMRE-29: Dynamic Time-Warping y Cross-Validation Robusta en Series Temporales
 - **Origen:** Postmortem `FAIL_06` (Fuga temporal en target encoding) y Zindi AirQo.
 - **Problema:** Los esquemas actuales de CV de purga asumen estacionariedad tras el embargo, fallando en regímenes dinámicos.
 - **Implementación:** Mejorar `PurgedGroupTimeSeriesSplit` introduciendo particiones guiadas por alineamiento DTW (Dynamic Time Warping) en lugar de cortes de tiempo estrictos.

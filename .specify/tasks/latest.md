@@ -1,6 +1,6 @@
 # 📋 TAREAS ATÓMICAS DE DESARROLLO (TASKS LATEST) - CMRE v0.5.0
 ### Proyecto: `0072-cmre-engine` (Competitive ML Reasoning Engine)
-**Estado Actual:** 132/132 tests aprobados (100% en verde).
+**Estado Actual:** 160/160 tests aprobados (100% en verde).
 **Gobernanza:** Rafael "Rafa" Pérez & Angelus AGI
 **Agente Autónomo en la Nube:** Jules (Google Cloud)
 
@@ -70,6 +70,11 @@
 - [x] **TASK-INIT-012 (Inicialización y Memoria Dinámica 1 Oct):**
   - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
   - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge/ y knowledge_db/, ejecutar tests (155 pasando) y asentar log en JULES_EXECUTION_LOG.md.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-EVOL-015 (Implementación de Super-Tareas CMRE-25, CMRE-28, CMRE-29):**
+  - **Objetivo:** Fortalecer y generalizar el motor universal CMRE implementando y refactorizando módulos agnósticos a la modalidad.
+  - **Requerimiento:** Implementar MultiMetricEarlyStopping (CMRE-28), OODDetector (CMRE-25) y DTWPurgedTimeSeriesSplit (CMRE-29). Asegurar tests al 100%. Actualizar logs y estado de arquitectura.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
 
 - [x] **TASK-INIT-014 (Inicialización y Memoria Dinámica 2 Oct):**

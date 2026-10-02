@@ -9,7 +9,7 @@ Implements custom loss functions for extreme medical imbalance and competition m
 from __future__ import annotations
 
 import math
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 
 def asymmetric_loss_numpy(
@@ -220,3 +220,87 @@ class AsymmetricLoss(nn.Module):
 
         return -loss.sum()
 '''
+
+class MultiMetricEarlyStopping:
+    """Multi-Metric Early Stopping Meta-Controller (Claim CMRE-28).
+
+    Monitors multiple metrics simultaneously (e.g. loss and pAUC/F1) and only stops
+    training when there is a consensus of no improvement across the metrics.
+    Prevents premature stopping when loss plateaus but secondary metrics like precision/recall
+    are still improving (resolves RSNA Mammography FAIL_10).
+    """
+
+    def __init__(self, patience: int = 5, min_delta: float = 0.0, mode: str = "all"):
+        """
+        Args:
+            patience: Number of epochs with no improvement after which training will be stopped.
+            min_delta: Minimum change in the monitored quantity to qualify as an improvement.
+            mode: "all" (stop if ALL metrics fail to improve) or "any" (stop if ANY metric fails).
+                  Default is "all" to be conservative against premature stopping.
+        """
+        self.patience = patience
+        self.min_delta = min_delta
+        self.mode = mode
+
+        # metric_name -> {"best": float, "mode": "min"|"max", "wait": int}
+        self.metrics_state: dict[str, dict[str, Any]] = {}
+        self.stopped_epoch = 0
+        self.stop_training = False
+
+    def register_metric(self, name: str, mode: str = "min") -> None:
+        """Registers a metric to track. Mode must be 'min' or 'max'."""
+        best_val = float("inf") if mode == "min" else float("-inf")
+        self.metrics_state[name] = {"best": best_val, "mode": mode, "wait": 0}
+
+    def __call__(self, epoch: int, metrics: dict[str, float]) -> bool:
+        """
+        Checks if training should stop.
+        Returns True if early stopping condition is met.
+        """
+        if self.stop_training:
+            return True
+
+        improvements = []
+
+        for name, current_val in metrics.items():
+            if name not in self.metrics_state:
+                continue
+
+            state = self.metrics_state[name]
+            mode = state["mode"]
+            best = state["best"]
+
+            improved = False
+            if mode == "min":
+                if current_val < best - self.min_delta:
+                    improved = True
+            else: # max
+                if current_val > best + self.min_delta:
+                    improved = True
+
+            if improved:
+                state["best"] = current_val
+                state["wait"] = 0
+                improvements.append(True)
+            else:
+                state["wait"] += 1
+                improvements.append(False)
+
+        # Decide based on mode
+        if not improvements:
+            return False # Nothing to track
+
+        if self.mode == "all":
+            # We stop if ALL tracked metrics have waited >= patience
+            should_stop = all(self.metrics_state[m]["wait"] >= self.patience for m in self.metrics_state)
+        elif self.mode == "any":
+             # We stop if ANY tracked metric has waited >= patience
+             should_stop = any(self.metrics_state[m]["wait"] >= self.patience for m in self.metrics_state)
+        else:
+            should_stop = False
+
+        if should_stop:
+            self.stopped_epoch = epoch
+            self.stop_training = True
+
+        return self.stop_training

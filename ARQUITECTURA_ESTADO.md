@@ -36,11 +36,12 @@
 ### Los Módulos Canónicos de Ingeniería (`src/cmre/modules/`)
 1. **`src/cmre/modules/ingest.py` (`MOD_INGEST`):** Ingesta física DICOM, aplicación estricta de Modality/VOI LUT, MONOCHROME1 inversion y recorte morfológico de ROI tisular.
 2. **`src/cmre/modules/signal.py` (`MOD_SIGNAL`):** Agregaciones jerárquicas delta (`feature - mean_group`), Target Encoder Bayesiano out-of-fold y arbitraje híbrido SDSI.
-3. **`src/cmre/modules/split.py` (`MOD_SPLIT`):** Particiones con cero fuga: K-Fold Disjunto por Grupos (`group_disjoint_kfold`), Series Temporales Purgadas con embargo (`purged_timeseries_split`) y Scaffold Molecular Bemis-Murcko (`molecular_scaffold_split`).
-4. **`src/cmre/modules/loss.py` (`MOD_LOSS`):** Asymmetric Loss (`asymmetric_loss_numpy`), Soft-F1 diferenciable y módulos PyTorch `AsymmetricLoss` y `SoftF1Loss` analíticamente validados con `torch.autograd.gradcheck` para desbalance médico extremo.
+3. **`src/cmre/modules/split.py` (`MOD_SPLIT`):** Particiones con cero fuga: K-Fold Disjunto por Grupos (`group_disjoint_kfold`), Series Temporales Purgadas con embargo (`purged_timeseries_split`), Scaffold Molecular Bemis-Murcko (`molecular_scaffold_split`), y alineamiento Dynamic Time-Warping CV (`DTWPurgedTimeSeriesSplit`, CMRE-29).
+4. **`src/cmre/modules/loss.py` (`MOD_LOSS`):** Asymmetric Loss (`asymmetric_loss_numpy`), Soft-F1 diferenciable, módulos PyTorch `AsymmetricLoss` y `SoftF1Loss`, y el Meta-Controlador de Paradas Tempranas Múltiples (`MultiMetricEarlyStopping`, CMRE-28).
 5. **`src/cmre/modules/ensemble.py` (`MOD_ENSEMBLE`):** Ensamble con regresión no-negativa NNLS (`SimpleNNLSBlender`), promediado de rangos percentiles (`rank_average_predictions`), **Class-Wise Asymmetric Matrix Blending** (`ClassWiseAsymmetricBlender`) y poda greedy por presupuesto de tiempo (`LatencyBudgetPruner`).
 6. **`src/cmre/modules/hpc.py` (`MOD_HPC`):** Optimización a nivel de silicio: Popcount de bitsets de alta dimensión (`BitsetFingerprint`) y Disjoint Set Union (`DisjointSetUnion`) con compresión de caminos.
-7. **`src/cmre/modules/registry.py`:** Mapeo determinista entre IDs de claims (`C01`-`C36`, `FC01`-`FC14`, `HPC01`-`HPC10`) y código ejecutable.
+7. **`src/cmre/modules/ood.py` (`MOD_OOD`):** Detección Z-score based OOD (`OODDetector`) contra regresiones de distribución (implementación CMRE-25).
+8. **`src/cmre/modules/registry.py`:** Mapeo determinista entre IDs de claims (`C01`-`C36`, `FC01`-`FC14`, `HPC01`-`HPC10`) y código ejecutable.
 
 ---
 
