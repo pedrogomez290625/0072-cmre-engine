@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_13_AUTO_EVOLUTION_READY 🟢 (100% Tests Pasando: 160/160)
+**Estado:** STAGE_13_AUTO_EVOLUTION_READY 🟢 (100% Tests Pasando: 165/165)
 **Última Auditoría:** 4 de Octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 160/160 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 165/165 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -71,7 +71,10 @@
 - **Módulos Avanzados (CMRE-25, CMRE-28, CMRE-29)**: Integración de `OODDetector` para validación OOD (CMRE-25), `MultiMetricEarlyStopping` para paradas tempranas seguras (CMRE-28), y `DTWPurgedTimeSeriesSplit` para robustez temporal dinámica (CMRE-29).
 - **AntiIdentityGuard**: Implementado en `src/cmre/services/submission_validator.py` para prevenir colapsos a 0.00 en Kaggle ARC-AGI, forzando transformaciones geométricas (D8) y cromáticas deterministas frente a inferencias idénticas a la entrada (Postmortem FAIL_11).
 - **Google Drive Continuous Bridge**: Herramienta CLI (`scripts/gdrive_hub.py`) ahora incluye comando `sync` que transfiere `claims_cmre.json` y `postmortems_failures_catalog.json` directo a la nube.
-- Pruebas incrementadas garantizando cobertura en las mitigaciones (100% de tests pasando de forma aislada, un total de 160/160 pasados).
+- Pruebas incrementadas garantizando cobertura en las mitigaciones (100% de tests pasando de forma aislada, un total de 165/165 pasados).
+
+---
+- **Super-Tareas Resolutivas (CMRE-36 a CMRE-40)**: Integración de `NelderMeadThresholdOptimizer` en MOD_ENSEMBLE (CMRE-36), `OOFTargetEncoder` en MOD_SIGNAL (CMRE-37), `BiTemperedLogisticLoss` en MOD_LOSS (CMRE-38), `NonNegativeLeastSquaresBlender` forzando ensamble simplex positivo en MOD_ENSEMBLE (CMRE-39) y `StrictDicomLUTDecoder` como decodificador seguro MONOCHROME2 en MOD_INGEST (CMRE-40). Incremento a 165 tests unitarios cubriendo los componentes.
 
 ---
 [VINCIT_OMNIA_VERITAS]

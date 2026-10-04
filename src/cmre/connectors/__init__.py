@@ -49,3 +49,4 @@ def get_connectors(settings=None):
         except Exception:  # noqa: BLE001
             pass
     return out
+from .winning_writeup_miner import WinningWriteupMiner

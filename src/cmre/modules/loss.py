@@ -304,3 +304,82 @@ class MultiMetricEarlyStopping:
             self.stop_training = True
 
         return self.stop_training
+
+class BiTemperedLogisticLoss(nn.Module):
+    """Bi-Tempered Logistic Loss for label noise robustness (Claim CMRE-38).
+
+    Uses t1 and t2 parameters to create a heavy-tailed distribution that bounds
+    the loss and is robust to mislabeled examples (e.g. 15-20% clinical noise).
+    Based on Google Research "Robust Bi-Tempered Logistic Loss Based on Tsallis Divergence".
+    """
+
+    def __init__(self, t1: float = 0.8, t2: float = 1.2, label_smoothing: float = 0.0, num_iters: int = 5):
+        super().__init__()
+        self.t1 = t1
+        self.t2 = t2
+        self.label_smoothing = label_smoothing
+        self.num_iters = num_iters
+
+    def log_t(self, u, t):
+        if t == 1.0:
+            return torch.log(u)
+        else:
+            return (u.pow(1.0 - t) - 1.0) / (1.0 - t)
+
+    def exp_t(self, u, t):
+        if t == 1.0:
+            return torch.exp(u)
+        else:
+            return torch.relu(1.0 + (1.0 - t) * u).pow(1.0 / (1.0 - t))
+
+    def compute_normalization_fixed_point(self, activations, t, num_iters):
+        mu = torch.max(activations, dim=-1, keepdim=True).values
+        normalized_activations_step_0 = activations - mu
+
+        normalized_activations = normalized_activations_step_0
+        i = 0
+        while i < num_iters:
+            i += 1
+            logt_partition = torch.sum(
+                self.exp_t(normalized_activations, t), dim=-1, keepdim=True
+            )
+            normalized_activations = normalized_activations_step_0 * \
+                                     (logt_partition.pow(1.0 - t))
+
+        logt_partition = torch.sum(
+            self.exp_t(normalized_activations, t), dim=-1, keepdim=True
+        )
+        normalization_constants = - self.log_t(1.0 / logt_partition, t) + mu
+
+        return normalization_constants
+
+    def compute_probabilities(self, activations, t, num_iters):
+        normalization_constants = self.compute_normalization_fixed_point(activations, t, num_iters)
+        return self.exp_t(activations - normalization_constants, t)
+
+    def forward(self, activations, labels):
+        """
+        Args:
+            activations: Raw logits (B, C)
+            labels: Integer target labels (B,) or one-hot (B, C)
+        """
+        if labels.dim() == 1 or (labels.dim() == 2 and labels.shape[1] == 1):
+            labels_one_hot = torch.nn.functional.one_hot(labels.long().view(-1), num_classes=activations.shape[-1]).float()
+        else:
+            labels_one_hot = labels.float()
+
+        if self.label_smoothing > 0:
+            num_classes = labels_one_hot.shape[-1]
+            labels_one_hot = labels_one_hot * (1 - self.label_smoothing) + self.label_smoothing / num_classes
+
+        probabilities = self.compute_probabilities(activations, self.t2, self.num_iters)
+
+        # Loss formula for bi-tempered logistic loss
+        loss_values = labels_one_hot * self.log_t(labels_one_hot + 1e-10, self.t1) \
+                      - labels_one_hot * self.log_t(probabilities, self.t1) \
+                      - labels_one_hot.pow(2.0 - self.t1) / (2.0 - self.t1) \
+                      + probabilities.pow(2.0 - self.t1) / (2.0 - self.t1)
+
+        loss_values = loss_values.sum(dim=-1)
+
+        return loss_values.mean()

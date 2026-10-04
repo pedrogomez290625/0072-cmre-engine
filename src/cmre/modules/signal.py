@@ -118,3 +118,57 @@ def oof_bayesian_target_encode(df_train, df_test, cat_cols, target_col, cv_split
 
     return train_encoded, test_encoded
 '''
+
+class OOFTargetEncoder:
+    """Out-of-Fold Target Encoder (Claim CMRE-37).
+
+    Prevents massive data leakage by calculating categorical target encodings
+    using a strict OOF scheme. Applies Dirichlet regularization and adds Gaussian noise
+    in each training fold before transforming the validation fold.
+    """
+
+    def __init__(self, m_smoothing: float = 20.0, noise_level: float = 0.01):
+        self.m_smoothing = m_smoothing
+        self.noise_level = noise_level
+
+    def fit_transform(
+        self,
+        categories: List[Any],
+        targets: List[float],
+        cv_splits: List[Tuple[List[int], List[int]]]
+    ) -> List[float]:
+        """
+        Fits encoder per fold and returns the OOF transformed categories.
+
+        Args:
+            categories: List of categorical values for the entire training set.
+            targets: Corresponding target values.
+            cv_splits: List of tuples containing (train_indices, val_indices).
+
+        Returns:
+            List of OOF encoded values matching the original categories size.
+        """
+        n_samples = len(categories)
+        oof_encoded = [0.0] * n_samples
+
+        for train_idx, val_idx in cv_splits:
+            train_cats = [categories[i] for i in train_idx]
+            train_targets = [targets[i] for i in train_idx]
+
+            # Using our base Bayesian TE for Dirichlet (m-estimate) smoothing
+            encoder = BayesianOofTargetEncoder(m_smoothing=self.m_smoothing, noise_level=0.0)
+            encoder.fit(train_cats, train_targets)
+
+            # Transform validation set without noise (noise is generally for train data during OOF)
+            # Actually, standard practice for TE is to add noise to the *transformed* values
+            # to further prevent overfitting when the OOF features are used by the downstream model.
+            val_cats = [categories[i] for i in val_idx]
+            val_encoded = encoder.transform(val_cats)
+
+            for i, v_idx in enumerate(val_idx):
+                encoded_val = val_encoded[i]
+                if self.noise_level > 0.0:
+                    encoded_val += random.gauss(0.0, self.noise_level)
+                oof_encoded[v_idx] = encoded_val
+
+        return oof_encoded
