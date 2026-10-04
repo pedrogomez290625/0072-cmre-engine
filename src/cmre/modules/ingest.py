@@ -125,3 +125,69 @@ def load_and_crop_mammogram(dicom_path, target_size=(1024, 512), voi_lut=True):
     img = cv2.resize(img, (target_size[1], target_size[0]), interpolation=cv2.INTER_AREA)
     return img
 '''
+
+class StrictDicomLUTDecoder:
+    """Robust DICOM LUT and Photometric Decoder (Claim CMRE-40).
+
+    Acts as a middleware to analyze standard DICOM metadata. If PhotometricInterpretation
+    is MONOCHROME1, it dynamically inverts the pixel matrix to canonical MONOCHROME2
+    before rescaling and clipping. This prevents models from confusing tumors with normal tissue.
+    """
+
+    def __init__(self, apply_voi_lut: bool = True):
+        self.apply_voi_lut = apply_voi_lut
+
+    def decode(self, pixel_array: Any, metadata: Dict[str, Any]) -> Any:
+        """
+        Decodes a pixel array based on DICOM metadata.
+
+        Args:
+            pixel_array: The raw pixel array (list or numpy array).
+            metadata: Dictionary containing DICOM tags (e.g. RescaleSlope, PhotometricInterpretation).
+
+        Returns:
+            The decoded and rescaled pixel array.
+        """
+        # Can use process_dicom_array logic or similar pipeline, but enforcing the strict
+        # inversion *before* any normalization according to the task description.
+
+        arr = pixel_array
+
+        # Invert MONOCHROME1 dynamically to canonical MONOCHROME2
+        photometric = str(metadata.get("PhotometricInterpretation", "")).strip().upper()
+        if photometric == "MONOCHROME1":
+            if hasattr(arr, "max"):
+                max_val = arr.max()
+                arr = max_val - arr
+            else:
+                max_val = max(arr)
+                arr = [max_val - val for val in arr]
+
+        # Rescale Slope / Intercept
+        slope = float(metadata.get("RescaleSlope", 1.0) or 1.0)
+        intercept = float(metadata.get("RescaleIntercept", 0.0) or 0.0)
+
+        if slope != 1.0 or intercept != 0.0:
+            if hasattr(arr, "max"):
+                arr = arr * slope + intercept
+            else:
+                arr = [val * slope + intercept for val in arr]
+
+        # Apply VOI LUT / Windowing
+        wc = metadata.get("WindowCenter")
+        ww = metadata.get("WindowWidth")
+        if self.apply_voi_lut and wc is not None and ww is not None:
+            try:
+                wc_val = float(wc[0] if isinstance(wc, (list, tuple)) else wc)
+                ww_val = float(ww[0] if isinstance(ww, (list, tuple)) else ww)
+                lower = wc_val - 0.5 - (ww_val - 1) / 2.0
+                upper = wc_val - 0.5 + (ww_val - 1) / 2.0
+
+                if hasattr(arr, "clip"):
+                    arr = (arr.clip(lower, upper) - lower) / max(ww_val - 1, 1.0)
+                else:
+                    arr = [min(max((v - lower) / max(ww_val - 1, 1.0), 0.0), 1.0) for v in arr]
+            except Exception:
+                pass
+
+        return arr

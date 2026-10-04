@@ -38,3 +38,8 @@ __all__ = [
     "CLAIM_MODULE_MAP",
     "get_module_for_claim",
 ]
+from .ensemble import NelderMeadThresholdOptimizer
+from .signal import OOFTargetEncoder
+from .loss import BiTemperedLogisticLoss
+from .ensemble import NonNegativeLeastSquaresBlender
+from .ingest import StrictDicomLUTDecoder

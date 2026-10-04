@@ -91,3 +91,8 @@
   - **Objetivo:** Ejecutar cierre, benchmarking final y proyectar nuevas super-tareas para el motor (CMRE-36 a CMRE-40).
   - **Requerimiento:** Verificar 160 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y reescribir JULES_DYNAMIC_TASKS.md. Abrir PR limpio hacia main.
   - **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
+
+- [x] **TASK-EVOL-019 (Implementación de Super-Tareas CMRE-36 a CMRE-40):**
+  - **Objetivo:** Ejecutar implementación y testeo unitario de CMRE-36 a CMRE-40, actualizando tableros y logs.
+  - **Requerimiento:** Verificar 165 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y JULES_DYNAMIC_TASKS.md.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez

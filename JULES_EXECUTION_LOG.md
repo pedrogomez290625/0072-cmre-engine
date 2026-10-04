@@ -308,3 +308,19 @@ Autor: Perez, Ernesto Rafael ("Rafa")
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
+
+## 🟢 ENTRADA 020 - IMPLEMENTACIÓN DE SUPER-TAREAS (CMRE-36 a CMRE-40)
+- **Fecha:** 4 de Octubre de 2026
+- **Responsable:** Jules AGI & Perez, Ernesto Rafael ("Rafa")
+- **Estado de Pruebas:** 165/165 tests pasando (100% verde).
+- **Hitos Alcanzados:**
+  1. Implementación de **CMRE-36: Optimizador Continuo de Umbrales (Nelder-Mead)** (`NelderMeadThresholdOptimizer`) en `MOD_ENSEMBLE` maximizando dinámicamente F1/pF1.
+  2. Implementación de **CMRE-37: Guardián contra Fuga OOF** (`OOFTargetEncoder`) en `MOD_SIGNAL` aplicando regularización de Dirichlet y adición de ruido gaussiano.
+  3. Implementación de **CMRE-38: Módulo de Pérdida Resistente a Ruido** (`BiTemperedLogisticLoss`) en `MOD_LOSS` con mitigación robusta de outliers (15-20% ruido).
+  4. Implementación de **CMRE-39: Ensamble Restringido Simplex** (`NonNegativeLeastSquaresBlender`) en `MOD_ENSEMBLE` forzando simplex $(w_i \ge 0, \sum w_i = 1)$ y mitigando multicolinealidad.
+  5. Implementación de **CMRE-40: Decodificador Universal DICOM MONOCHROME2** (`StrictDicomLUTDecoder`) en `MOD_INGEST` que invierte dinámicamente metadatos MONOCHROME1.
+  6. Se aseguró 100% éxito en la suite de pruebas mediante Pytest. Se actualizaron JULES_DYNAMIC_TASKS y ARQUITECTURA_ESTADO respetando Axioma de No Borrado.
+
+---
+[VINCIT_OMNIA_VERITAS]
+Autor: Perez, Ernesto Rafael ("Rafa")

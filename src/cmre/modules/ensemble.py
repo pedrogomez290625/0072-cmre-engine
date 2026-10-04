@@ -1,4 +1,4 @@
-"""MOD_ENSEMBLE - Competitive Ensembling & Blending Module.
+"""MOD_ENSEMBLE - Meta-Modeling & Blending Module.
 
 Implements battle-tested grandmaster ensembling methods:
 - Non-Negative Least Squares (NNLS) OOF blending (Claim C23)
@@ -9,7 +9,8 @@ Implements battle-tested grandmaster ensembling methods:
 from __future__ import annotations
 
 import math
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple, Dict
+import scipy.optimize
 
 
 def rank_average_predictions(predictions_matrix: List[List[float]]) -> List[float]:
@@ -258,6 +259,54 @@ class LatencyBudgetPruner:
         return selected, accum_latency, accum_score
 
 
+class NelderMeadThresholdOptimizer:
+    """Continuous Threshold Optimizer using Nelder-Mead method.
+
+    Dynamically finds the optimal asymmetric threshold (e.g. 0.05) on OOF predictions
+    to maximize a target metric (like F1 or pF1) without collapsing recall on extreme class imbalance.
+    (Claim CMRE-36).
+    """
+
+    def __init__(self, metric_fn: Callable[[List[float], List[float]], float], init_threshold: float = 0.5):
+        self.metric_fn = metric_fn
+        self.best_threshold = init_threshold
+
+    def fit(self, y_true: List[float], y_pred_probs: List[float]) -> NelderMeadThresholdOptimizer:
+        if not y_true or not y_pred_probs:
+            return self
+
+        def objective(th: List[float]) -> float:
+            t = max(0.001, min(th[0], 0.999))
+            # metric_fn should be maximized, so we minimize negative metric
+            preds = [1.0 if p >= t else 0.0 for p in y_pred_probs]
+            return -self.metric_fn(y_true, preds)
+
+        import numpy as np
+
+        # Nelder-Mead can get stuck if initialized at 0.5 and the gradient is 0.
+        # We can evaluate a few points first to give it a good start if F1 is 0.
+        best_val = float("inf")
+        best_th = self.best_threshold
+        for cand_th in np.linspace(0.01, 0.99, 99):
+            val = objective([cand_th])
+            if val < best_val:
+                best_val = val
+                best_th = cand_th
+
+        result = scipy.optimize.minimize(
+            objective,
+            x0=[best_th],
+            method='Nelder-Mead',
+            options={'xatol': 1e-4, 'fatol': 1e-4}
+        )
+        self.best_threshold = float(result.x[0])
+        self.best_threshold = max(0.001, min(self.best_threshold, 0.999))
+        return self
+
+    def predict(self, y_pred_probs: List[float]) -> List[float]:
+        return [1.0 if p >= self.best_threshold else 0.0 for p in y_pred_probs]
+
+
 CODE_TEMPLATE_NNLS_BLEND = '''# [CMRE MOD_ENSEMBLE] Non-Negative Least Squares & Hill-Climbing Blend
 import numpy as np
 from scipy.optimize import nnls
@@ -277,3 +326,71 @@ def fit_nnls_blend(oof_preds_dict, y_true):
     return dict(zip(model_names, weights))
 '''
 
+class NonNegativeLeastSquaresBlender:
+    """Strict Simplex-Restricted Blender (Claim CMRE-39).
+
+    Replaces naive Ordinary Least Squares (OLS) which collapses Log-Loss when
+    meta-models are highly collinear by producing negative coefficients.
+    Mathematically forces weights to the probability simplex: w_i >= 0, sum(w_i) = 1.
+    """
+
+    def __init__(self, tol: float = 1e-6):
+        self.tol = tol
+        self.weights: List[float] = []
+
+    def fit(self, preds_matrix: List[List[float]], y_true: List[float]) -> NonNegativeLeastSquaresBlender:
+        m = len(preds_matrix)
+        n = len(y_true)
+        if m == 0 or n == 0:
+            return self
+
+        import numpy as np
+        from scipy.optimize import minimize
+
+        # X is (N, M)
+        X = np.column_stack(preds_matrix)
+        y = np.array(y_true)
+
+        def objective(w):
+            residuals = X @ w - y
+            return 0.5 * np.sum(residuals ** 2)
+
+        # Gradient of 0.5 * ||Xw - y||^2 is X^T (Xw - y)
+        def gradient(w):
+            return X.T @ (X @ w - y)
+
+        # Constraint: sum(w) = 1
+        constraints = ({'type': 'eq', 'fun': lambda w: np.sum(w) - 1.0, 'jac': lambda w: np.ones_like(w)})
+
+        # Bounds: w_i >= 0
+        bounds = [(0.0, 1.0) for _ in range(m)]
+
+        # Initial guess: uniform
+        w0 = np.ones(m) / m
+
+        res = minimize(
+            objective,
+            w0,
+            method='SLSQP',
+            jac=gradient,
+            bounds=bounds,
+            constraints=constraints,
+            tol=self.tol
+        )
+
+        # Clean small numerical artifacts and re-normalize exactly
+        w_clean = np.maximum(res.x, 0.0)
+        tot = np.sum(w_clean)
+        if tot > 0:
+            w_clean = w_clean / tot
+        else:
+            w_clean = np.ones(m) / m
+
+        self.weights = w_clean.tolist()
+        return self
+
+    def predict(self, preds_matrix: List[List[float]]) -> List[float]:
+        m = len(preds_matrix)
+        n = len(preds_matrix[0]) if m > 0 else 0
+        w = self.weights if self.weights else [1.0 / max(m, 1)] * m
+        return [sum(w[j] * preds_matrix[j][i] for j in range(m)) for i in range(n)]

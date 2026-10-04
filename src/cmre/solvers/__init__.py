@@ -22,3 +22,4 @@ __all__ = [
     "RSNAKneeSolver",
     "ArcAgiHybridSolver",
 ]
+from .blueprint_template import CMRESolverBlueprint
