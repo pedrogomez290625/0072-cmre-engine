@@ -1,6 +1,6 @@
 # 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
-**Iteración:** Sesión Final de Cierre y Benchmarking (4 de Octubre 2026)
+**Iteración:** Sesión Final de Cierre y Benchmarking (4 de Octubre 2026) - Auto-Reescritura
 **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS.json` y el `data/knowledge/postmortems_failures_catalog.json`. Su objetivo es proyectar las mitigaciones a las vulnerabilidades encontradas y potenciar los solvers de las competencias activas (RSNA Knee, CASMI, ARC-AGI).
@@ -9,35 +9,30 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [x] SUPER-TAREA CMRE-36: Optimizador Continuo de Umbrales (Nelder-Mead Thresholding)
-- **Origen:** Postmortem `FAIL_01` (RSNA Breast Cancer) y desalineamiento de métrica pF1.
-- **Problema:** Evaluar con un umbral fijo estático de 0.50 en problemas con desbalance extremo (ej. prevalencia < 5%) colapsa completamente la métrica (pF1 o F1).
-- **Implementación:** Agregar una clase `NelderMeadThresholdOptimizer` en `MOD_ENSEMBLE` o `MOD_LOSS` que tome predicciones de validación cruzada y encuentre el umbral asimétrico óptimo (ej. 0.05) maximizando dinámicamente la métrica sin colapsar el recall.
-- **Verificación:** `tests/test_nelder_mead_threshold_optimizer.py`.
+### [ ] SUPER-TAREA CMRE-41: Guardián Anti-Identidad con Test-Time Training (TTT) Expandido
+- **Origen:** Postmortem `FAIL_11` (ARC Prize 2026 - Colapso Simbólico de Identidad).
+- **Problema:** En ARC-AGI, los motores simbólicos pueden agotar el tiempo y conmutar a un fallback que devuelve la entrada sin modificar, lo cual garantiza un 0 de precisión ya que la salida nunca es igual a la entrada.
+- **Implementación:** Refinar el guardián anti-identidad en `src/cmre/services/submission_validator.py` o `MOD_OOD`. Implementar un módulo unificado de transformaciones (aumentaciones $D_8$ completas y variaciones topológicas) asegurando divergencia cromática y geométrica ante cualquier fallback que intente colapsar a identidad pura.
 
-### [x] SUPER-TAREA CMRE-37: Guardián contra Fuga en Target Encoding (Out-of-Fold TE)
-- **Origen:** Postmortem `FAIL_06` (Home Credit Default Risk).
-- **Problema:** Calcular variables categóricas de target encoding sin un esquema riguroso OOF provoca data leakage masivo, inflando artificialmente el ROC-AUC en validación cruzada para luego colapsar en producción.
-- **Implementación:** Refactorizar o añadir `OOFTargetEncoder` en `MOD_SIGNAL` que fuerce de manera estricta la partición, aplicando regularización de Dirichlet y adición de ruido gaussiano en cada pliegue de entrenamiento antes de transformar la validación.
-- **Verificación:** `tests/test_oof_target_encoder.py`.
+### [ ] SUPER-TAREA CMRE-42: Limitador de Presupuesto de Latencia Multi-Flujo
+- **Origen:** Postmortem `FAIL_12` (RSNA Knee 2026 - Explosión de Latencia de Ensamble).
+- **Problema:** Ensambles complejos upstream con 30+ modelos violan los límites de Kaggle de 9 horas, causando fallas en el envío privado.
+- **Implementación:** Ampliar `LatencyBudgetPruner` en `MOD_ENSEMBLE` para actuar como un controlador de latencia que pueda abortar dinámicamente o aplicar poda *greedy* sobre rutas de cómputo en `RSNAKneeSolver` y otras arquitecturas densas en caso de superar el presupuesto seguro por muestra.
 
-### [x] SUPER-TAREA CMRE-38: Módulo de Pérdida Resistente a Ruido de Etiquetas (Soft-F1 Weighted)
-- **Origen:** Postmortem `FAIL_08` (Cassava Leaf Disease).
-- **Problema:** En dominios médicos o biológicos con diagnósticos inexactos de campo (15-20% de ruido en etiquetas), la Cross-Entropy pura corrompe los gradientes porque fuerza a la red a memorizar el ruido.
-- **Implementación:** Potenciar `MOD_LOSS` con un implementador puro de `BiTemperedLogisticLoss` o extender `SoftF1Loss` con mitigación robusta de outliers a través de Label Smoothing diferencial por clase.
-- **Verificación:** `tests/test_noise_robust_loss.py`.
+### [ ] SUPER-TAREA CMRE-43: Sanitizador Universal de Tipos Mixtos CUDA (FP16/FP64)
+- **Origen:** Postmortem `FAIL_13` (RSNA Knee 2026 - Discordancia de Doble Precisión FP16/FP64).
+- **Problema:** Constantes de normalización originadas en NumPy (`float64`) crashean CUDA al interactuar sin sanitizar con operaciones `torch.autocast` (`half`/`float16`).
+- **Implementación:** Agregar una utilidad general de sanitización en `MOD_HPC` o `MOD_INGEST` que inspeccione automáticamente el Dtype de todos los tensores y diccionarios de buffers cruzando la frontera NumPy/PyTorch hacia PyTorch/CUDA FP16, asegurando que las constantes estén forzadas a `float32` antes del auto-casteo de precisión mixta.
 
-### [x] SUPER-TAREA CMRE-39: Ensamble Restringido Simplex Positivo (NNLS Stacking estricto)
-- **Origen:** Postmortem `FAIL_09` (Tabular Playground Series).
-- **Problema:** Usar Ordinary Least Squares (OLS) sobre meta-modelos altamente colineales resulta en coeficientes negativos masivos, lo que destruye el Log-Loss (probabilidades menores que 0).
-- **Implementación:** Reemplazar el backend ingenuo en `MOD_ENSEMBLE` y garantizar que la clase de ensamblaje (ej. `NonNegativeLeastSquaresBlender`) fuerce matemáticamente los pesos en el simplex $(w_i \ge 0, \sum w_i = 1)$.
-- **Verificación:** `tests/test_nnls_simplex_blender.py`.
+### [ ] SUPER-TAREA CMRE-44: Optimizador Universal del Axioma de Ausencia SIRIUS (Filtro Neutro Biofísico)
+- **Origen:** Postmortem `FAIL_14` (Enveda CASMI 2026 - Sobrecarga de Decoys y Falsa Identidad).
+- **Problema:** Buscar coincidencias de espectros masivos filtrando solo por la delta de masa permite que decoys moleculares sin sentido biológico monopolicen el Top-K MRR@25.
+- **Implementación:** Generalizar el filtro SIRIUS del Axioma de Ausencia en `MOD_OOD` o un nuevo espacio quimio-biológico que penalice severamente compuestos que, dadas ciertas pérdidas neutras obligatorias en MS/MS (ej. H2O o CO2), no contengan los átomos fundamentales esperados (ej. Oxígeno).
 
-### [x] SUPER-TAREA CMRE-40: Auto-Decodificador Universal DICOM MONOCHROME2
-- **Origen:** Postmortem `FAIL_10` (RSNA Breast Cancer) con la etiqueta PhotometricInterpretation.
-- **Problema:** Ignorar las tablas Modality LUT y la inversión MONOCHROME1 en DICOM causa que los modelos confundan regiones tumorales y tejido normal en el 30% del dataset.
-- **Implementación:** Implementar un middleware robusto `StrictDicomLUTDecoder` dentro de `MOD_INGEST` que analice los metadatos DICOM por defecto e invierta dinámicamente las matrices de píxeles a MONOCHROME2 canónico antes del rescale.
-- **Verificación:** `tests/test_strict_dicom_lut_decoder.py`.
+### [ ] SUPER-TAREA CMRE-45: Controlador Multi-Vista Ortogonal Robusto (Multi-View Alignment)
+- **Origen:** `ACTIVE_COMPETITIONS.json` (RSNA Knee 2026 - Desafíos de Alineamiento Ortogonal y Desbalance Severo).
+- **Problema:** En estudios médicos con múltiples vistas (Sagital, Coronal, Axial), los modelos pueden sobreajustarse o fracasar si no se unifican las predicciones ponderadas por la calidad y relevancia de cada vista.
+- **Implementación:** Diseñar un pipeline agnóstico en `MOD_ENSEMBLE` que combine e intercale matrices de atención para entradas multi-vista estructuradas, combinándose opcionalmente con el ya implementado `NelderMeadThresholdOptimizer` para mitigar el desbalance extremo multietiqueta.
 
 ---
 [VINCIT_OMNIA_VERITAS]
