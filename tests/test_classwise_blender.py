@@ -69,3 +69,12 @@ def test_latency_budget_pruner():
     assert len(selected) >= 1
     # ModelA (0.90/0.5 = 1.8) and ModelD (0.85/0.4 = 2.125) have high efficiency ratios
     assert "ModelD" in selected
+
+def test_latency_budget_pruner_dynamic_abort():
+    from cmre.modules.ensemble import LatencyBudgetPruner
+
+    pruner = LatencyBudgetPruner(max_latency_seconds=2.0)
+
+    assert pruner.check_dynamic_abort(current_latency=1.5, estimated_remaining=0.2) is False
+    assert pruner.check_dynamic_abort(current_latency=1.5, estimated_remaining=0.6) is True
+    assert pruner.check_dynamic_abort(current_latency=2.1, estimated_remaining=0.0) is True

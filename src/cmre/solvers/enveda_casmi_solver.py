@@ -20,15 +20,7 @@ from ..modules.hpc import BitsetFingerprint
 from ..modules.hpc_advanced import ChokudaiSearchOptimizer
 
 
-# Principales pérdidas neutrales comunes en espectrometría de masas (Da)
-COMMON_NEUTRAL_LOSSES = {
-    "H2O": (18.0106, ["O"]),
-    "NH3": (17.0265, ["N"]),
-    "CO": (27.9949, ["O", "C"]),
-    "CO2": (43.9898, ["O"]),
-    "HCOOH": (46.0055, ["O"]),
-    "CH3COOH": (60.0211, ["O"]),
-}
+
 
 
 class EnvedaCasmiSolver:
@@ -71,18 +63,7 @@ class EnvedaCasmiSolver:
                     break
         return deduped
 
-    def evaluate_sirius_neutral_losses(
-        self,
-        candidate_smiles: List[str],
-        observed_losses: List[str],
-    ) -> np.ndarray:
-        """Axioma de Ausencia SIRIUS: Si el espectro observa pérdidas neutrales que la molécula
-        no puede justificar biológicamente (ej. pérdida de CO2 sin presencia de oxígeno),
-        se aplica una penalización multiplicativa severa contra decoys.
-        """
-        penalties = np.ones(len(candidate_smiles), dtype=np.float32)
-        if not observed_losses:
-            return penalties
+
 
         for i, smi in enumerate(candidate_smiles):
             for loss_name in observed_losses:
@@ -129,7 +110,9 @@ class EnvedaCasmiSolver:
         # 4. Axioma de Ausencia SIRIUS (Penalización por pérdida neutral ausente)
         neutral_loss_weights = np.ones(len(candidate_bitsets), dtype=np.float32)
         if observed_neutral_losses:
-            neutral_loss_weights = self.evaluate_sirius_neutral_losses(smiles_list, observed_neutral_losses)
+            from ..modules.ood import SIRIUSAbsenceAxiomOptimizer
+            sirius = SIRIUSAbsenceAxiomOptimizer(self.absence_penalty)
+            neutral_loss_weights = sirius.evaluate(smiles_list, observed_neutral_losses)
 
         # 5. Ponderación combinada
         adjusted_scores = sims_matrix * mass_penalties * neutral_loss_weights

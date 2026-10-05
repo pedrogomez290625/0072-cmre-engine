@@ -101,3 +101,8 @@
   - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
   - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (165 pasando) y asentar log en JULES_EXECUTION_LOG.md.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-EVOL-025 (Implementación de Super-Tareas CMRE-41 a CMRE-45):**
+  - **Objetivo:** Ejecutar implementación y testeo unitario de CMRE-41 a CMRE-45, fortaleciendo el motor CMRE.
+  - **Requerimiento:** Implementar TTT D8 Anti-Identidad, Controlador de Latencia Dinámica, Sanitizador FP16/FP64, Filtro Biofísico SIRIUS unificado, y Controlador Multi-Vista Ortogonal. Actualizar logs y estado.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez

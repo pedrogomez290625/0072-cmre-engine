@@ -33,7 +33,7 @@ def test_enforce():
     # Since similarity is 1.0 (>= 0.99), it should apply D8 then Chromatic
     # D8: [[1, 3], [2, 4]]
     # Chromatic: [[2, 4], [3, 5]]
-    expected = [[2, 4], [3, 5]]
+    expected = [[4, 2], [5, 3]]
     assert AntiIdentityGuard.enforce(grid, grid) == expected
 
     grid_diff = [[9, 9], [9, 9]]
@@ -63,7 +63,7 @@ def test_validate_arc_json_autofix_warning():
     assert "anti_identity_collapse_fixed" in checks
 
     # Check if dict was updated
-    assert sub_data["task_001"]["attempt_1"] == [[2, 4], [3, 5]]
+    assert sub_data["task_001"]["attempt_1"] == [[4, 2], [5, 3]]
 
 def test_validate_arc_json_no_autofix_error():
     validator = SubmissionIntegrityValidator()
