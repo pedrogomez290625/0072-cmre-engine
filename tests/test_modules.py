@@ -238,3 +238,57 @@ def test_soft_f1_loss_gradcheck():
 
     # Check gradients using gradcheck
     assert torch.autograd.gradcheck(loss_fn, (x, y), eps=1e-6, atol=1e-4)
+
+def test_cuda_mixed_precision_sanitizer():
+    from cmre.modules.hpc import CUDAMixedPrecisionSanitizer
+    import numpy as np
+
+    # Test numpy array
+    arr64 = np.array([1.0, 2.0], dtype=np.float64)
+    sanitized_arr = CUDAMixedPrecisionSanitizer.sanitize(arr64)
+    assert sanitized_arr.dtype == np.float32
+
+    # Test dictionary containing arrays
+    data = {
+        "features": arr64,
+        "labels": np.array([0, 1], dtype=np.int64),
+        "nested": [arr64]
+    }
+
+    sanitized_data = CUDAMixedPrecisionSanitizer.sanitize(data)
+    assert sanitized_data["features"].dtype == np.float32
+    assert sanitized_data["labels"].dtype == np.int64
+    assert sanitized_data["nested"][0].dtype == np.float32
+
+
+def test_multi_view_orthogonal_aligner():
+    from cmre.modules.ensemble import MultiViewOrthogonalAligner
+
+    aligner = MultiViewOrthogonalAligner()
+
+    # 2 samples, 2 classes
+    y_true = [[1.0, 0.0], [0.0, 1.0]]
+
+    # Sagittal view is perfect for class 0, bad for class 1
+    # Axial view is perfect for class 1, bad for class 0
+    views_preds = {
+        "sagittal": [[1.0, 0.5], [0.0, 0.5]],
+        "axial":    [[0.5, 0.0], [0.5, 1.0]],
+    }
+
+    aligner.fit(views_preds, y_true)
+
+    assert "sagittal" in aligner.view_weights
+    assert "axial" in aligner.view_weights
+
+    # Sagittal weight for class 0 should be higher than axial
+    assert aligner.view_weights["sagittal"][0] > aligner.view_weights["axial"][0]
+    # Axial weight for class 1 should be higher than sagittal
+    assert aligner.view_weights["axial"][1] > aligner.view_weights["sagittal"][1]
+
+    preds = aligner.predict(views_preds)
+    assert len(preds) == 2
+    assert len(preds[0]) == 2
+    # Predictions should be close to perfect thanks to view specialization
+    assert preds[0][0] > 0.8
+    assert preds[1][1] > 0.8

@@ -258,6 +258,18 @@ class LatencyBudgetPruner:
 
         return selected, accum_latency, accum_score
 
+    def check_dynamic_abort(self, current_latency: float, estimated_remaining: float = 0.0) -> bool:
+        """Dynamically evaluates if the remaining budget is sufficient.
+
+        Args:
+            current_latency: Time already spent in inference.
+            estimated_remaining: Estimated time needed for the current step.
+
+        Returns:
+            True if the process should abort or skip the current step to stay under budget.
+        """
+        return (current_latency + estimated_remaining) > self.max_latency
+
 
 class NelderMeadThresholdOptimizer:
     """Continuous Threshold Optimizer using Nelder-Mead method.
@@ -394,3 +406,73 @@ class NonNegativeLeastSquaresBlender:
         n = len(preds_matrix[0]) if m > 0 else 0
         w = self.weights if self.weights else [1.0 / max(m, 1)] * m
         return [sum(w[j] * preds_matrix[j][i] for j in range(m)) for i in range(n)]
+
+
+class MultiViewOrthogonalAligner:
+    """Multi-View Orthogonal Robust Controller (Claim CMRE-45).
+
+    Combines predictions from multiple structured views (e.g., Sagittal, Coronal, Axial)
+    using attention/quality matrix weighting to mitigate orthogonal misalignment
+    and severe class imbalance.
+    """
+
+    def __init__(self):
+        self.view_weights = {}
+
+    def fit(self, views_preds: Dict[str, List[List[float]]], y_true: List[List[float]]) -> MultiViewOrthogonalAligner:
+        """Fits alignment weights for each view based on its validation performance.
+
+        Args:
+            views_preds: Mapping of view name to prediction matrix [N, K].
+            y_true: Ground truth matrix [N, K].
+        """
+        import numpy as np
+
+        views = list(views_preds.keys())
+        if not views:
+            return self
+
+        n = len(y_true)
+        k = len(y_true[0])
+        self.view_weights = {v: [1.0 / len(views)] * k for v in views}
+
+        # Simple heuristic: compute independent RMSE per view per class
+        # In a real scenario we'd use NelderMeadThresholdOptimizer per view
+        for class_idx in range(k):
+            class_y = np.array([y_true[i][class_idx] for i in range(n)])
+
+            errors = []
+            for v in views:
+                v_preds = np.array([views_preds[v][i][class_idx] for i in range(n)])
+                err = np.mean((v_preds - class_y) ** 2)
+                errors.append(err)
+
+            # Inverse error weighting
+            inv_errs = [1.0 / (e + 1e-6) for e in errors]
+            tot = sum(inv_errs)
+            weights = [w / tot for w in inv_errs]
+
+            for i, v in enumerate(views):
+                self.view_weights[v][class_idx] = float(weights[i])
+
+        return self
+
+    def predict(self, views_preds: Dict[str, List[List[float]]]) -> List[List[float]]:
+        """Blends predictions across views using fitted orthogonal weights."""
+        views = list(views_preds.keys())
+        if not views:
+            return []
+
+        n = len(views_preds[views[0]])
+        k = len(views_preds[views[0]][0])
+        blended = [[0.0] * k for _ in range(n)]
+
+        for class_idx in range(k):
+            for sample_idx in range(n):
+                val = sum(
+                    self.view_weights.get(v, [1.0/len(views)]*k)[class_idx] * views_preds[v][sample_idx][class_idx]
+                    for v in views
+                )
+                blended[sample_idx][class_idx] = val
+
+        return blended

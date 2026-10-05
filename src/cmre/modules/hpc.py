@@ -124,3 +124,38 @@ inline double tanimoto_avx512(const uint64_t* a, const uint64_t* b, size_t n_wor
     return union_bits == 0 ? 1.0 : (double)intersect_bits / (double)union_bits;
 }
 '''
+
+
+class CUDAMixedPrecisionSanitizer:
+    """Universal Mixed Precision Sanitizer (Claim CMRE-43).
+
+    Recursively inspects data structures crossing the NumPy -> PyTorch boundary
+    and downcasts float64/double to float32 to prevent CUDA autocast crashes.
+    """
+
+    @staticmethod
+    def sanitize(data: Any) -> Any:
+        import numpy as np
+
+        if isinstance(data, np.ndarray):
+            if data.dtype == np.float64:
+                return data.astype(np.float32)
+            return data
+
+        if isinstance(data, dict):
+            return {k: CUDAMixedPrecisionSanitizer.sanitize(v) for k, v in data.items()}
+
+        if isinstance(data, list):
+            return [CUDAMixedPrecisionSanitizer.sanitize(v) for v in data]
+
+        if isinstance(data, tuple):
+            return tuple(CUDAMixedPrecisionSanitizer.sanitize(v) for v in data)
+
+        # Optional: PyTorch tensor detection without hard dependency
+        if hasattr(data, 'dtype') and hasattr(data, 'to'):
+            if str(data.dtype) == 'torch.float64':
+                # Can't directly import torch easily if it's optional, but we can do a hack
+                import torch
+                return data.to(torch.float32)
+
+        return data

@@ -84,3 +84,40 @@ class OODDetector:
             "mean_divergence": mean_div,
             "feature_divergences": feature_divergences,
         }
+
+# Principales pérdidas neutrales comunes en espectrometría de masas (Da)
+COMMON_NEUTRAL_LOSSES = {
+    "H2O": (18.0106, ["O"]),
+    "NH3": (17.0265, ["N"]),
+    "CO": (27.9949, ["O", "C"]),
+    "CO2": (43.9898, ["O"]),
+    "HCOOH": (46.0055, ["O"]),
+    "CH3COOH": (60.0211, ["O"]),
+}
+
+class SIRIUSAbsenceAxiomOptimizer:
+    """Universal SIRIUS Absence Axiom Optimizer (Filtro Neutro Biofísico) (Claim CMRE-44).
+
+    Aplica una penalización severa a moléculas (decoys) que, dados ciertos picos de
+    pérdida neutral detectados en el espectro MS/MS, no contienen los elementos químicos
+    fundamentales esperados.
+    """
+
+    def __init__(self, absence_penalty_factor: float = 0.35):
+        self.absence_penalty_factor = absence_penalty_factor
+
+    def evaluate(self, candidate_smiles: List[str], observed_losses: List[str]) -> np.ndarray:
+        """Calculates penalty weights for candidates based on absence of required elements."""
+        penalties = np.ones(len(candidate_smiles), dtype=np.float32)
+        if not observed_losses:
+            return penalties
+
+        for i, smi in enumerate(candidate_smiles):
+            for loss_name in observed_losses:
+                if loss_name in COMMON_NEUTRAL_LOSSES:
+                    required_elements = COMMON_NEUTRAL_LOSSES[loss_name][1]
+                    for elem in required_elements:
+                        if elem not in smi:
+                            penalties[i] *= self.absence_penalty_factor
+                            break
+        return penalties

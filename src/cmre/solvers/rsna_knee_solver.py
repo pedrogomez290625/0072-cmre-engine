@@ -113,10 +113,19 @@ class RSNAKneeSolver:
         """
         start_time = time.perf_counter()
 
+        # Check budget early if models_preds_list is large (dynamic abort check)
+        if hasattr(self, 'pruner') and self.pruner:
+            # Estimate roughly that building predictors takes ~0.05s per model
+            est_time = len(models_preds_list) * 0.05
+            if self.pruner.check_dynamic_abort(time.perf_counter() - start_time, est_time):
+                # Fallback to single best model to save latency
+                models_preds_list = [models_preds_list[0]] if models_preds_list else []
+
         # 1. FP16 / Tensor Type Sanitization Guard
         if self.enable_fp16_guard:
-            y_true = self.sanitize_tensor_dtypes(y_true)
-            models_preds_list = [self.sanitize_tensor_dtypes(p) for p in models_preds_list]
+            from ..modules.hpc import CUDAMixedPrecisionSanitizer
+            y_true = CUDAMixedPrecisionSanitizer.sanitize(y_true)
+            models_preds_list = CUDAMixedPrecisionSanitizer.sanitize(models_preds_list)
 
         n_samples = y_true.shape[0]
         n_classes = len(self.class_names)

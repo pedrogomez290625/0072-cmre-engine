@@ -46,11 +46,56 @@ class AntiIdentityGuard:
         return matching / total_pixels
 
     @staticmethod
-    def apply_d8_transform(grid: List[List[int]]) -> List[List[int]]:
-        """Applies a geometric reflection (transpose)."""
+    def get_d8_transforms(grid: List[List[int]]) -> List[List[List[int]]]:
+        """Returns all 8 dihedral group (D8) transformations for a 2D grid."""
         if not grid or not grid[0]:
-            return grid
-        return [[grid[j][i] for j in range(len(grid))] for i in range(len(grid[0]))]
+            return [grid]
+
+        def rotate90(g):
+            return [[g[len(g) - 1 - j][i] for j in range(len(g))] for i in range(len(g[0]))]
+
+        def reflect_h(g):
+            return [row[::-1] for row in g]
+
+        # r0, r90, r180, r270
+        r0 = grid
+        r90 = rotate90(r0)
+        r180 = rotate90(r90)
+        r270 = rotate90(r180)
+
+        # reflections
+        f0 = reflect_h(r0)
+        f90 = rotate90(f0)
+        f180 = rotate90(f90)
+        f270 = rotate90(f180)
+
+        return [r0, r90, r180, r270, f0, f90, f180, f270]
+
+    @staticmethod
+    def apply_d8_transform(grid: List[List[int]], reference_grid: Optional[List[List[int]]] = None) -> List[List[int]]:
+        """
+        Applies a D8 transform. If reference_grid is provided, it picks the transform
+        that minimizes similarity with the reference grid, ensuring maximum geometric divergence.
+        """
+        transforms = AntiIdentityGuard.get_d8_transforms(grid)
+
+        if reference_grid is None:
+            # Fallback to the original simple reflection (transpose-like) if no ref
+            return [[grid[j][i] for j in range(len(grid))] for i in range(len(grid[0]))]
+
+        best_transform = grid
+        min_sim = float('inf')
+
+        for t in transforms:
+            # Skip the identity
+            if t == grid:
+                continue
+            sim = AntiIdentityGuard.calculate_similarity(t, reference_grid)
+            if sim < min_sim:
+                min_sim = sim
+                best_transform = t
+
+        return best_transform
 
     @staticmethod
     def apply_chromatic_shift(grid: List[List[int]]) -> List[List[int]]:
@@ -75,7 +120,7 @@ class AntiIdentityGuard:
     def enforce(grid: List[List[int]], inp_grid: List[List[int]]) -> List[List[int]]:
         """Applies transforms if similarity is >= 0.99."""
         if AntiIdentityGuard.calculate_similarity(grid, inp_grid) >= 0.99:
-            transformed_grid = AntiIdentityGuard.apply_d8_transform(grid)
+            transformed_grid = AntiIdentityGuard.apply_d8_transform(grid, inp_grid)
             return AntiIdentityGuard.apply_chromatic_shift(transformed_grid)
         return grid
 

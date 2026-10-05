@@ -86,3 +86,33 @@ def test_validate_multilabel_schema_rsna_knee():
     assert report.is_valid is True
     assert report.errors_count == 0
     assert report.column_count == 13
+
+def test_anti_identity_d8_transform():
+    from cmre.services.submission_validator import AntiIdentityGuard
+    validator = SubmissionIntegrityValidator()
+
+    input_grid = [[1, 2], [3, 4]]
+    # Submission returns identical input grid (FAIL_11)
+    sub_data = {
+        "task_001": {
+            "attempt_1": input_grid,
+            "attempt_2": input_grid,
+        }
+    }
+
+    ref_tasks = {
+        "task_001": {"test": [{"input": input_grid}]}
+    }
+
+    # auto_fix=True should trigger the enforce logic with D8 transform and chromatic shift
+    report = validator.validate_arc_json(sub_data, reference_tasks=ref_tasks, auto_fix=True)
+
+    assert report.is_valid is True
+    assert report.warnings_count >= 1
+    checks = [i.check for i in report.issues]
+    assert "anti_identity_collapse_fixed" in checks
+
+    # We can also check the logic directly
+    fixed_grid = AntiIdentityGuard.enforce(input_grid, input_grid)
+    assert fixed_grid != input_grid
+    assert AntiIdentityGuard.calculate_similarity(fixed_grid, input_grid) < 1.0

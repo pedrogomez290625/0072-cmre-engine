@@ -71,7 +71,9 @@ def test_casmi_sirius_absence_penalty():
     
     # Molecule without Oxygen vs Molecule with Oxygen
     candidates = ["CCCC", "CCCO"]
-    penalties = solver.evaluate_sirius_neutral_losses(candidates, observed_losses=["H2O", "CO2"])
+    from cmre.modules.ood import SIRIUSAbsenceAxiomOptimizer
+    optimizer = SIRIUSAbsenceAxiomOptimizer(absence_penalty_factor=solver.absence_penalty)
+    penalties = optimizer.evaluate(candidates, observed_losses=["H2O", "CO2"])
 
     # First candidate has no O, should be penalized twice (0.25 * 0.25 = 0.0625)
     assert pytest.approx(penalties[0], abs=1e-4) == 0.0625
