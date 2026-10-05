@@ -96,3 +96,8 @@
   - **Objetivo:** Ejecutar implementación y testeo unitario de CMRE-36 a CMRE-40, actualizando tableros y logs.
   - **Requerimiento:** Verificar 165 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y JULES_DYNAMIC_TASKS.md.
   - **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
+
+- [x] **TASK-INIT-022 (Inicialización y Memoria Dinámica 5 Oct):**
+  - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
+  - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (165 pasando) y asentar log en JULES_EXECUTION_LOG.md.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
