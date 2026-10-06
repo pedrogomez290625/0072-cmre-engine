@@ -11,41 +11,617 @@
     "6": "Regla respaldada por documentación oficial o consenso metodológico fuerte"
   },
   "claims": [
-    {"id":"C01","statement":"Si la unidad de generalización es paciente, usuario, instrumento o entidad, cada grupo debe permanecer entero en un único fold.","mechanism_slug":"group-disjoint-cv","tags":["validation","leakage","groups"],"applicable_when":"Hay repetición o dependencia intraentidad.","not_recommended_when":"Las filas son realmente independientes y el grupo está mal definido.","evidence_level":6,"expected_effect":"Estimación menos optimista y mayor validez externa.","cost":"medio"},
-    {"id":"C02","statement":"Si el despliegue sólo permite usar pasado, un walk-forward o expanding split suele responder mejor a la pregunta operacional que un k-fold aleatorio.","mechanism_slug":"causal-time-split","tags":["time-series","validation"],"applicable_when":"Existe timestamp causal y el futuro no está disponible.","not_recommended_when":"No hay orden temporal real o el servicio reutiliza legítimamente datos de ambos lados.","evidence_level":6,"expected_effect":"Reduce contaminación temporal.","cost":"medio-alto"},
-    {"id":"C03","statement":"Si las ventanas de información o etiquetas solapan el bloque de validación, hay que purgar intervalos y, cuando proceda, añadir embargo derivado del horizonte y dependencia serial.","mechanism_slug":"purged-embargo","tags":["time-series","leakage"],"applicable_when":"Features o labels abarcan intervalos.","not_recommended_when":"El intervalo causal no está definido o se copia un embargo de otra competición.","evidence_level":5,"expected_effect":"Menor optimismo por solapamiento.","cost":"alto"},
-    {"id":"C04","statement":"Si una transformación aprende estadísticos, debe ajustarse dentro de cada fold y aplicarse sólo como transform a validación y test.","mechanism_slug":"pipeline-fit-scope","tags":["leakage","preprocessing"],"applicable_when":"Imputación, escalado, PCA, selección, vocabularios o resampling aprenden de datos.","not_recommended_when":"La transformación es completamente fija y no aprende de observaciones.","evidence_level":6,"expected_effect":"Estimación de generalización defendible.","cost":"bajo-medio"},
-    {"id":"C05","statement":"Si se usa target encoding, el valor de cada fila de entrenamiento debe ser cross-fitted u OOF y el mapa de validación debe estimarse sólo con train.","mechanism_slug":"oof-target-encoding","tags":["features","target-leakage","categorical"],"applicable_when":"Las categorías consultan la etiqueta.","not_recommended_when":"El encoding no usa target o la disponibilidad de la estadística no está definida.","evidence_level":6,"expected_effect":"Evita memorizar el target propio.","cost":"medio"},
-    {"id":"C06","statement":"El suavizado TE(c)=(n_c*ybar_c+alpha*ybar)/(n_c+alpha) puede reducir varianza de categorías raras, pero aumenta contracción y debe validarse.","mechanism_slug":"smoothed-target-encoding","tags":["regularization","categorical"],"applicable_when":"Hay categorías de frecuencia muy desigual.","not_recommended_when":"Se elige alpha mirando test o se necesita conservar diferencias de categorías pequeñas sin evidencia.","evidence_level":5,"expected_effect":"Menor varianza con posible sesgo hacia la media.","cost":"bajo"},
-    {"id":"C07","statement":"Las agregaciones jerárquicas pueden descubrir señal local y global si cada estadístico estaba disponible al momento de predicción.","mechanism_slug":"hierarchical-aggregations","tags":["feature-engineering","tabular"],"applicable_when":"Existen jerarquías como país-tienda-producto.","not_recommended_when":"Los niveles usan futuro, target del fold evaluado o claves no observables en producción.","evidence_level":4,"expected_effect":"Mejora potencial con trade-off de varianza y sesgo.","cost":"medio"},
-    {"id":"C08","statement":"Si un nulo puede significar ausencia estructural, desconocido, no aplicable o cero, conservar indicadores o representaciones distintas suele ser más seguro que reemplazar todo por cero.","mechanism_slug":"semantic-missingness","tags":["missing-values","production"],"applicable_when":"Los estados tienen semántica diferente.","not_recommended_when":"El contrato garantiza que NaN equivale exactamente a cero.","evidence_level":5,"expected_effect":"Evita destruir señal o cambiar unidades.","cost":"bajo"},
-    {"id":"C09","statement":"Las interacciones categóricas deben limitarse por frecuencia o cardinalidad y usar un token de nulo sin colisiones.","mechanism_slug":"controlled-cat-interactions","tags":["categorical","cardinality"],"applicable_when":"La interacción representa una relación plausible.","not_recommended_when":"La cardinalidad es multiplicativa sin regularización o la clave contiene información post-evento.","evidence_level":3,"expected_effect":"Captura contexto conjunto con menor explosión.","cost":"medio"},
-    {"id":"C10","statement":"CatBoost ordered statistics reduce el riesgo de que una fila use directamente su propio target, pero no corrigen un split temporal o grupal incorrecto.","mechanism_slug":"ordered-categorical-stats","tags":["CatBoost","categorical","leakage"],"applicable_when":"Hay categorías de alta cardinalidad y condiciones ordenadas.","not_recommended_when":"Se interpreta como sustituto de la separación causal.","evidence_level":5,"expected_effect":"Encoding categórico más seguro bajo el split correcto.","cost":"medio"},
-    {"id":"C11","statement":"En LightGBM, num_leaves, max_depth y min_data_in_leaf deben explorarse conjuntamente porque el crecimiento leaf-wise no equivale en la práctica a 2^max_depth.","mechanism_slug":"leafwise-capacity-control","tags":["LightGBM","regularization"],"applicable_when":"Se ajusta capacidad tabular.","not_recommended_when":"Se transfieren defaults sin observar curvas de validación.","evidence_level":5,"expected_effect":"Control de sobreajuste y subajuste.","cost":"medio"},
-    {"id":"C12","statement":"Si se reduce learning_rate, conviene permitir más rondas y seleccionar la duración mediante early stopping en validación no vista.","mechanism_slug":"boosting-rate-rounds","tags":["GBDT","early-stopping"],"applicable_when":"Se usan LightGBM, XGBoost o CatBoost con presupuesto suficiente.","not_recommended_when":"Early stopping consulta repetidamente el holdout final.","evidence_level":5,"expected_effect":"Mejor compromiso sesgo-varianza sin garantía universal.","cost":"medio-alto"},
-    {"id":"C13","statement":"En XGBoost, mayor profundidad o menor min_child_weight aumentan capacidad, mientras gamma, L1, L2 y subsampling tienden a hacer el modelo más conservador.","mechanism_slug":"xgb-complexity-regularization","tags":["XGBoost","regularization"],"applicable_when":"La curva indica memorización o subajuste.","not_recommended_when":"Se cambian todas las palancas simultáneamente sin diseño experimental.","evidence_level":5,"expected_effect":"Ajuste de complejidad y correlación entre árboles.","cost":"medio"},
-    {"id":"C14","statement":"Ninguno de LightGBM, XGBoost o CatBoost debe declararse ganador universal: el ranking depende de dataset, split, métrica, versión, categóricas y presupuesto.","mechanism_slug":"dataset-conditional-booster","tags":["benchmark","model-selection"],"applicable_when":"Se comparan boosters.","not_recommended_when":"Se extrapola un benchmark o leaderboard a otra tarea.","evidence_level":4,"expected_effect":"Selección menos sesgada.","cost":"medio"},
-    {"id":"C15","statement":"EMA y SWA son promedios de parámetros para modelos diferenciables entrenados con SGD, no operaciones nativas equivalentes para árboles discretos.","mechanism_slug":"optimizer-domain-boundary","tags":["EMA","SWA","neural","GBDT"],"applicable_when":"Se entrenan redes con trayectoria de pesos.","not_recommended_when":"Se intenta promediar parámetros de LightGBM, XGBoost o CatBoost.","evidence_level":5,"expected_effect":"Evita aplicar técnicas fuera de dominio.","cost":"bajo"},
-    {"id":"C16","statement":"Pseudo-labeling es defendible sólo si hay datos no etiquetados permitidos, confianza calibrada o validada, peso menor para pseudo-labels y un holdout etiquetado.","mechanism_slug":"confidence-weighted-pseudolabel","tags":["semi-supervised","shift"],"applicable_when":"El protocolo permite usar X no etiquetada.","not_recommended_when":"Hay shift severo, confianza sin calibrar o se eligen iteraciones mirando test oculto.","evidence_level":4,"expected_effect":"Más datos efectivos con riesgo de amplificar sesgo.","cost":"alto"},
-    {"id":"C17","statement":"Una AUC alta en adversarial validation es una señal para investigar shift; una AUC cercana a 0.5 no demuestra ausencia de shift ni garantiza que eliminar features sea correcto.","mechanism_slug":"adversarial-shift-diagnostic","tags":["shift","validation","diagnostics"],"applicable_when":"Train y test pueden diferir.","not_recommended_when":"Se usa un umbral mágico o se infiere causalidad de importancias.","evidence_level":4,"expected_effect":"Localiza covariables sospechosas.","cost":"medio"},
-    {"id":"C18","statement":"Elegir repetidamente por el leaderboard público convierte esa muestra parcial en señal de entrenamiento y puede producir shake-up en el privado.","mechanism_slug":"adaptive-leaderboard-selection","tags":["competition","selection-bias"],"applicable_when":"Existe leaderboard público y privado.","not_recommended_when":"Se hace una consulta única tras congelar el protocolo.","evidence_level":5,"expected_effect":"Limita sobreajuste adaptativo.","cost":"medio"},
-    {"id":"C19","statement":"La calibración debe ajustarse sobre scores OOF o un holdout independiente, nunca sobre las predicciones del mismo ajuste usado para entrenar el modelo.","mechanism_slug":"out-of-sample-calibration","tags":["calibration","probability"],"applicable_when":"Se necesitan probabilidades, costes o umbrales.","not_recommended_when":"La métrica es exclusivamente ranking y la transformación no aporta una decisión.","evidence_level":6,"expected_effect":"Probabilidades más fiables bajo distribución similar.","cost":"bajo-medio"},
-    {"id":"C20","statement":"Isotonic puede superar a sigmoid con suficiente muestra de calibración, pero la orientación de alrededor de 1000 observaciones es contextual y no universal.","mechanism_slug":"calibrator-bias-variance","tags":["isotonic","sigmoid"],"applicable_when":"Hay suficientes observaciones y relación no sigmoidal plausible.","not_recommended_when":"La muestra es pequeña, ruidosa o se necesita preservar estrictamente el ranking.","evidence_level":5,"expected_effect":"Más flexibilidad con mayor varianza.","cost":"bajo"},
-    {"id":"C21","statement":"El umbral debe optimizar la métrica o coste operativo sobre OOF o validación y congelarse antes del test; 0.5 no es universal.","mechanism_slug":"decision-threshold-by-cost","tags":["threshold","calibration","metrics"],"applicable_when":"La decisión binaria tiene costes o prevalencia definidos.","not_recommended_when":"Se evalúa AUC o log-loss y no se necesita una decisión discreta.","evidence_level":5,"expected_effect":"Mejor utilidad o métrica operativa objetivo.","cost":"bajo"},
-    {"id":"C22","statement":"Rank averaging puede ser útil cuando las escalas de modelos son incompatibles, pero no es calibración y puede perder magnitud informativa.","mechanism_slug":"rank-space-ensemble","tags":["ensemble","ranking"],"applicable_when":"El objetivo depende del orden y las escalas son heterogéneas.","not_recommended_when":"Probabilidades calibradas y log-loss son el objetivo principal.","evidence_level":3,"expected_effect":"Robustez de escala y diversidad con posible degradación probabilística.","cost":"bajo"},
-    {"id":"C23","statement":"NNLS produce pesos no negativos al minimizar error cuadrático, pero no impone suma uno ni optimiza automáticamente log-loss, AUC o costes.","mechanism_slug":"nonnegative-blend","tags":["ensemble","NNLS"],"applicable_when":"Hay predicciones OOF y objetivo aproximadamente cuadrático.","not_recommended_when":"Existe alta colinealidad sin regularización o la métrica no está alineada.","evidence_level":5,"expected_effect":"Blend reproducible y restringido.","cost":"bajo-medio"},
-    {"id":"C24","statement":"IDs, rutas, nombres, EXIF, compresión y timestamps deben auditarse como features potenciales y eliminarse o enmascararse si no existen antes de inferencia o codifican el etiquetado.","mechanism_slug":"metadata-leakage-audit","tags":["leakage","metadata","vision"],"applicable_when":"Archivos o eventos tienen metadatos auxiliares.","not_recommended_when":"El campo está en el contrato productivo y su estabilidad está demostrada.","evidence_level":5,"expected_effect":"Elimina atajos espurios y mejora transferencia.","cost":"medio-alto"},
-    {"id":"C25","statement":"En DICOM, rescale o Modality LUT debe aplicarse antes de Window Center/Width o VOI LUT y el procesamiento debe conservar precisión suficiente.","mechanism_slug":"dicom-physical-value-order","tags":["medical","DICOM","preprocessing"],"applicable_when":"CT u otra modalidad usa transformaciones de modalidad o VOI.","not_recommended_when":"Se ignora metadata o se convierte prematuramente a uint8.","evidence_level":6,"expected_effect":"Entrada físicamente y semánticamente coherente.","cost":"medio"},
-    {"id":"C26","statement":"TTA médica sólo debe usar transformaciones label-equivariant respecto de adquisición, orientación, lateralidad y anatomía, invertirlas en la salida y promediar allí.","mechanism_slug":"anatomically-valid-tta","tags":["medical","TTA","uncertainty"],"applicable_when":"La simetría está validada por modalidad y tarea.","not_recommended_when":"Flips, rotaciones o deformaciones alteran la etiqueta o el contexto clínico.","evidence_level":5,"expected_effect":"Posible robustez y señal de desacuerdo.","cost":"medio-alto"},
-    {"id":"C27","statement":"Dice, CE, focal, Generalized Dice y Unified Focal deben compararse según prevalencia, clases vacías y estabilidad de gradiente; no existe una loss médica universalmente mejor.","mechanism_slug":"imbalance-loss-ablation","tags":["segmentation","medical","imbalance"],"applicable_when":"Foreground raro o desbalance espacial o clínico.","not_recommended_when":"Se copian pesos o gamma de otro dataset sin ablación.","evidence_level":4,"expected_effect":"Mejor equilibrio entre solapamiento y estabilidad, dependiente del caso.","cost":"alto"},
-    {"id":"C28","statement":"En MS/MS, binning, pérdidas neutras, Spec2Vec, coseno y fingerprints son vistas complementarias; representación y split deben fijar aducto, energía, tolerancia y procedencia.","mechanism_slug":"chemistry-protocol-alignment","tags":["MSMS","chemistry","OOD"],"applicable_when":"Se comparan similitud, identificación o predicción espectral.","not_recommended_when":"Se comparan scores con limpieza, ionización o instrumentación distinta.","evidence_level":5,"expected_effect":"Evaluación más interpretable y generalización química mejor medida.","cost":"alto"},
-    {"id":"C29","statement":"Un contenedor mejora reproducibilidad sólo si también se fijan digest, dependencias, pesos, contrato de entrada y salida, hardware relevante, pruebas y checksums.","mechanism_slug":"container-contract","tags":["platforms","reproducibility"],"applicable_when":"DrivenData code execution, Grand Challenge u otro runner oculto.","not_recommended_when":"Se asume que Docker elimina diferencias de GPU, driver o aleatoriedad.","evidence_level":5,"expected_effect":"Menor fallo de ejecución y mayor auditabilidad.","cost":"medio-alto"},
-    {"id":"C30","statement":"Un gap CV-private es diagnóstico de selección, leakage, shift, prevalencia o métrica desalineada, no prueba por sí solo una causa única; hay que triangular splits, metadatos, grupos, subgrupos y número de intentos.","mechanism_slug":"private-collapse-triangulation","tags":["failure-modes","leaderboard","shift"],"applicable_when":"El resultado oculto contradice la validación.","not_recommended_when":"Se atribuye de inmediato a una sola técnica o se siguen enviando variantes sin protocolo.","evidence_level":5,"expected_effect":"Causa raíz más fiable y menor repetición del fallo.","cost":"alto"},
-    {"id":"C31","statement":"En clasificación multi-etiqueta médica heterogénea (ej. RSNA Knee 12 clases), un ensamble con vector global de pesos es subóptimo frente a una matriz de pesos asimétrica clase por clase que asigne especialistas focales a desgarros/fracturas y transformers multiescala a ligamentos y derrame.","mechanism_slug":"classwise-asymmetric-blending","tags":["medical","ensemble","multi-label","radiology"],"applicable_when":"Hay múltiples patologías con morfologías, prevalencias y escalas anatómicas disímiles.","not_recommended_when":"Las etiquetas son altamente colineales o una sola arquitectura domina estrictamente todas las clases.","evidence_level":6,"expected_effect":"Aumento sostenido en Macro ROC-AUC evitando compromiso subóptimo de clases minoritarias.","cost":"medio"},
-    {"id":"C32","statement":"En competencias de inferencia en notebook con límite estricto de tiempo (ej. Kaggle 9h), los ensambles masivos deben podarse mediante optimización greedy de latencia garantizando sub-2.0s por volumen antes de desplegar al Leaderboard.","mechanism_slug":"latency-bounded-pruning","tags":["HPC","inference","latency","ensemble"],"applicable_when":"El conjunto privado es desconocido o masivo y el pipeline excede el 60% del tiempo reglamentario en validación.","not_recommended_when":"El tiempo de inferencia es despreciable (<0.01s) o no hay restricción de ejecución.","evidence_level":6,"expected_effect":"Inmunidad contra timeouts y descalificación en tiempo de ejecución.","cost":"bajo"},
-    {"id":"C33","statement":"En identificación molecular a ciegas (CASMI/MSMS), el filtrado por masa y Tanimoto debe complementarse con el Axioma de Ausencia de SIRIUS para penalizar severamente candidatos decoys que no pueden justificar pérdidas neutrales observadas (H2O, CO2, NH3).","mechanism_slug":"sirius-absence-axiom","tags":["MSMS","chemistry","molecular","bioinformatics"],"applicable_when":"Identificación no dirigida sobre bibliotecas químicas masivas (>100k moléculas).","not_recommended_when":"Espectros sin resolución de masa suficiente o fragmentación sin pérdidas neutrales detectables.","evidence_level":6,"expected_effect":"Eliminación de falsos positivos decoys y drástica subida en Top-10 / Top-25 accuracy.","cost":"medio"},
-    {"id":"C34","statement":"En razonamiento inductivo discreto (ARC-AGI-2), la arquitectura óptima es híbrida monotónica (SDSI): programas simbólicos verificados al 100% en pares de demostración toman el intento 1, y modelos neuronales con Test-Time Training (TTT) y aumentación D8 respaldan el intento 2.","mechanism_slug":"sdsi-hybrid-arbitration","tags":["ARC","reasoning","TTT","hybrid"],"applicable_when":"Tareas de síntesis de programas sobre grillas visuales pequeñas con demostraciones escasas.","not_recommended_when":"El espacio de búsqueda de programas es infinito sin heurísticas de poda o no hay demostraciones.","evidence_level":6,"expected_effect":"Asegura exactitud determinista en tareas geométricas y generalización en tareas de abstracción.","cost":"alto"},
-    {"id":"C35","statement":"En evaluación de doble intento (ARC-AGI), devolver la grilla de entrada sin modificar como fallback garantiza un score oficial de 0.00; el sistema debe incorporar un guardián anti-identidad que fuerce transformaciones topológicas o cromáticas válidas.","mechanism_slug":"anti-identity-fallback-guard","tags":["ARC","validation","guardrails","fallback"],"applicable_when":"Sistemas que generan grillas de salida ante timeout de búsqueda.","not_recommended_when":"La tarea explícitamente requiere identidad como solución demostrada.","evidence_level":6,"expected_effect":"Inmunidad contra colapso a 0.00 en tareas complejas sin solución simbólica exacta.","cost":"muy-bajo"},
-    {"id":"C36","statement":"En pipelines PyTorch con FP16 (autocast) en GPU, los parámetros de normalización y arrays NumPy deben convertirse explícitamente a float32 antes del paso forward para evitar caídas fatales por desajuste de tipos Half vs Double.","mechanism_slug":"cuda-fp16-sanitization","tags":["CUDA","GPU","PyTorch","stability"],"applicable_when":"Inferencia en aceleradores GPU con autocast o AMP.","not_recommended_when":"Todo el pipeline opera estrictamente en CPU o en float32 uniforme sin librerías externas.","evidence_level":6,"expected_effect":"Cero abortos de ejecución en GPU remota durante envíos oficiales.","cost":"muy-bajo"}
+    {
+      "id": "C01",
+      "statement": "Si la unidad de generalización es paciente, usuario, instrumento o entidad, cada grupo debe permanecer entero en un único fold.",
+      "mechanism_slug": "group-disjoint-cv",
+      "tags": [
+        "validation",
+        "leakage",
+        "groups"
+      ],
+      "applicable_when": "Hay repetición o dependencia intraentidad.",
+      "not_recommended_when": "Las filas son realmente independientes y el grupo está mal definido.",
+      "evidence_level": 6,
+      "expected_effect": "Estimación menos optimista y mayor validez externa.",
+      "cost": "medio"
+    },
+    {
+      "id": "C02",
+      "statement": "Si el despliegue sólo permite usar pasado, un walk-forward o expanding split suele responder mejor a la pregunta operacional que un k-fold aleatorio.",
+      "mechanism_slug": "causal-time-split",
+      "tags": [
+        "time-series",
+        "validation"
+      ],
+      "applicable_when": "Existe timestamp causal y el futuro no está disponible.",
+      "not_recommended_when": "No hay orden temporal real o el servicio reutiliza legítimamente datos de ambos lados.",
+      "evidence_level": 6,
+      "expected_effect": "Reduce contaminación temporal.",
+      "cost": "medio-alto"
+    },
+    {
+      "id": "C03",
+      "statement": "Si las ventanas de información o etiquetas solapan el bloque de validación, hay que purgar intervalos y, cuando proceda, añadir embargo derivado del horizonte y dependencia serial.",
+      "mechanism_slug": "purged-embargo",
+      "tags": [
+        "time-series",
+        "leakage"
+      ],
+      "applicable_when": "Features o labels abarcan intervalos.",
+      "not_recommended_when": "El intervalo causal no está definido o se copia un embargo de otra competición.",
+      "evidence_level": 5,
+      "expected_effect": "Menor optimismo por solapamiento.",
+      "cost": "alto"
+    },
+    {
+      "id": "C04",
+      "statement": "Si una transformación aprende estadísticos, debe ajustarse dentro de cada fold y aplicarse sólo como transform a validación y test.",
+      "mechanism_slug": "pipeline-fit-scope",
+      "tags": [
+        "leakage",
+        "preprocessing"
+      ],
+      "applicable_when": "Imputación, escalado, PCA, selección, vocabularios o resampling aprenden de datos.",
+      "not_recommended_when": "La transformación es completamente fija y no aprende de observaciones.",
+      "evidence_level": 6,
+      "expected_effect": "Estimación de generalización defendible.",
+      "cost": "bajo-medio"
+    },
+    {
+      "id": "C05",
+      "statement": "Si se usa target encoding, el valor de cada fila de entrenamiento debe ser cross-fitted u OOF y el mapa de validación debe estimarse sólo con train.",
+      "mechanism_slug": "oof-target-encoding",
+      "tags": [
+        "features",
+        "target-leakage",
+        "categorical"
+      ],
+      "applicable_when": "Las categorías consultan la etiqueta.",
+      "not_recommended_when": "El encoding no usa target o la disponibilidad de la estadística no está definida.",
+      "evidence_level": 6,
+      "expected_effect": "Evita memorizar el target propio.",
+      "cost": "medio"
+    },
+    {
+      "id": "C06",
+      "statement": "El suavizado TE(c)=(n_c*ybar_c+alpha*ybar)/(n_c+alpha) puede reducir varianza de categorías raras, pero aumenta contracción y debe validarse.",
+      "mechanism_slug": "smoothed-target-encoding",
+      "tags": [
+        "regularization",
+        "categorical"
+      ],
+      "applicable_when": "Hay categorías de frecuencia muy desigual.",
+      "not_recommended_when": "Se elige alpha mirando test o se necesita conservar diferencias de categorías pequeñas sin evidencia.",
+      "evidence_level": 5,
+      "expected_effect": "Menor varianza con posible sesgo hacia la media.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C07",
+      "statement": "Las agregaciones jerárquicas pueden descubrir señal local y global si cada estadístico estaba disponible al momento de predicción.",
+      "mechanism_slug": "hierarchical-aggregations",
+      "tags": [
+        "feature-engineering",
+        "tabular"
+      ],
+      "applicable_when": "Existen jerarquías como país-tienda-producto.",
+      "not_recommended_when": "Los niveles usan futuro, target del fold evaluado o claves no observables en producción.",
+      "evidence_level": 4,
+      "expected_effect": "Mejora potencial con trade-off de varianza y sesgo.",
+      "cost": "medio"
+    },
+    {
+      "id": "C08",
+      "statement": "Si un nulo puede significar ausencia estructural, desconocido, no aplicable o cero, conservar indicadores o representaciones distintas suele ser más seguro que reemplazar todo por cero.",
+      "mechanism_slug": "semantic-missingness",
+      "tags": [
+        "missing-values",
+        "production"
+      ],
+      "applicable_when": "Los estados tienen semántica diferente.",
+      "not_recommended_when": "El contrato garantiza que NaN equivale exactamente a cero.",
+      "evidence_level": 5,
+      "expected_effect": "Evita destruir señal o cambiar unidades.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C09",
+      "statement": "Las interacciones categóricas deben limitarse por frecuencia o cardinalidad y usar un token de nulo sin colisiones.",
+      "mechanism_slug": "controlled-cat-interactions",
+      "tags": [
+        "categorical",
+        "cardinality"
+      ],
+      "applicable_when": "La interacción representa una relación plausible.",
+      "not_recommended_when": "La cardinalidad es multiplicativa sin regularización o la clave contiene información post-evento.",
+      "evidence_level": 3,
+      "expected_effect": "Captura contexto conjunto con menor explosión.",
+      "cost": "medio"
+    },
+    {
+      "id": "C10",
+      "statement": "CatBoost ordered statistics reduce el riesgo de que una fila use directamente su propio target, pero no corrigen un split temporal o grupal incorrecto.",
+      "mechanism_slug": "ordered-categorical-stats",
+      "tags": [
+        "CatBoost",
+        "categorical",
+        "leakage"
+      ],
+      "applicable_when": "Hay categorías de alta cardinalidad y condiciones ordenadas.",
+      "not_recommended_when": "Se interpreta como sustituto de la separación causal.",
+      "evidence_level": 5,
+      "expected_effect": "Encoding categórico más seguro bajo el split correcto.",
+      "cost": "medio"
+    },
+    {
+      "id": "C11",
+      "statement": "En LightGBM, num_leaves, max_depth y min_data_in_leaf deben explorarse conjuntamente porque el crecimiento leaf-wise no equivale en la práctica a 2^max_depth.",
+      "mechanism_slug": "leafwise-capacity-control",
+      "tags": [
+        "LightGBM",
+        "regularization"
+      ],
+      "applicable_when": "Se ajusta capacidad tabular.",
+      "not_recommended_when": "Se transfieren defaults sin observar curvas de validación.",
+      "evidence_level": 5,
+      "expected_effect": "Control de sobreajuste y subajuste.",
+      "cost": "medio"
+    },
+    {
+      "id": "C12",
+      "statement": "Si se reduce learning_rate, conviene permitir más rondas y seleccionar la duración mediante early stopping en validación no vista.",
+      "mechanism_slug": "boosting-rate-rounds",
+      "tags": [
+        "GBDT",
+        "early-stopping"
+      ],
+      "applicable_when": "Se usan LightGBM, XGBoost o CatBoost con presupuesto suficiente.",
+      "not_recommended_when": "Early stopping consulta repetidamente el holdout final.",
+      "evidence_level": 5,
+      "expected_effect": "Mejor compromiso sesgo-varianza sin garantía universal.",
+      "cost": "medio-alto"
+    },
+    {
+      "id": "C13",
+      "statement": "En XGBoost, mayor profundidad o menor min_child_weight aumentan capacidad, mientras gamma, L1, L2 y subsampling tienden a hacer el modelo más conservador.",
+      "mechanism_slug": "xgb-complexity-regularization",
+      "tags": [
+        "XGBoost",
+        "regularization"
+      ],
+      "applicable_when": "La curva indica memorización o subajuste.",
+      "not_recommended_when": "Se cambian todas las palancas simultáneamente sin diseño experimental.",
+      "evidence_level": 5,
+      "expected_effect": "Ajuste de complejidad y correlación entre árboles.",
+      "cost": "medio"
+    },
+    {
+      "id": "C14",
+      "statement": "Ninguno de LightGBM, XGBoost o CatBoost debe declararse ganador universal: el ranking depende de dataset, split, métrica, versión, categóricas y presupuesto.",
+      "mechanism_slug": "dataset-conditional-booster",
+      "tags": [
+        "benchmark",
+        "model-selection"
+      ],
+      "applicable_when": "Se comparan boosters.",
+      "not_recommended_when": "Se extrapola un benchmark o leaderboard a otra tarea.",
+      "evidence_level": 4,
+      "expected_effect": "Selección menos sesgada.",
+      "cost": "medio"
+    },
+    {
+      "id": "C15",
+      "statement": "EMA y SWA son promedios de parámetros para modelos diferenciables entrenados con SGD, no operaciones nativas equivalentes para árboles discretos.",
+      "mechanism_slug": "optimizer-domain-boundary",
+      "tags": [
+        "EMA",
+        "SWA",
+        "neural",
+        "GBDT"
+      ],
+      "applicable_when": "Se entrenan redes con trayectoria de pesos.",
+      "not_recommended_when": "Se intenta promediar parámetros de LightGBM, XGBoost o CatBoost.",
+      "evidence_level": 5,
+      "expected_effect": "Evita aplicar técnicas fuera de dominio.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C16",
+      "statement": "Pseudo-labeling es defendible sólo si hay datos no etiquetados permitidos, confianza calibrada o validada, peso menor para pseudo-labels y un holdout etiquetado.",
+      "mechanism_slug": "confidence-weighted-pseudolabel",
+      "tags": [
+        "semi-supervised",
+        "shift"
+      ],
+      "applicable_when": "El protocolo permite usar X no etiquetada.",
+      "not_recommended_when": "Hay shift severo, confianza sin calibrar o se eligen iteraciones mirando test oculto.",
+      "evidence_level": 4,
+      "expected_effect": "Más datos efectivos con riesgo de amplificar sesgo.",
+      "cost": "alto"
+    },
+    {
+      "id": "C17",
+      "statement": "Una AUC alta en adversarial validation es una señal para investigar shift; una AUC cercana a 0.5 no demuestra ausencia de shift ni garantiza que eliminar features sea correcto.",
+      "mechanism_slug": "adversarial-shift-diagnostic",
+      "tags": [
+        "shift",
+        "validation",
+        "diagnostics"
+      ],
+      "applicable_when": "Train y test pueden diferir.",
+      "not_recommended_when": "Se usa un umbral mágico o se infiere causalidad de importancias.",
+      "evidence_level": 4,
+      "expected_effect": "Localiza covariables sospechosas.",
+      "cost": "medio"
+    },
+    {
+      "id": "C18",
+      "statement": "Elegir repetidamente por el leaderboard público convierte esa muestra parcial en señal de entrenamiento y puede producir shake-up en el privado.",
+      "mechanism_slug": "adaptive-leaderboard-selection",
+      "tags": [
+        "competition",
+        "selection-bias"
+      ],
+      "applicable_when": "Existe leaderboard público y privado.",
+      "not_recommended_when": "Se hace una consulta única tras congelar el protocolo.",
+      "evidence_level": 5,
+      "expected_effect": "Limita sobreajuste adaptativo.",
+      "cost": "medio"
+    },
+    {
+      "id": "C19",
+      "statement": "La calibración debe ajustarse sobre scores OOF o un holdout independiente, nunca sobre las predicciones del mismo ajuste usado para entrenar el modelo.",
+      "mechanism_slug": "out-of-sample-calibration",
+      "tags": [
+        "calibration",
+        "probability"
+      ],
+      "applicable_when": "Se necesitan probabilidades, costes o umbrales.",
+      "not_recommended_when": "La métrica es exclusivamente ranking y la transformación no aporta una decisión.",
+      "evidence_level": 6,
+      "expected_effect": "Probabilidades más fiables bajo distribución similar.",
+      "cost": "bajo-medio"
+    },
+    {
+      "id": "C20",
+      "statement": "Isotonic puede superar a sigmoid con suficiente muestra de calibración, pero la orientación de alrededor de 1000 observaciones es contextual y no universal.",
+      "mechanism_slug": "calibrator-bias-variance",
+      "tags": [
+        "isotonic",
+        "sigmoid"
+      ],
+      "applicable_when": "Hay suficientes observaciones y relación no sigmoidal plausible.",
+      "not_recommended_when": "La muestra es pequeña, ruidosa o se necesita preservar estrictamente el ranking.",
+      "evidence_level": 5,
+      "expected_effect": "Más flexibilidad con mayor varianza.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C21",
+      "statement": "El umbral debe optimizar la métrica o coste operativo sobre OOF o validación y congelarse antes del test; 0.5 no es universal.",
+      "mechanism_slug": "decision-threshold-by-cost",
+      "tags": [
+        "threshold",
+        "calibration",
+        "metrics"
+      ],
+      "applicable_when": "La decisión binaria tiene costes o prevalencia definidos.",
+      "not_recommended_when": "Se evalúa AUC o log-loss y no se necesita una decisión discreta.",
+      "evidence_level": 5,
+      "expected_effect": "Mejor utilidad o métrica operativa objetivo.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C22",
+      "statement": "Rank averaging puede ser útil cuando las escalas de modelos son incompatibles, pero no es calibración y puede perder magnitud informativa.",
+      "mechanism_slug": "rank-space-ensemble",
+      "tags": [
+        "ensemble",
+        "ranking"
+      ],
+      "applicable_when": "El objetivo depende del orden y las escalas son heterogéneas.",
+      "not_recommended_when": "Probabilidades calibradas y log-loss son el objetivo principal.",
+      "evidence_level": 3,
+      "expected_effect": "Robustez de escala y diversidad con posible degradación probabilística.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C23",
+      "statement": "NNLS produce pesos no negativos al minimizar error cuadrático, pero no impone suma uno ni optimiza automáticamente log-loss, AUC o costes.",
+      "mechanism_slug": "nonnegative-blend",
+      "tags": [
+        "ensemble",
+        "NNLS"
+      ],
+      "applicable_when": "Hay predicciones OOF y objetivo aproximadamente cuadrático.",
+      "not_recommended_when": "Existe alta colinealidad sin regularización o la métrica no está alineada.",
+      "evidence_level": 5,
+      "expected_effect": "Blend reproducible y restringido.",
+      "cost": "bajo-medio"
+    },
+    {
+      "id": "C24",
+      "statement": "IDs, rutas, nombres, EXIF, compresión y timestamps deben auditarse como features potenciales y eliminarse o enmascararse si no existen antes de inferencia o codifican el etiquetado.",
+      "mechanism_slug": "metadata-leakage-audit",
+      "tags": [
+        "leakage",
+        "metadata",
+        "vision"
+      ],
+      "applicable_when": "Archivos o eventos tienen metadatos auxiliares.",
+      "not_recommended_when": "El campo está en el contrato productivo y su estabilidad está demostrada.",
+      "evidence_level": 5,
+      "expected_effect": "Elimina atajos espurios y mejora transferencia.",
+      "cost": "medio-alto"
+    },
+    {
+      "id": "C25",
+      "statement": "En DICOM, rescale o Modality LUT debe aplicarse antes de Window Center/Width o VOI LUT y el procesamiento debe conservar precisión suficiente.",
+      "mechanism_slug": "dicom-physical-value-order",
+      "tags": [
+        "medical",
+        "DICOM",
+        "preprocessing"
+      ],
+      "applicable_when": "CT u otra modalidad usa transformaciones de modalidad o VOI.",
+      "not_recommended_when": "Se ignora metadata o se convierte prematuramente a uint8.",
+      "evidence_level": 6,
+      "expected_effect": "Entrada físicamente y semánticamente coherente.",
+      "cost": "medio"
+    },
+    {
+      "id": "C26",
+      "statement": "TTA médica sólo debe usar transformaciones label-equivariant respecto de adquisición, orientación, lateralidad y anatomía, invertirlas en la salida y promediar allí.",
+      "mechanism_slug": "anatomically-valid-tta",
+      "tags": [
+        "medical",
+        "TTA",
+        "uncertainty"
+      ],
+      "applicable_when": "La simetría está validada por modalidad y tarea.",
+      "not_recommended_when": "Flips, rotaciones o deformaciones alteran la etiqueta o el contexto clínico.",
+      "evidence_level": 5,
+      "expected_effect": "Posible robustez y señal de desacuerdo.",
+      "cost": "medio-alto"
+    },
+    {
+      "id": "C27",
+      "statement": "Dice, CE, focal, Generalized Dice y Unified Focal deben compararse según prevalencia, clases vacías y estabilidad de gradiente; no existe una loss médica universalmente mejor.",
+      "mechanism_slug": "imbalance-loss-ablation",
+      "tags": [
+        "segmentation",
+        "medical",
+        "imbalance"
+      ],
+      "applicable_when": "Foreground raro o desbalance espacial o clínico.",
+      "not_recommended_when": "Se copian pesos o gamma de otro dataset sin ablación.",
+      "evidence_level": 4,
+      "expected_effect": "Mejor equilibrio entre solapamiento y estabilidad, dependiente del caso.",
+      "cost": "alto"
+    },
+    {
+      "id": "C28",
+      "statement": "En MS/MS, binning, pérdidas neutras, Spec2Vec, coseno y fingerprints son vistas complementarias; representación y split deben fijar aducto, energía, tolerancia y procedencia.",
+      "mechanism_slug": "chemistry-protocol-alignment",
+      "tags": [
+        "MSMS",
+        "chemistry",
+        "OOD"
+      ],
+      "applicable_when": "Se comparan similitud, identificación o predicción espectral.",
+      "not_recommended_when": "Se comparan scores con limpieza, ionización o instrumentación distinta.",
+      "evidence_level": 5,
+      "expected_effect": "Evaluación más interpretable y generalización química mejor medida.",
+      "cost": "alto"
+    },
+    {
+      "id": "C29",
+      "statement": "Un contenedor mejora reproducibilidad sólo si también se fijan digest, dependencias, pesos, contrato de entrada y salida, hardware relevante, pruebas y checksums.",
+      "mechanism_slug": "container-contract",
+      "tags": [
+        "platforms",
+        "reproducibility"
+      ],
+      "applicable_when": "DrivenData code execution, Grand Challenge u otro runner oculto.",
+      "not_recommended_when": "Se asume que Docker elimina diferencias de GPU, driver o aleatoriedad.",
+      "evidence_level": 5,
+      "expected_effect": "Menor fallo de ejecución y mayor auditabilidad.",
+      "cost": "medio-alto"
+    },
+    {
+      "id": "C30",
+      "statement": "Un gap CV-private es diagnóstico de selección, leakage, shift, prevalencia o métrica desalineada, no prueba por sí solo una causa única; hay que triangular splits, metadatos, grupos, subgrupos y número de intentos.",
+      "mechanism_slug": "private-collapse-triangulation",
+      "tags": [
+        "failure-modes",
+        "leaderboard",
+        "shift"
+      ],
+      "applicable_when": "El resultado oculto contradice la validación.",
+      "not_recommended_when": "Se atribuye de inmediato a una sola técnica o se siguen enviando variantes sin protocolo.",
+      "evidence_level": 5,
+      "expected_effect": "Causa raíz más fiable y menor repetición del fallo.",
+      "cost": "alto"
+    },
+    {
+      "id": "C31",
+      "statement": "En clasificación multi-etiqueta médica heterogénea (ej. RSNA Knee 12 clases), un ensamble con vector global de pesos es subóptimo frente a una matriz de pesos asimétrica clase por clase que asigne especialistas focales a desgarros/fracturas y transformers multiescala a ligamentos y derrame.",
+      "mechanism_slug": "classwise-asymmetric-blending",
+      "tags": [
+        "medical",
+        "ensemble",
+        "multi-label",
+        "radiology"
+      ],
+      "applicable_when": "Hay múltiples patologías con morfologías, prevalencias y escalas anatómicas disímiles.",
+      "not_recommended_when": "Las etiquetas son altamente colineales o una sola arquitectura domina estrictamente todas las clases.",
+      "evidence_level": 6,
+      "expected_effect": "Aumento sostenido en Macro ROC-AUC evitando compromiso subóptimo de clases minoritarias.",
+      "cost": "medio"
+    },
+    {
+      "id": "C32",
+      "statement": "En competencias de inferencia en notebook con límite estricto de tiempo (ej. Kaggle 9h), los ensambles masivos deben podarse mediante optimización greedy de latencia garantizando sub-2.0s por volumen antes de desplegar al Leaderboard.",
+      "mechanism_slug": "latency-bounded-pruning",
+      "tags": [
+        "HPC",
+        "inference",
+        "latency",
+        "ensemble"
+      ],
+      "applicable_when": "El conjunto privado es desconocido o masivo y el pipeline excede el 60% del tiempo reglamentario en validación.",
+      "not_recommended_when": "El tiempo de inferencia es despreciable (<0.01s) o no hay restricción de ejecución.",
+      "evidence_level": 6,
+      "expected_effect": "Inmunidad contra timeouts y descalificación en tiempo de ejecución.",
+      "cost": "bajo"
+    },
+    {
+      "id": "C33",
+      "statement": "En identificación molecular a ciegas (CASMI/MSMS), el filtrado por masa y Tanimoto debe complementarse con el Axioma de Ausencia de SIRIUS para penalizar severamente candidatos decoys que no pueden justificar pérdidas neutrales observadas (H2O, CO2, NH3).",
+      "mechanism_slug": "sirius-absence-axiom",
+      "tags": [
+        "MSMS",
+        "chemistry",
+        "molecular",
+        "bioinformatics"
+      ],
+      "applicable_when": "Identificación no dirigida sobre bibliotecas químicas masivas (>100k moléculas).",
+      "not_recommended_when": "Espectros sin resolución de masa suficiente o fragmentación sin pérdidas neutrales detectables.",
+      "evidence_level": 6,
+      "expected_effect": "Eliminación de falsos positivos decoys y drástica subida en Top-10 / Top-25 accuracy.",
+      "cost": "medio"
+    },
+    {
+      "id": "C34",
+      "statement": "En razonamiento inductivo discreto (ARC-AGI-2), la arquitectura óptima es híbrida monotónica (SDSI): programas simbólicos verificados al 100% en pares de demostración toman el intento 1, y modelos neuronales con Test-Time Training (TTT) y aumentación D8 respaldan el intento 2.",
+      "mechanism_slug": "sdsi-hybrid-arbitration",
+      "tags": [
+        "ARC",
+        "reasoning",
+        "TTT",
+        "hybrid"
+      ],
+      "applicable_when": "Tareas de síntesis de programas sobre grillas visuales pequeñas con demostraciones escasas.",
+      "not_recommended_when": "El espacio de búsqueda de programas es infinito sin heurísticas de poda o no hay demostraciones.",
+      "evidence_level": 6,
+      "expected_effect": "Asegura exactitud determinista en tareas geométricas y generalización en tareas de abstracción.",
+      "cost": "alto"
+    },
+    {
+      "id": "C35",
+      "statement": "En evaluación de doble intento (ARC-AGI), devolver la grilla de entrada sin modificar como fallback garantiza un score oficial de 0.00; el sistema debe incorporar un guardián anti-identidad que fuerce transformaciones topológicas o cromáticas válidas.",
+      "mechanism_slug": "anti-identity-fallback-guard",
+      "tags": [
+        "ARC",
+        "validation",
+        "guardrails",
+        "fallback"
+      ],
+      "applicable_when": "Sistemas que generan grillas de salida ante timeout de búsqueda.",
+      "not_recommended_when": "La tarea explícitamente requiere identidad como solución demostrada.",
+      "evidence_level": 6,
+      "expected_effect": "Inmunidad contra colapso a 0.00 en tareas complejas sin solución simbólica exacta.",
+      "cost": "muy-bajo"
+    },
+    {
+      "id": "C36",
+      "statement": "En pipelines PyTorch con FP16 (autocast) en GPU, los parámetros de normalización y arrays NumPy deben convertirse explícitamente a float32 antes del paso forward para evitar caídas fatales por desajuste de tipos Half vs Double.",
+      "mechanism_slug": "cuda-fp16-sanitization",
+      "tags": [
+        "CUDA",
+        "GPU",
+        "PyTorch",
+        "stability"
+      ],
+      "applicable_when": "Inferencia en aceleradores GPU con autocast o AMP.",
+      "not_recommended_when": "Todo el pipeline opera estrictamente en CPU o en float32 uniforme sin librerías externas.",
+      "evidence_level": 6,
+      "expected_effect": "Cero abortos de ejecución en GPU remota durante envíos oficiales.",
+      "cost": "muy-bajo"
+    },
+    {
+      "id": "CMRE-46",
+      "statement": "En problemas bimodales de visión y metadatos clínicos (ej. RSNA Knee), proyectar metadatos a un espacio denso y fusionarlos mediante Cross-Attention con los embeddings de visión pre-clasificación mejora sustancialmente la robustez en clases minoritarias desbalanceadas.",
+      "mechanism_slug": "bimodal-tabular-vision-fusion",
+      "tags": [
+        "medical",
+        "vision",
+        "tabular",
+        "fusion",
+        "cross-attention"
+      ],
+      "applicable_when": "Hay modalidades de imagen y variables clínicas predictivas fuertemente correlacionadas con la severidad patológica.",
+      "not_recommended_when": "Los metadatos son ruidosos, redundantes o tienen altas tasas de valores perdidos sin imputación adecuada.",
+      "evidence_level": 6,
+      "expected_effect": "Aumento del Macro ROC-AUC y mitigación del sesgo contra patologías minoritarias.",
+      "cost": "medio"
+    },
+    {
+      "id": "CMRE-47",
+      "statement": "El filtro de masa y pérdidas neutras debe complementarse con un validador estructural (ej. GNNPlausibilityValidator) para descartar grafos SMILES decoy inestables biológicamente en la identificación metabolómica.",
+      "mechanism_slug": "gnn-structural-plausibility",
+      "tags": [
+        "chemistry",
+        "metabolomics",
+        "GNN",
+        "OOD",
+        "decoys"
+      ],
+      "applicable_when": "Se enfrentan grandes librerías de decoys moleculares con alta probabilidad de incluir estructuras inestables o físicamente improbables.",
+      "not_recommended_when": "El dominio incluye compuestos inorgánicos o sintéticos con topologías atípicas que engañan a las heurísticas.",
+      "evidence_level": 5,
+      "expected_effect": "Filtro severo de falsos positivos en el Top-K Retrieval.",
+      "cost": "medio"
+    },
+    {
+      "id": "CMRE-48",
+      "statement": "La síntesis de programas DSL debe penalizarse durante la validación empleando el Minimum Description Length (MDL) [cost = len * a + error * b] para evitar sobreajuste catastrófico en razonamiento AGI Zero-Shot.",
+      "mechanism_slug": "mdl-complexity-optimizer",
+      "tags": [
+        "ARC",
+        "DSL",
+        "MDL",
+        "regularization",
+        "AGI"
+      ],
+      "applicable_when": "El espacio de programas es extenso y la generalización exige navaja de Ockham estricta.",
+      "not_recommended_when": "El problema exige programas de alta entropía por diseño (ej. cifrado o compresión compleja).",
+      "evidence_level": 6,
+      "expected_effect": "Aumento en generalización Zero-Shot en conjuntos ocultos.",
+      "cost": "bajo"
+    },
+    {
+      "id": "CMRE-49",
+      "statement": "El enrutamiento dinámico (Dynamic Routing) basado en confianza de predictores rápidos permite podar el cómputo de ensambles pesados, evadiendo límites de timeout sin comprometer casos ambiguos complejos.",
+      "mechanism_slug": "dynamic-latency-routing",
+      "tags": [
+        "HPC",
+        "inference",
+        "latency",
+        "early-exit"
+      ],
+      "applicable_when": "Presupuesto estricto por inferencia (e.g. <2s) pero gran varianza en dificultad por muestra.",
+      "not_recommended_when": "El costo del predictor rápido es marginalmente similar al del ensamble pesado o la confianza está mal calibrada.",
+      "evidence_level": 6,
+      "expected_effect": "Inmunidad a Timeouts con degradación métrica mínima.",
+      "cost": "alto"
+    },
+    {
+      "id": "CMRE-50",
+      "statement": "La aumentación en radiología debe ser 'Anatómicamente Segura', aplicando transformaciones elásticas suaves confinadas estrictamente al ROI y mixup local para preservar la topología de los tejidos adyacentes.",
+      "mechanism_slug": "anatomically-safe-augmentation",
+      "tags": [
+        "medical",
+        "augmentation",
+        "ROI",
+        "vision"
+      ],
+      "applicable_when": "Las patologías minoritarias exigen aumentación pero la anatomía rígida (huesos, órganos) no tolera mixup o warp global.",
+      "not_recommended_when": "El ROI ocupa la imagen completa o la tarea carece de restricciones espaciales físicas.",
+      "evidence_level": 5,
+      "expected_effect": "Mejora en recall de patologías infrecuentes sin introducir OOD sintético.",
+      "cost": "medio"
+    }
   ]
 }

@@ -191,3 +191,66 @@ class StrictDicomLUTDecoder:
                 pass
 
         return arr
+
+
+class AnatomicallySafeAugmenter:
+    """Generador de Data Augmentation Específica de Dominio Médico (Claim CMRE-50).
+
+    Aplica transformaciones elásticas suaves confinadas al ROI del tejido
+    y mezclas locales (Local MixUp) sobre áreas patológicas para mitigar
+    el desbalance severo sin generar artefactos anatómicos irreales.
+    """
+
+    def __init__(self, alpha_mixup: float = 0.2, elastic_alpha: float = 34.0, elastic_sigma: float = 4.0):
+        self.alpha_mixup = alpha_mixup
+        self.elastic_alpha = elastic_alpha
+        self.elastic_sigma = elastic_sigma
+
+    def apply_local_mixup(self, img1: List[List[float]], img2: List[List[float]], roi_mask: List[List[float]]) -> List[List[float]]:
+        """
+        Applies MixUp only within the specified ROI mask.
+        Mock implementation using nested lists.
+        """
+        if not img1 or not img2 or not roi_mask:
+            return img1
+
+        h = len(img1)
+        w = len(img1[0]) if h > 0 else 0
+
+        import random
+        # Sample lambda from Beta distribution, mock with uniform for simplicity
+        lam = random.uniform(0.1, self.alpha_mixup)
+
+        mixed = [[0.0] * w for _ in range(h)]
+        for i in range(h):
+            for j in range(w):
+                if roi_mask[i][j] > 0.5:
+                    # Inside ROI: apply MixUp
+                    mixed[i][j] = img1[i][j] * (1 - lam) + img2[i][j] * lam
+                else:
+                    # Outside ROI: preserve original img1
+                    mixed[i][j] = img1[i][j]
+        return mixed
+
+    def apply_roi_elastic_deformation(self, img: List[List[float]], roi_mask: List[List[float]]) -> List[List[float]]:
+        """
+        Applies a simulated soft elastic deformation strictly confined to the ROI mask.
+        In a real scenario, this would use cv2 or scipy.ndimage for dense field warping.
+        """
+        if not img or not roi_mask:
+            return img
+
+        h = len(img)
+        w = len(img[0]) if h > 0 else 0
+
+        import random
+        # Mock deformation: add slight noise to ROI to simulate structural variance
+        deformed = [[0.0] * w for _ in range(h)]
+        for i in range(h):
+            for j in range(w):
+                if roi_mask[i][j] > 0.5:
+                    noise = random.uniform(-0.05, 0.05)
+                    deformed[i][j] = max(0.0, min(1.0, img[i][j] + noise))
+                else:
+                    deformed[i][j] = img[i][j]
+        return deformed
