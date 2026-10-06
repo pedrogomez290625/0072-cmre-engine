@@ -68,6 +68,9 @@
 - **Generador Dinámico de Tareas:** El motor analiza en tiempo real `ACTIVE_COMPETITIONS.json` y postmortems históricos para autoproyectar su evolución a través de `JULES_DYNAMIC_TASKS.md`, abordando vulnerabilidades sistémicas antes de la inferencia en producción y permitiendo reescritura constante de su backlog de ingeniería.
 
 ## 🌟 6. ACTUALIZACIONES RECIENTES (v1.0.0+)
+
+- **Super-Tareas Resolutivas (CMRE-46 a CMRE-50)**: Integración de `BimodalTabularVisionFusion` en `MOD_ENSEMBLE` (CMRE-46), `GNNPlausibilityValidator` en `MOD_OOD` (CMRE-47), `MDLComplexityOptimizer` en `MOD_LOSS` (CMRE-48), `dynamic_route` en `LatencyBudgetPruner` (`MOD_ENSEMBLE`) (CMRE-49), y `AnatomicallySafeAugmenter` en `MOD_INGEST` (CMRE-50). Incremento de tests unitarios garantizando cobertura de los componentes.
+
 - **Módulos Avanzados (CMRE-25, CMRE-28, CMRE-29)**: Integración de `OODDetector` para validación OOD (CMRE-25), `MultiMetricEarlyStopping` para paradas tempranas seguras (CMRE-28), y `DTWPurgedTimeSeriesSplit` para robustez temporal dinámica (CMRE-29).
 - **AntiIdentityGuard**: Implementado en `src/cmre/services/submission_validator.py` para prevenir colapsos a 0.00 en Kaggle ARC-AGI, forzando transformaciones geométricas (D8) y cromáticas deterministas frente a inferencias idénticas a la entrada (Postmortem FAIL_11).
 - **Google Drive Continuous Bridge**: Herramienta CLI (`scripts/gdrive_hub.py`) ahora incluye comando `sync` que transfiere `claims_cmre.json` y `postmortems_failures_catalog.json` directo a la nube.

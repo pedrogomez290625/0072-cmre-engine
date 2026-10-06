@@ -383,3 +383,46 @@ class BiTemperedLogisticLoss(nn.Module):
         loss_values = loss_values.sum(dim=-1)
 
         return loss_values.mean()
+
+
+class MDLComplexityOptimizer:
+    """Optimizador de Complejidad MDL (Minimum Description Length) (Claim CMRE-48).
+
+    En el razonamiento AGI (ARC Prize), penaliza programas inducidos (DSL) que están
+    sobre-ajustados (espagueti simbólico). Evalúa candidatos con:
+    cost = len(DSL_ast_nodes) * alpha + Error_Rate * beta
+    """
+
+    def __init__(self, alpha: float = 1.0, beta: float = 100.0):
+        """
+        Args:
+            alpha: Peso para la complejidad del programa (longitud de nodos).
+            beta: Peso para el error de validación empírico (Error_Rate).
+        """
+        self.alpha = alpha
+        self.beta = beta
+
+    def compute_cost(self, num_ast_nodes: int, error_rate: float) -> float:
+        """Calcula el costo MDL explícito."""
+        return (num_ast_nodes * self.alpha) + (error_rate * self.beta)
+
+    def select_best_program(self, programs_metadata: List[Dict[str, float]]) -> int:
+        """
+        Selecciona el índice del programa candidato con el menor costo MDL.
+
+        Args:
+            programs_metadata: Lista de diccionarios, cada uno con 'nodes' y 'error_rate'.
+        """
+        if not programs_metadata:
+            return -1
+
+        best_idx = 0
+        best_cost = float('inf')
+
+        for i, meta in enumerate(programs_metadata):
+            cost = self.compute_cost(int(meta.get('nodes', 0)), float(meta.get('error_rate', 1.0)))
+            if cost < best_cost:
+                best_cost = cost
+                best_idx = i
+
+        return best_idx

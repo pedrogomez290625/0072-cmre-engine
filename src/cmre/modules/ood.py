@@ -121,3 +121,54 @@ class SIRIUSAbsenceAxiomOptimizer:
                             penalties[i] *= self.absence_penalty_factor
                             break
         return penalties
+
+
+class GNNPlausibilityValidator:
+    """Detector de Decoys Basado en Grafos Moleculares (Claim CMRE-47).
+
+    Estimador heurístico para evaluar estructuralmente si un "SMILES_graph"
+    propuesto como decoy es energéticamente estable o biofísicamente probable
+    dentro del dominio metabolómico.
+    """
+
+    def __init__(self, plausibility_threshold_percentile: float = 5.0, penalty_factor: float = 0.1):
+        self.threshold = plausibility_threshold_percentile
+        self.penalty_factor = penalty_factor
+        self.reference_distribution: List[float] = []
+
+    def fit(self, training_smiles: List[str]) -> GNNPlausibilityValidator:
+        """Mock fitting of the plausibility score distribution based on training data."""
+        import numpy as np
+        self.reference_distribution = [self._calculate_raw_score(s) for s in training_smiles]
+        if not self.reference_distribution:
+            self.reference_distribution = [50.0] # Default center
+        return self
+
+    def _calculate_raw_score(self, smiles: str) -> float:
+        """
+        Mocks a GNN GraphSAGE score. Real impl would parse networkx graph from SMILES
+        and run a forward pass of a lightweight GNN.
+        Here we use a dummy heuristic: Length and ring presence (C1=CC=CC=C1 etc).
+        """
+        length_score = min(len(smiles) / 50.0, 1.0) * 50.0
+        ring_bonus = 20.0 if "1" in smiles or "2" in smiles else 0.0
+        hetero_penalty = -10.0 if smiles.count("X") > 0 else 0.0 # Unknown elements
+        return max(0.0, min(100.0, length_score + ring_bonus + hetero_penalty))
+
+    def evaluate(self, candidate_smiles: List[str], current_scores: List[float]) -> List[float]:
+        """
+        Penaliza candidatos cuyo score estructural cae en percentiles inferiores.
+        """
+        import numpy as np
+        if not candidate_smiles or not self.reference_distribution:
+            return current_scores
+
+        threshold_val = np.percentile(self.reference_distribution, self.threshold)
+
+        penalized_scores = list(current_scores)
+        for i, smi in enumerate(candidate_smiles):
+            plausibility = self._calculate_raw_score(smi)
+            if plausibility < threshold_val:
+                penalized_scores[i] *= self.penalty_factor
+
+        return penalized_scores
