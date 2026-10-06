@@ -116,3 +116,8 @@
   - **Objetivo:** Ejecutar implementación y testeo unitario de CMRE-46 a CMRE-50, fortaleciendo el motor CMRE.
   - **Requerimiento:** Implementar BimodalTabularVisionFusion, GNNPlausibilityValidator, MDLComplexityOptimizer, DynamicRouting, y AnatomicallySafeAugmenter. Actualizar logs y estado.
   - **Autor:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
+
+- [x] **TASK-CLOSURE-028 (Cierre de Sesión y Auto-evolución 6 Oct):**
+  - **Objetivo:** Ejecutar cierre, benchmarking final y proyectar nuevas super-tareas para el motor (CMRE-51 a CMRE-55).
+  - **Requerimiento:** Verificar 176 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y reescribir JULES_DYNAMIC_TASKS.md. Abrir PR limpio hacia main.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
