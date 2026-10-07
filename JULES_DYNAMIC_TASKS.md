@@ -1,6 +1,6 @@
 # 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
-**Iteración:** Sesión de Desarrollo Agnóstico (6 de Octubre 2026) - Auto-Reescritura Avanzada
+**Iteración:** Sesión de Desarrollo Agnóstico (7 de Octubre 2026) - Auto-Reescritura Avanzada
 **Autor:** Perez, Ernesto Rafael ("Rafa")
 
 Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS.json` y el `data/knowledge/postmortems_failures_catalog.json`. Su objetivo es proyectar las mitigaciones a las vulnerabilidades encontradas y potenciar los solvers de las competencias activas (RSNA Knee, CASMI, ARC-AGI).
@@ -9,30 +9,30 @@ Este archivo es reescrito por el motor tras el análisis de `ACTIVE_COMPETITIONS
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-51: Optimizador Nelder-Mead de Umbrales Multiclase (Extremo Desbalance)
-- **Origen:** `ACTIVE_COMPETITIONS.json` (RSNA Knee 2026 - severe_class_imbalance) & `FAIL_01` (Threshold Collapse and Metric Disalignment).
-- **Problema:** Usar un umbral de 0.5 por defecto colapsa métricas en clases raras (<5% de prevalencia). Los modelos pueden obtener AUC alto pero fallar en el private LB de Kaggle al momento de la binarización de decisión.
-- **Implementación:** Construir en `MOD_ENSEMBLE` un Optimizador Nelder-Mead multiclase, que tome las predicciones out-of-fold y calibre cada clase independientemente (o macro-promediada) para optimizar el F1-score sin penalizar masivamente los falsos positivos.
+### [ ] SUPER-TAREA CMRE-56: Reconstrucción de Tiling de Mosaicos con Hanning (WSI)
+- **Origen:** `FAIL_03` (MED_WSI_HANNING_TILER).
+- **Problema:** En imágenes médicas de ultra-alta resolución (Gigapíxeles), la recombinación ingenua de mosaicos (tiling sin solapamiento) causa pérdida de contexto espacial en fronteras, generando discontinuidades en forma de cuadrícula y degradando la métrica Dice.
+- **Implementación:** Construir en `MOD_INGEST` un Tiler de ventana separable 2D de Hanning, asegurando un solapamiento del 25% y reconstrucción suavizada ponderada.
 
-### [ ] SUPER-TAREA CMRE-52: Sanitizador Universal de Precisiones (FP16/FP64)
-- **Origen:** `FAIL_13` (CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH).
-- **Problema:** En el paso de tensores o constantes de pre-procesamiento desde NumPy (Float64) a PyTorch con Autocast (FP16) para inferencia acelerada en Kaggle, existen fallos en tiempo de ejecución (Double vs Half) abortando CUDA silenciosamente.
-- **Implementación:** Implementar un guardián de tipos y casting `PrecisionSanitizer` en `MOD_HPC` o `MOD_INGEST` que analice recursivamente cada tensor dentro del `ProblemDNA` antes de pasarlo al backbone, realizando un casting explícito a `.float()` y luego a `.half()` bajo autocast.
+### [ ] SUPER-TAREA CMRE-57: Target Encoder OOF Bayesiano Estricto
+- **Origen:** `FAIL_06` (TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE).
+- **Problema:** Calcular variables objetivo codificadas (Target Encoding) sin validación cruzada estricta genera fuga (leakage) masiva en variables de alta cardinalidad, colapsando el score en inferencia.
+- **Implementación:** Implementar en `MOD_SIGNAL` un `BayesianOOFTargetEncoder` que procese estrcitamente Out-Of-Fold aplicando regularización m-estimate de Dirichlet y adición de ruido gaussiano para variables categóricas.
 
-### [ ] SUPER-TAREA CMRE-53: Arquitectura Híbrida de Enrutamiento para Latencia Estricta (Dynamic Budget Pruner V2)
-- **Origen:** `ACTIVE_COMPETITIONS.json` (RSNA Knee 2026 - kaggle_timeout_risk) & `FAIL_12` (UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION).
-- **Problema:** Un pipeline ensamblado masivo (>30 sub-redes) causó colapsos por exceder 9h en RSNA. El presupuesto actual es de 1.5s por muestra.
-- **Implementación:** Mejorar el `LatencyBudgetPruner` en `MOD_ENSEMBLE`. Desarrollar un sistema de enrutamiento basado en costo: usar una pequeña red convolucional que en menos de 5ms determine si un estudio es "difícil" o "fácil". Si es fácil, ejecutar la red principal; si es difícil, ejecutar un bloque pesado (KneeSpecialist + CoAtNet) deteniendo otros componentes en paralelo.
+### [ ] SUPER-TAREA CMRE-58: Normalización Intercuartílica Robusta y Delta Trick
+- **Origen:** `FAIL_07` (UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT).
+- **Problema:** Los conteos brutos o features de densidad a menudo se sobreajustan a las distribuciones de un pliegue y fallan ante un dataset desplazado.
+- **Implementación:** Añadir a `MOD_SIGNAL` un generador `DeltaTrickNormalizer` que convierta conteos directos en desvíos relativos y normalización intercuartílica (IQR) respecto a medias de grupos de control robustas.
 
-### [ ] SUPER-TAREA CMRE-54: Generador de Señal Delta Relativo a Dispersión (Delta Trick)
-- **Origen:** `FAIL_07` (UNSCALED_COUNT_FEATURE_LEAKAGE).
-- **Problema:** Los metadatos tabulares a menudo contienen conteos absolutos que se sobreajustan a las distribuciones del public LB.
-- **Implementación:** Implementar en `MOD_SIGNAL` un calculador de desvíos relativos e intercuartílicos robustos para toda columna numérica entrante, eliminando constantes crudas como conteo de ceros no relativizado por grupo.
+### [ ] SUPER-TAREA CMRE-59: Suavizador de Etiquetas con Cross-Entropy Ponderada (Soft-F1)
+- **Origen:** `FAIL_08` (LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION).
+- **Problema:** La Cross-Entropy estándar forzaba a los modelos complejos a memorizar ruido en competencias con etiquetas de campo médicas de mala calidad (Cassava), corrompiendo gradientes.
+- **Implementación:** Desarrollar en `MOD_LOSS` un mecanismo diferenciable de `WeightedSoftF1` y Label Smoothing con gradientes amortiguados para inmunizar la pérdida ante falsos positivos de anotadores.
 
-### [ ] SUPER-TAREA CMRE-55: Purga Temporal y Embargo para Alineamiento Multimodal
-- **Origen:** `FAIL_02` (TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS).
-- **Problema:** K-Fold aleatorio en datos biomédicos longitudinales del mismo paciente filtra información futura hacia el pasado.
-- **Implementación:** Extender `MOD_SPLIT` con un `PurgedGroupTimeSeriesSplit` robusto a modalidades 2.5D que garantice la desconexión estricta temporal (embargo period) entre los scans de base de datos del mismo paciente sin superposición en folds.
+### [ ] SUPER-TAREA CMRE-60: Ensamble de Mínimos Cuadrados No Negativos (NNLS)
+- **Origen:** `FAIL_09` (NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE).
+- **Problema:** En el stacking con Regresión Lineal Ordinaria, la multicolinealidad severa de modelos idénticos forzó coeficientes fuertemente negativos, causando pérdida infinita.
+- **Implementación:** Desarrollar un `NNLSBlender` en `MOD_ENSEMBLE` que ajuste los meta-pesos forzando `w_i >= 0` y la restricción convexa euclidiana `sum(w) = 1.0` frente a modelos hiper-colineales.
 
 ---
 [VINCIT_OMNIA_VERITAS]
