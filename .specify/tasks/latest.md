@@ -121,3 +121,8 @@
   - **Objetivo:** Ejecutar cierre, benchmarking final y proyectar nuevas super-tareas para el motor (CMRE-51 a CMRE-55).
   - **Requerimiento:** Verificar 176 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y reescribir JULES_DYNAMIC_TASKS.md. Abrir PR limpio hacia main.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-INIT-029 (Inicialización y Memoria Dinámica 7 Oct):**
+  - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
+  - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (176 pasando) y asentar log en JULES_EXECUTION_LOG.md.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
