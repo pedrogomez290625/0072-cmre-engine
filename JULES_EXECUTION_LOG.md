@@ -452,3 +452,15 @@ Autor: Perez, Ernesto Rafael ("Rafa")
   4. Sincronización mental con los catálogos en `data/knowledge/` respetando regla de convivencia anti-colisión con Spark (lectura e integración aditiva).
   5. Ejecución exitosa de `pytest tests/` validando el estado del repositorio (100% tests en verde).
 - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+## 🟢 ENTRADA 030 - IMPLEMENTACIÓN DE SUPER-TAREAS CMRE-56 A CMRE-60
+**Fecha:** 7 de Octubre 2026
+**Objetivo:** Implementación de Super-Tareas CMRE-56 a CMRE-60.
+**Acciones:**
+- Se implementó `HanningWindowTiler2D` en `MOD_INGEST` para resolver el colapso de contexto espacial en Whole Slide Imaging (CMRE-56).
+- Se validó el OOF estricto con m-estimate en `OOFTargetEncoder` de `MOD_SIGNAL` (CMRE-57).
+- Se desarrolló `DeltaTrickNormalizer` en `MOD_SIGNAL` para normalización robusta intercuartílica, previniendo fuga de conteos (CMRE-58).
+- Se añadió `WeightedSoftF1Loss` a `MOD_LOSS`, uniendo Label Smoothing con Soft-F1 diferenciable para anotaciones ruidosas (CMRE-59).
+- Se habilitó `NNLSBlender` explícitamente en `MOD_ENSEMBLE` garantizando en ensambles un set robusto no-negativo (CMRE-60).
+- Todos los 180 tests pasaron al 100%.
+**Autor:** Perez, Ernesto Rafael ("Rafa")

@@ -254,3 +254,67 @@ class AnatomicallySafeAugmenter:
                 else:
                     deformed[i][j] = img[i][j]
         return deformed
+
+class HanningWindowTiler2D:
+    """Reconstrucción de Tiling de Mosaicos con Hanning (Claim CMRE-56).
+
+    Para WSI (Whole Slide Imaging), la recombinación ingenua de mosaicos
+    causa artefactos. Esta clase usa una ventana de Hanning separable en 2D
+    para mezclar fronteras con un solapamiento del 25% garantizando
+    transiciones suaves.
+    """
+
+    def __init__(self, tile_size: int = 256, overlap_pct: float = 0.25):
+        self.tile_size = tile_size
+        self.overlap_pct = overlap_pct
+        self.step = int(tile_size * (1.0 - overlap_pct))
+        # Ensure minimum step of 1
+        if self.step < 1:
+            self.step = 1
+
+    def _get_hanning_window(self) -> List[List[float]]:
+        import math
+        window = [[0.0] * self.tile_size for _ in range(self.tile_size)]
+        for i in range(self.tile_size):
+            h_i = 0.5 * (1 - math.cos(2 * math.pi * i / (self.tile_size - 1)))
+            for j in range(self.tile_size):
+                h_j = 0.5 * (1 - math.cos(2 * math.pi * j / (self.tile_size - 1)))
+                window[i][j] = h_i * h_j
+        return window
+
+    def blend_tiles(self, tiles: List[List[List[float]]], image_shape: Tuple[int, int]) -> List[List[float]]:
+        """
+        Recombines a flat list of tiles back into the original image shape using
+        Hanning window weighting.
+
+        Args:
+            tiles: List of 2D tile matrices, assumed to be extracted in row-major order.
+            image_shape: Tuple of (height, width) for the reconstructed image.
+        """
+        h, w = image_shape
+        out = [[0.0] * w for _ in range(h)]
+        weights = [[0.0] * w for _ in range(h)]
+
+        hanning = self._get_hanning_window()
+
+        rows = (h - self.tile_size) // self.step + 1 if h >= self.tile_size else 1
+        cols = (w - self.tile_size) // self.step + 1 if w >= self.tile_size else 1
+
+        tile_idx = 0
+        for i in range(0, h - self.tile_size + 1, self.step):
+            for j in range(0, w - self.tile_size + 1, self.step):
+                if tile_idx < len(tiles):
+                    tile = tiles[tile_idx]
+                    for r in range(self.tile_size):
+                        for c in range(self.tile_size):
+                            out[i+r][j+c] += tile[r][c] * hanning[r][c]
+                            weights[i+r][j+c] += hanning[r][c]
+                tile_idx += 1
+
+        # Normalize
+        for i in range(h):
+            for j in range(w):
+                if weights[i][j] > 0.0:
+                    out[i][j] /= weights[i][j]
+
+        return out

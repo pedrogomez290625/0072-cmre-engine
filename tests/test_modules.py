@@ -292,3 +292,97 @@ def test_multi_view_orthogonal_aligner():
     # Predictions should be close to perfect thanks to view specialization
     assert preds[0][0] > 0.8
     assert preds[1][1] > 0.8
+
+def test_hanning_window_tiler2d():
+    from cmre.modules.ingest import HanningWindowTiler2D
+
+    tiler = HanningWindowTiler2D(tile_size=4, overlap_pct=0.5)
+
+    # 4x4 hanning window center should be high
+    window = tiler._get_hanning_window()
+    assert window[1][1] > 0.0
+
+    # Create two 4x4 tiles to blend into a 4x6 image
+    # step is 4 * (1 - 0.5) = 2
+    # image_shape = (4, 6) -> row = 0, col = 0, 2, 4 -> wait, 4+2=6, so 2 cols?
+    # (6 - 4) // 2 + 1 = 2
+    tile1 = [[1.0]*4 for _ in range(4)]
+    tile2 = [[2.0]*4 for _ in range(4)]
+
+    blended = tiler.blend_tiles([tile1, tile2], (4, 6))
+    assert len(blended) == 4
+    assert len(blended[0]) == 6
+
+def test_delta_trick_normalizer():
+    from cmre.modules.signal import DeltaTrickNormalizer
+
+    rows = [
+        {"group": "A", "val": 10},
+        {"group": "A", "val": 20},
+        {"group": "A", "val": 30},
+        {"group": "A", "val": 40},
+        {"group": "B", "val": 100},
+        {"group": "B", "val": 100},
+    ]
+
+    normalizer = DeltaTrickNormalizer()
+    out = normalizer.fit_transform(rows, "group", "val")
+
+    assert len(out) == 6
+    # Group A: vals [10, 20, 30, 40]
+    # median = 25
+    # q1 = 20, q3 = 40 (based on rough idx), iqr = 20
+    # 10 -> (10 - 25) / 20 = -0.75
+    # 20 -> (20 - 25) / 20 = -0.25
+    # 30 -> (30 - 25) / 20 = 0.25
+    # 40 -> (40 - 25) / 20 = 0.75
+    assert out[0] < 0
+    assert out[3] > 0
+    # Group B: vals [100, 100], iqr = 0 -> 1.0, median = 100
+    # 100 -> 0.0
+    assert out[4] == 0.0
+
+def test_weighted_soft_f1_loss():
+    from cmre.modules.loss import WeightedSoftF1Loss
+    import torch
+
+    loss_fn = WeightedSoftF1Loss(ce_weight=0.5, f1_weight=0.5, label_smoothing=0.1)
+
+    # 2 samples, 3 classes
+    logits = torch.tensor([[10.0, -10.0, -10.0], [-10.0, 10.0, -10.0]], requires_grad=True)
+    targets = torch.tensor([0, 1]) # integer labels
+
+    loss1 = loss_fn(logits, targets)
+    assert loss1.item() > 0.0
+
+    # Test gradients flow
+    loss1.backward()
+    assert logits.grad is not None
+
+    # Test with one-hot targets
+    logits2 = torch.tensor([[10.0, -10.0, -10.0], [-10.0, 10.0, -10.0]], requires_grad=True)
+    targets_onehot = torch.tensor([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])
+
+    loss2 = loss_fn(logits2, targets_onehot)
+    assert loss2.item() > 0.0
+
+def test_nnls_blender_cmre_60():
+    from cmre.modules.ensemble import NNLSBlender
+    import pytest
+
+    m1 = [1.0, 0.0, 1.0, 0.0]
+    m2 = [0.0, 1.0, 0.0, 1.0]
+    m3 = [1.0, 0.0, 1.0, 0.0] # Highly collinear with m1
+    y_true = [1.0, 0.0, 1.0, 0.0]  # M1/M3 are perfect predictors
+
+    blender = NNLSBlender()
+    blender.fit([m1, m2, m3], y_true)
+
+    # Check that weights sum to 1.0
+    assert sum(blender.weights) == pytest.approx(1.0, abs=1e-3)
+    # Check non-negativity
+    assert all(w >= -1e-6 for w in blender.weights)
+
+    # Predict
+    preds = blender.predict([m1, m2, m3])
+    assert len(preds) == 4

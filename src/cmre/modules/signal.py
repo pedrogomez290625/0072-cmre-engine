@@ -120,11 +120,12 @@ def oof_bayesian_target_encode(df_train, df_test, cat_cols, target_col, cv_split
 '''
 
 class OOFTargetEncoder:
-    """Out-of-Fold Target Encoder (Claim CMRE-37).
+    """Out-of-Fold Target Encoder (Claim CMRE-37 y CMRE-57).
 
     Prevents massive data leakage by calculating categorical target encodings
-    using a strict OOF scheme. Applies Dirichlet regularization and adds Gaussian noise
-    in each training fold before transforming the validation fold.
+    using a strict OOF scheme. Applies Dirichlet regularization (m-estimate)
+    and adds Gaussian noise in each training fold before transforming the validation fold
+    y también para todo el dataset.
     """
 
     def __init__(self, m_smoothing: float = 20.0, noise_level: float = 0.01):
@@ -159,9 +160,7 @@ class OOFTargetEncoder:
             encoder = BayesianOofTargetEncoder(m_smoothing=self.m_smoothing, noise_level=0.0)
             encoder.fit(train_cats, train_targets)
 
-            # Transform validation set without noise (noise is generally for train data during OOF)
-            # Actually, standard practice for TE is to add noise to the *transformed* values
-            # to further prevent overfitting when the OOF features are used by the downstream model.
+            # Transform validation set
             val_cats = [categories[i] for i in val_idx]
             val_encoded = encoder.transform(val_cats)
 
@@ -172,3 +171,54 @@ class OOFTargetEncoder:
                 oof_encoded[v_idx] = encoded_val
 
         return oof_encoded
+
+class DeltaTrickNormalizer:
+    """Normalización Intercuartílica Robusta y Delta Trick (Claim CMRE-58).
+
+    Convierte conteos directos en desvíos relativos usando normalización IQR.
+    Evita sobreajuste a conteos absolutos y generaliza mejor ante shifts.
+    """
+
+    def __init__(self):
+        self.group_stats = {}
+
+    def fit_transform(self, rows: List[Dict[str, Any]], group_key: str, value_key: str) -> List[float]:
+        # Calculate IQR and robust mean (median) per group
+        groups = {}
+        for r in rows:
+            g = r.get(group_key)
+            val = float(r.get(value_key, 0.0) or 0.0)
+            if g not in groups:
+                groups[g] = []
+            groups[g].append(val)
+
+        for g, vals in groups.items():
+            vals.sort()
+            n = len(vals)
+            if n == 0:
+                self.group_stats[g] = (0.0, 1.0)
+                continue
+
+            median = vals[n // 2] if n % 2 != 0 else (vals[n // 2 - 1] + vals[n // 2]) / 2.0
+
+            q1_idx = n // 4
+            q3_idx = (3 * n) // 4
+            q1 = vals[q1_idx]
+            q3 = vals[q3_idx]
+            iqr = q3 - q1
+            if iqr == 0.0:
+                iqr = 1.0
+
+            self.group_stats[g] = (median, iqr)
+
+        out = []
+        for r in rows:
+            g = r.get(group_key)
+            val = float(r.get(value_key, 0.0) or 0.0)
+            if g in self.group_stats:
+                median, iqr = self.group_stats[g]
+                out.append((val - median) / iqr)
+            else:
+                out.append(0.0)
+
+        return out
