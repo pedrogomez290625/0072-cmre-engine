@@ -108,3 +108,10 @@ Autor: Perez, Ernesto Rafael ("Rafa")
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
+
+## 2026-10-07 Arquitectura Update
+
+- **MOD_INGEST:** HanningWindowTiler2D (CMRE-56) para mitigación de costuras en mosaicos médicos WSI.
+- **MOD_SIGNAL:** DeltaTrickNormalizer (CMRE-58) con normalización IQR y Strict OOF Bayesian Target Encoder (CMRE-57).
+- **MOD_LOSS:** WeightedSoftF1Loss (CMRE-59) combinado con Label Smoothing para robustez ante etiquetas ruidosas.
+- **MOD_ENSEMBLE:** NNLSBlender restrictivo (simplemente instanciando el estricto NonNegativeLeastSquaresBlender, CMRE-60).

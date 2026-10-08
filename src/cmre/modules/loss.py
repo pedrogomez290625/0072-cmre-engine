@@ -426,3 +426,53 @@ class MDLComplexityOptimizer:
                 best_idx = i
 
         return best_idx
+
+class WeightedSoftF1Loss(nn.Module):
+    """Suavizador de Etiquetas con Cross-Entropy Ponderada (Claim CMRE-59).
+
+    Combina Soft-F1 diferenciable con Cross-Entropy suavizada (Label Smoothing)
+    y amortiguación de gradientes para inmunizar la pérdida ante falsos positivos
+    de anotadores en competencias médicas de baja calidad.
+    """
+
+    def __init__(self, ce_weight: float = 0.5, f1_weight: float = 0.5, label_smoothing: float = 0.1, eps: float = 1e-7):
+        super().__init__()
+        self.ce_weight = ce_weight
+        self.f1_weight = f1_weight
+        self.label_smoothing = label_smoothing
+        self.eps = eps
+        self.ce_loss = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
+
+    def forward(self, logits, targets):
+        """
+        Args:
+            logits: Unnormalized model outputs [B, C].
+            targets: Binary or integer targets [B] or [B, C].
+        """
+        # Support both integer labels and one-hot
+        if targets.dim() == 1 or (targets.dim() == 2 and targets.shape[1] == 1):
+            targets_one_hot = torch.nn.functional.one_hot(targets.long().view(-1), num_classes=logits.shape[-1]).float()
+            targets_ce = targets.long().view(-1)
+        else:
+            targets_one_hot = targets.float()
+            targets_ce = targets_one_hot
+
+        ce = self.ce_loss(logits, targets_ce)
+
+        probs = torch.sigmoid(logits)
+
+        # Apply label smoothing to targets for F1 to avoid over-confident gradient pushing
+        if self.label_smoothing > 0.0:
+            num_classes = logits.shape[-1]
+            smooth_targets = targets_one_hot * (1.0 - self.label_smoothing) + self.label_smoothing / num_classes
+        else:
+            smooth_targets = targets_one_hot
+
+        tp = (smooth_targets * probs).sum(dim=0)
+        fp = ((1.0 - smooth_targets) * probs).sum(dim=0)
+        fn = (smooth_targets * (1.0 - probs)).sum(dim=0)
+
+        f1 = (2.0 * tp) / (2.0 * tp + fp + fn + self.eps)
+        f1_loss = 1.0 - f1.mean()
+
+        return self.ce_weight * ce + self.f1_weight * f1_loss

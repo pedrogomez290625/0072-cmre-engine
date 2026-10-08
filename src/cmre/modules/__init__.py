@@ -43,3 +43,11 @@ from .signal import OOFTargetEncoder
 from .loss import BiTemperedLogisticLoss
 from .ensemble import NonNegativeLeastSquaresBlender
 from .ingest import StrictDicomLUTDecoder
+
+from .ingest import HanningWindowTiler2D
+
+from .signal import DeltaTrickNormalizer
+
+from .loss import WeightedSoftF1Loss
+
+from .ensemble import NNLSBlender

@@ -547,3 +547,7 @@ class BimodalTabularVisionFusion:
             raise ValueError(f"Unknown fusion method: {self.fusion_method}")
 
         return fused.tolist()
+
+
+# Alias explicitly requested in CMRE-60
+NNLSBlender = NonNegativeLeastSquaresBlender
