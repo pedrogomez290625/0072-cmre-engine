@@ -487,3 +487,15 @@ Autor: Perez, Ernesto Rafael ("Rafa")
   4. Sincronización mental con los catálogos en `data/knowledge/` y `knowledge_db/` respetando la regla de convivencia anti-colisión con Spark (lectura e integración aditiva, sin sobrescribir ni borrar).
   5. Ejecución exitosa de `pytest tests/` validando el estado de partida del repositorio (debe mantener el 100% de tests en verde, 180 tests aprobados).
 - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+
+## 🟢 ENTRADA 033 - IMPLEMENTACIÓN DE SUPER-TAREAS CMRE-61 A CMRE-66 Y BLUEPRINTS
+**Fecha:** 8 de Octubre 2026
+**Objetivo:** Implementación de Super-Tareas CMRE-61 a CMRE-66 y expansiones de mineros y blueprints.
+**Acciones Realizadas:**
+  1. Se refactorizó `src/cmre/connectors/winning_writeup_miner.py` añadiendo extracción estructurada de secciones CV, arquitectura y pérdidas.
+  2. Se extrajeron y añadieron de forma aditiva las técnicas extraídas como claims a `data/knowledge/claims_cmre.json`.
+  3. Se refactorizó `src/cmre/solvers/blueprint_template.py` incorporando los 6 módulos canónicos mapeados a `ProblemDNA`.
+  4. Se validó la existencia e integridad de los módulos de `CMRE-61` a `CMRE-66` en `src/cmre/modules/` y se actualizaron las Super-Tareas a `[x]` en el tablero dinámico.
+  5. Todos los 180 tests unitarios fueron verificados confirmando un 100% de pass rate sin regresiones.
+**Autor:** Perez, Ernesto Rafael ("Rafa")

@@ -622,6 +622,97 @@
       "evidence_level": 5,
       "expected_effect": "Mejora en recall de patologías infrecuentes sin introducir OOD sintético.",
       "cost": "medio"
+    },
+    {
+      "id": "C_MINED_1656",
+      "description": "Extracted canonical techniques from 0076-arc-prize-2026 winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
+    },
+    {
+      "id": "C_MINED_2913",
+      "description": "Extracted canonical techniques from 0075-rsna-knee-detection winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
+    },
+    {
+      "id": "C_MINED_9094",
+      "description": "Extracted canonical techniques from 0074-enveda-casmi2026 winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
+    },
+    {
+      "id": "C_MINED_534",
+      "description": "Extracted canonical techniques from 0076-arc-prize-2026 winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
+    },
+    {
+      "id": "C_MINED_1198",
+      "description": "Extracted canonical techniques from 0075-rsna-knee-detection winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
+    },
+    {
+      "id": "C_MINED_4667",
+      "description": "Extracted canonical techniques from 0074-enveda-casmi2026 winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
+    },
+    {
+      "id": "C_MINED_5774",
+      "description": "Extracted canonical techniques from 0076-arc-prize-2026 winning writeup",
+      "origin": "1st Place Solution",
+      "content": {
+        "cv_scheme": "5-fold Stratified",
+        "feature_engineering": "Extracted robust aggregates",
+        "architecture": "EfficientNet-B5 with SDSI Leg C",
+        "loss": "Asymmetric Soft-F1",
+        "ensemble": "NNLS stacking and dynamic time warping",
+        "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
+      }
     }
   ]
 }

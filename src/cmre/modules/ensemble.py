@@ -551,3 +551,6 @@ class BimodalTabularVisionFusion:
 
 # Alias explicitly requested in CMRE-60
 NNLSBlender = NonNegativeLeastSquaresBlender
+
+# Alias explicitly requested in CMRE-65
+AsymmetricMatrixBlending = MultiViewOrthogonalAligner
