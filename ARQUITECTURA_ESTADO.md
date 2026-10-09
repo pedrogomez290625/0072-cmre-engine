@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_14_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 170/170)
-**Última Auditoría:** 4 de Octubre de 2026
+**Estado:** STAGE_14_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 180/180)
+**Última Auditoría:** 9 de Octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 170/170 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 180/180 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -19,6 +19,15 @@
 ---
 
 ## 📂 2. INVENTARIO DE MÓDULOS ACTIVOS
+
+
+### Capacidades de Alta Competición y HPC (Nuevos)
+- **ARC-AGI Anti-Identity Guard & TTT D8:** Rechazo de identidades en fallbacks simbólicos y aplicación de Test-Time Training con aumentaciones D8 (rotación/reflexión) (SUPER-TAREA CMRE-61).
+- **Latency Budget Pruner:** Podado greedy de ensambles para cumplir estrictas restricciones de latencia en Inferencia Kaggle (SUPER-TAREA CMRE-62).
+- **Sanitizador FP16/FP64:** Conversión estricta a Float32 previa a autocast `.half()` en CUDA previniendo crasheos por contantes de normalización tipo Double (SUPER-TAREA CMRE-63).
+- **Axioma de Ausencia SIRIUS:** Filtro biofísico de purga de decoys en CASMI basado en heteroátomos presentes (N, O) para justificar pérdidas neutras (SUPER-TAREA CMRE-64).
+- **Asymmetric Matrix Blending:** Combinación diferenciada por clase y vista (Sagital, Axial, Coronal) para mitigación de desbalance (SUPER-TAREA CMRE-65).
+- **Nelder-Mead Threshold Optimizer:** Optimización no convexa rápida para calibración ordinal de fronteras continuas en métricas QWK/pAUC (SUPER-TAREA CMRE-66).
 
 ### Núcleo de Razonamiento y Servicios (`src/cmre/services/`)
 - **`src/cmre/models.py`:** Esquemas relacionales SQLModel con soporte para pgvector (`Mechanism`, `Technique`, `Claim`, `Failure`, `ProblemProfile`, `Experiment`).
@@ -74,7 +83,7 @@
 - **Módulos Avanzados (CMRE-25, CMRE-28, CMRE-29)**: Integración de `OODDetector` para validación OOD (CMRE-25), `MultiMetricEarlyStopping` para paradas tempranas seguras (CMRE-28), y `DTWPurgedTimeSeriesSplit` para robustez temporal dinámica (CMRE-29).
 - **AntiIdentityGuard**: Implementado en `src/cmre/services/submission_validator.py` para prevenir colapsos a 0.00 en Kaggle ARC-AGI, forzando transformaciones geométricas (D8) y cromáticas deterministas frente a inferencias idénticas a la entrada (Postmortem FAIL_11).
 - **Google Drive Continuous Bridge**: Herramienta CLI (`scripts/gdrive_hub.py`) ahora incluye comando `sync` que transfiere `claims_cmre.json` y `postmortems_failures_catalog.json` directo a la nube.
-- Pruebas incrementadas garantizando cobertura en las mitigaciones (100% de tests pasando de forma aislada, un total de 170/170 pasados).
+- Pruebas incrementadas garantizando cobertura en las mitigaciones (100% de tests pasando de forma aislada, un total de 180/180 pasados).
 
 ---
 - **Super-Tareas Resolutivas (CMRE-41 a CMRE-45)**: Integración de `AntiIdentityGuard` y TTT D8 en `MOD_OOD`/`SubmissionValidator` (CMRE-41), `LatencyBudgetPruner` multi-flujo dinámico en `MOD_ENSEMBLE` (CMRE-42), Sanitizador Universal FP16/FP64 en `MOD_HPC` (CMRE-43), Optimizador SIRIUS unificado en `MOD_OOD` (CMRE-44) y Controlador Multi-Vista Ortogonal en `MOD_ENSEMBLE` (CMRE-45). Incremento a 176 tests unitarios cubriendo los componentes.
