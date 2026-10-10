@@ -523,3 +523,17 @@ Autor: Perez, Ernesto Rafael ("Rafa")
   4. Sincronización mental con los catálogos en `data/knowledge/` y `knowledge_db/` respetando la regla de convivencia anti-colisión con Spark (lectura e integración aditiva, sin sobrescribir ni borrar).
   5. Ejecución exitosa de `pytest tests/` validando el estado de partida del repositorio (debe mantener el 100% de tests en verde, 180+ tests aprobados).
 - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+
+## 🟢 ENTRADA 036 - IMPLEMENTACIÓN DE SUPER-TAREAS CMRE-67 A CMRE-72
+**Fecha:** 10 de Octubre 2026
+**Objetivo:** Implementación de Super-Tareas CMRE-67 a CMRE-72.
+**Acciones:**
+- Se verificó la implementación de `StrictDicomLUTDecoder` en `MOD_INGEST` para corregir la polaridad de las características (CMRE-67).
+- Se validó el `MDLComplexityOptimizer` en `MOD_LOSS` priorizando programas de menor longitud (CMRE-68).
+- Se verificó `BiTemperedLogisticLoss` en `MOD_LOSS` (Soft-F1 suavizada) para mitigar el ruido en etiquetas (CMRE-69).
+- Se confirmó el uso de `NonNegativeLeastSquaresBlender` en `MOD_ENSEMBLE` logrando robustez ante colinealidad con el método NNLS (CMRE-70).
+- Se comprobó la existencia de `DeltaTrickNormalizer` en `MOD_SIGNAL` para convertir características de conteo en "Deltas relativos" con IQR (CMRE-71).
+- Se verificó la implementación de `MultiViewOrthogonalAligner` en `MOD_ENSEMBLE` alineando vistas ortogonales para RSNA Knee (CMRE-72).
+- Se actualizaron los archivos dinámicos del sistema para reflejar el progreso.
+**Firma:** Perez, Ernesto Rafael ("Rafa")
