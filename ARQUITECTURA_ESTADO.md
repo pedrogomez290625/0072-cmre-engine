@@ -78,6 +78,9 @@
 
 ## 🌟 6. ACTUALIZACIONES RECIENTES (v1.0.0+)
 
+- **Super-Tareas Resolutivas (CMRE-67 a CMRE-72)**: Integración de `StrictDicomLUTDecoder` en `MOD_INGEST` (CMRE-67) para correcciones de LUT. Incorporación de `MDLComplexityOptimizer` en `MOD_LOSS` (CMRE-68). Integración de `BiTemperedLogisticLoss` en `MOD_LOSS` (CMRE-69). Ensamble restrictivo mediante `NonNegativeLeastSquaresBlender` en `MOD_ENSEMBLE` (CMRE-70). `DeltaTrickNormalizer` en `MOD_SIGNAL` logrando conversiones intercuartílicas (CMRE-71). Se incorporó el `MultiViewOrthogonalAligner` en `MOD_ENSEMBLE` (CMRE-72).
+
+
 - **Super-Tareas Resolutivas (CMRE-46 a CMRE-50)**: Integración de `BimodalTabularVisionFusion` en `MOD_ENSEMBLE` (CMRE-46), `GNNPlausibilityValidator` en `MOD_OOD` (CMRE-47), `MDLComplexityOptimizer` en `MOD_LOSS` (CMRE-48), `dynamic_route` en `LatencyBudgetPruner` (`MOD_ENSEMBLE`) (CMRE-49), y `AnatomicallySafeAugmenter` en `MOD_INGEST` (CMRE-50). Incremento de tests unitarios garantizando cobertura de los componentes.
 
 - **Módulos Avanzados (CMRE-25, CMRE-28, CMRE-29)**: Integración de `OODDetector` para validación OOD (CMRE-25), `MultiMetricEarlyStopping` para paradas tempranas seguras (CMRE-28), y `DTWPurgedTimeSeriesSplit` para robustez temporal dinámica (CMRE-29).
