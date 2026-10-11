@@ -1,43 +1,43 @@
 # 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
-**Iteración:** Cierre de Sesión y Proyección Auto-Evolutiva (09 de Octubre de 2026)
+**Iteración:** Cierre de Sesión y Proyección Auto-Evolutiva (11 de October de 2026)
 **Autor:** Perez, Ernesto Rafael ("Rafa")
 
-Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 6 nuevas super-tareas agnósticas (CMRE-73 a CMRE-78) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
+Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 6 nuevas super-tareas agnósticas (CMRE-79 a CMRE-84) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
 
 ---
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-73: Generador de Aumentaciones Topológicas D8 (ARC-AGI)
-- **Origen:** `FAIL_11` (`SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE`) y `anti_identity_collapse` (ARC Prize).
-- **Problema:** Para prevenir colapso a score 0.00 en fallback en ARC-AGI, necesitamos divergencia garantizada si el razonamiento simbólico falla por timeout.
-- **Implementación:** Desarrollar en `MOD_OOD` o `arc_agi_hybrid_solver.py` un generador que aplique sistemáticamente las 8 transformaciones diédricas (D8) para evadir la identidad absoluta de entrada-salida.
+### [ ] SUPER-TAREA CMRE-79: Mitigación de EDGE_SEAM_BOUNDARY_DEGRADATION
+- **Origen:** `FAIL_03` y catálogo de fallos.
+- **Problema:** Modelos con Dice de 0.88 en parches aislados de 512x512 colapsaron a 0.74 al evaluar la imagen gigapíxel completa (Whole Slide Image de 50,000x50,000 px).
+- **Implementación:** Corte con solapamiento del 25% y reconstrucción mediante ponderación separable con ventana 2D de Hanning.
 
-### [ ] SUPER-TAREA CMRE-74: Filtro de Ambigüedad de Masa Precursora (CASMI)
-- **Origen:** `ACTIVE_COMPETITIONS.json` (`precursor_mass_ambiguity`) y `FAIL_14`.
-- **Problema:** Búsquedas saturadas por decoys debido a variaciones isotópicas y ambigüedades en la ventana de aislamiento del espectrómetro de masas.
-- **Implementación:** Implementar en `MOD_FEAT` un filtro que descarte candidatos moleculares cuyas masas teóricas escapen a un margen dinámico de PPM.
+### [ ] SUPER-TAREA CMRE-80: Mitigación de SCAFFOLD_ANALOG_MEMORIZATION_LEAK
+- **Origen:** `FAIL_04` y catálogo de fallos.
+- **Problema:** Top-10 accuracy de 94.5% en validación aleatoria; colapso catastrófico a 28.2% al evaluar en el conjunto ciego de prueba.
+- **Implementación:** Particionado disjunto por esqueletos moleculares de Bemis-Murcko (BemisMurckoScaffoldSplit).
 
-### [ ] SUPER-TAREA CMRE-75: Pipeline de Aumentación TTA Dinámico (Presupuesto de Latencia)
-- **Origen:** `FAIL_12` (`UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION`) y `kaggle_timeout_risk` (RSNA Knee).
-- **Problema:** Aplicar Test-Time Augmentation (TTA) de manera estática (e.g. 8x o 10x) en datasets grandes viola el límite de inferencia y causa Timeouts en sumisión.
-- **Implementación:** Construir en `MOD_ENSEMBLE` un orquestador TTA que monitoree la latencia por muestra y reduzca el factor TTA si el presupuesto global peligra.
+### [ ] SUPER-TAREA CMRE-81: Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE
+- **Origen:** `FAIL_06` y catálogo de fallos.
+- **Problema:** Target encoding directo sobre pares de tarjetas y direcciones (card1 + addr1) infló el CV a 0.985, colapsando a 0.880 en test temporal.
+- **Implementación:** Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano.
 
-### [ ] SUPER-TAREA CMRE-76: Estratificación Estricta por Identidad de Paciente (PatientGroupKFold)
-- **Origen:** `FAIL_05` (`PATIENT_IDENTITY_COHORT_LEAKAGE`) y dominio `medical_radiology_vision`.
-- **Problema:** Los splits aleatorios o estratificados simples pueden repartir distintas tomas del mismo paciente entre train y validación, inflando métricas por memorización de biometría.
-- **Implementación:** Implementar en `MOD_SIGNAL` un partidor `PatientGroupKFold` que garantice disjunción de pacientes entre pliegues.
+### [ ] SUPER-TAREA CMRE-82: Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION
+- **Origen:** `FAIL_08` y catálogo de fallos.
+- **Problema:** Modelos complejos (EfficientNet-B5) alcanzaron 99% accuracy en train con Cross-Entropy, pero la validación se estancó en 87.5% por sobreajuste severo a etiquetas erróneas.
+- **Implementación:** Uso de Label Smoothing, Bi-Tempered Loss o Soft-F1 con gradientes amortiguados para mitigar la penalización de outliers.
 
-### [ ] SUPER-TAREA CMRE-77: Alineador Nelder-Mead de Umbrales Asimétricos Multi-Clase
-- **Origen:** `FAIL_01` (`THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT`) y `severe_class_imbalance`.
-- **Problema:** En clasificación multi-etiqueta severamente desbalanceada, un umbral global estático de 0.5 destruye el recall de las clases raras (e.g., lesiones infrecuentes en rodilla).
-- **Implementación:** Construir en `MOD_ENSEMBLE` una extensión de optimización Nelder-Mead que optimice un vector de umbrales continuos independientemente para cada clase maximizando la métrica final (Macro-ROC-AUC).
+### [ ] SUPER-TAREA CMRE-83: Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE
+- **Origen:** `FAIL_09` y catálogo de fallos.
+- **Problema:** Regresión lineal ordinaria (OLS) sobre las predicciones de 15 modelos de Gradient Boosting asignó coeficientes fuertemente negativos (-3.8) a varios modelos colineales, generando probabilidades negativas y Log-Loss infinito en test.
+- **Implementación:** Mínimos Cuadrados No Negativos (Non-Negative Least Squares / NNLS) forzando w_i >= 0 y suma(w) = 1.0.
 
-### [ ] SUPER-TAREA CMRE-78: Detector de Fugas por Autocorrelación Temporal (Time Series Leak Guard)
-- **Origen:** `FAIL_02` (`TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS`).
-- **Problema:** Crear features de retardo horario (lags) o medias móviles sin un gap de purga causa lookahead temporal en validación.
-- **Implementación:** Desarrollar en `MOD_OOD` un utilitario `TimeSeriesLeakDetector` que alerte si se detectan superposiciones en las ventanas de agregación entre muestras de entrenamiento y de test/validación.
+### [ ] SUPER-TAREA CMRE-84: Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION
+- **Origen:** `FAIL_10` y catálogo de fallos.
+- **Problema:** Pipelines basados en OpenCV/PIL estándar leyeron mamografías DICOM sin interpretar la etiqueta PhotometricInterpretation, invirtiendo la apariencia de los tejidos (grasa blanca, tejido tumoral negro) en el 30% del dataset.
+- **Implementación:** Decodificador DICOM canónico con verificación obligatoria de PhotometricInterpretation y normalización a MONOCHROME2.
 
 ---
 [VINCIT_OMNIA_VERITAS]
