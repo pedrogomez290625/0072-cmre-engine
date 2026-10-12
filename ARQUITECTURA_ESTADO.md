@@ -1,8 +1,8 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_14_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 180/180)
-**Última Auditoría:** 9 de Octubre de 2026
+**Estado:** STAGE_15_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 180/180)
+**Última Auditoría:** 12 de Octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
 
 ---
@@ -22,6 +22,7 @@
 
 
 ### Capacidades de Alta Competición y HPC (Nuevos)
+- **Inferencia Multi-Vista RSNA Knee:** Procesamiento ortogonal (Sagital, Axial, Coronal) con latencia <1.86s por estudio (Auto-Evolución CMRE).
 - **ARC-AGI Anti-Identity Guard & TTT D8:** Rechazo de identidades en fallbacks simbólicos y aplicación de Test-Time Training con aumentaciones D8 (rotación/reflexión) (SUPER-TAREA CMRE-61).
 - **Latency Budget Pruner:** Podado greedy de ensambles para cumplir estrictas restricciones de latencia en Inferencia Kaggle (SUPER-TAREA CMRE-62).
 - **Sanitizador FP16/FP64:** Conversión estricta a Float32 previa a autocast `.half()` en CUDA previniendo crasheos por contantes de normalización tipo Double (SUPER-TAREA CMRE-63).

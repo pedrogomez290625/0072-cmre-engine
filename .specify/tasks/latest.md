@@ -132,3 +132,8 @@
   - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
   - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (180 pasando) y asentar log en JULES_EXECUTION_LOG.md.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-CLOSURE (Cierre de Sesión y Auto-evolución 12 Oct):**
+  - **Objetivo:** Ejecutar cierre, benchmarking final y proyectar nuevas super-tareas para el motor (CMRE-85 a CMRE-90).
+  - **Requerimiento:** Verificar 180 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y reescribir JULES_DYNAMIC_TASKS.md. Abrir PR limpio hacia main.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
