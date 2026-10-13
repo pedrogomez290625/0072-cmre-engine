@@ -1,43 +1,43 @@
 # 📝 TABLERO DINÁMICO DE SUPER-TAREAS (AUTO-EVOLUCIÓN CMRE)
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine
-**Iteración:** Cierre de Sesión y Proyección Auto-Evolutiva (12 de Octubre de 2026)
+**Iteración:** Cierre de Sesión y Proyección Auto-Evolutiva (13 de Octubre de 2026)
 **Autor:** Perez, Ernesto Rafael ("Rafa")
 
-Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 6 nuevas super-tareas agnósticas (CMRE-85 a CMRE-90) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
+Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 6 nuevas super-tareas agnósticas (CMRE-91 a CMRE-96) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
 
 ---
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-85: Mitigación de THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT
-- **Origen:** `FAIL_01` y catálogo de fallos.
-- **Problema:** Umbrales fijos colapsan debido a la discrepancia entre BCE Loss y métricas de Kaggle (pAUC/QWK).
-- **Implementación:** Implementar `NelderMeadThresholdOptimizer` dinámico.
+### [ ] SUPER-TAREA CMRE-91: Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION
+- **Origen:** `FAIL_08` y catálogo de fallos.
+- **Problema:** Modelos complejos memorizan ruido en etiquetas de campo, corrompiendo gradientes con Cross-Entropy pura.
+- **Implementación:** Forzar el uso de `WeightedSoftF1Loss` y suavizado de etiquetas para mitigar memorización de ruido.
 
-### [ ] SUPER-TAREA CMRE-86: Mitigación de TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS
-- **Origen:** `FAIL_02` y catálogo de fallos.
-- **Problema:** Fuga temporal inversa infló AUC en CV a 0.94 pero colapsó en test.
-- **Implementación:** Implementar validación cruzada con `PurgedTimeSeriesSplit` y embargo estricto.
+### [ ] SUPER-TAREA CMRE-92: Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE
+- **Origen:** `FAIL_09` y catálogo de fallos.
+- **Problema:** Ensamblado OLS produce pesos fuertemente negativos en predicciones colineales, llevando a probabilidades inválidas.
+- **Implementación:** Implementar apilamiento mediante `NonNegativeLeastSquaresBlender` forzando ensamble simplex positivo.
 
-### [ ] SUPER-TAREA CMRE-87: Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE
-- **Origen:** `FAIL_05` y catálogo de fallos.
-- **Problema:** Múltiples metástasis del mismo paciente distribuidas en train y validación engañan al modelo para memorizar identidad genética, cayendo severamente en evaluación.
-- **Implementación:** Forzar agrupación estricta por `patient_id` usando iteradores `GroupKFold` desacoplados.
+### [ ] SUPER-TAREA CMRE-93: Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION
+- **Origen:** `FAIL_10` y catálogo de fallos.
+- **Problema:** Ignorar metadato `PhotometricInterpretation` causa inversión de tejidos radiológicos (grasa blanca vs negra) en DICOM.
+- **Implementación:** Desarrollar `StrictDicomLUTDecoder` con verificación obligatoria a MONOCHROME2.
 
-### [ ] SUPER-TAREA CMRE-88: Mitigación de UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT
-- **Origen:** `FAIL_07` y catálogo de fallos.
-- **Problema:** Sobreajuste a matriz de dispersión pública usando conteo directo, colapsando en el leaderboard privado.
-- **Implementación:** Integrar cálculo de desvíos relativos (Delta Trick) y normalización robusta intercuartílica (IQR).
+### [ ] SUPER-TAREA CMRE-94: Mitigación de CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH
+- **Origen:** `FAIL_13` y catálogo de fallos.
+- **Problema:** Constantes FP64 chocan con FP16 en `torch.autocast`, causando aborto CUDA RuntimeError: expected scalar type Half.
+- **Implementación:** Sanitización universal vía `sanitizer` explícito en buffer HPC antes del casteo `Half`.
 
-### [ ] SUPER-TAREA CMRE-89: Mitigación de SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE
-- **Origen:** `FAIL_11` y catálogo de fallos.
-- **Problema:** Fallback ciego devolviendo entrada de grilla tras timeout en ARC-AGI provocando un fallo total de identidad.
-- **Implementación:** Guardián anti-identidad que exige mutación cromática/topológica garantizada o Test-Time Training (TTT) D8.
+### [ ] SUPER-TAREA CMRE-95: Mitigación de UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD
+- **Origen:** `FAIL_14` y catálogo de fallos.
+- **Problema:** Filtrado de biblioteca masiva ciega MS/MS satura Top-K con decoys de masas similares sin heteroátomos.
+- **Implementación:** Introducir Axioma de Ausencia SIRIUS que restringe candidatos mediante validación de pérdidas neutras (ej. requiere O, N).
 
-### [ ] SUPER-TAREA CMRE-90: Mitigación de UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION
-- **Origen:** `FAIL_12` y catálogo de fallos.
-- **Problema:** Sobre-ingeniería y ensamblado ciego de >30 redes provocando timeout de latencia en Kaggle.
-- **Implementación:** Desarrollar `LatencyBudgetPruner` para podado dinámico y balance latencia/AUC dentro del presupuesto de tiempo especificado en `ACTIVE_COMPETITIONS.json`.
+### [ ] SUPER-TAREA CMRE-96: Meta-Optimización Multi-Vista (Multi-View Orthogonal Alignment)
+- **Origen:** Desafío `multi_view_ortho_alignment` en `0075-rsna-knee-detection`.
+- **Problema:** Falta de convergencia por vistas anatómicas desalineadas (Axial, Coronal, Sagital).
+- **Implementación:** Incorporar y estabilizar `MultiViewOrthogonalAligner` a nivel de `MOD_ENSEMBLE` o extracción de características.
 
 ---
 [VINCIT_OMNIA_VERITAS]
