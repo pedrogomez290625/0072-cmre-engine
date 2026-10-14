@@ -1,9 +1,9 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_16_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 180/180)
+**Estado:** STAGE_17_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 180/180)
 **Última Auditoría:** 14 de Octubre de 2026
-**Investigador Principal:** Perez, Ernesto Rafael ("Rafa") & Victoria Perez
+**Investigador Principal:** Perez, Ernesto Rafael ("Rafa")
 
 ---
 
@@ -20,6 +20,15 @@
 
 ## 📂 2. INVENTARIO DE MÓDULOS ACTIVOS
 
+
+
+### Nuevas Capacidades Proyectadas (Próxima Auto-Evolución CMRE-97 a 102)
+- **Continuous Threshold Optimization:** Mitigación de desalineación métrica usando Nelder-Mead sobre OOF.
+- **Isomer Disambiguation via GIN:** Uso de Graph Isomorphism Network para resolver ambigüedades en masas precursoras MS/MS.
+- **Zero-Shot Meta-Learning Module:** Extracción adaptativa de Few-Shot Demonstrations en espacios ARC.
+- **MDL Program Regularization:** Penalización de longitud de descripción mínima para evitar sobreajuste en síntesis simbólica discreta.
+- **Focal Resampling Pipeline:** Uso híbrido de Asymmetric Loss o Focal Loss y sobremuestreo dinámico para abordar desbalance severo.
+- **Purged Group Timeseries Split:** Validación robusta con ventanas de embargo explícitas mitigando Lookahead Bias.
 
 ### Capacidades de Alta Competición y HPC (Nuevos)
 - **Inferencia Multi-Vista RSNA Knee:** Procesamiento ortogonal (Sagital, Axial, Coronal) con latencia <1.86s por estudio (Auto-Evolución CMRE).
