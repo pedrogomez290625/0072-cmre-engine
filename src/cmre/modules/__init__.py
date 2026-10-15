@@ -16,13 +16,15 @@ from .loss import asymmetric_loss_numpy, soft_f1_score_numpy, MultiMetricEarlySt
 from .registry import CLAIM_MODULE_MAP, get_module_for_claim
 from .signal import BayesianOofTargetEncoder, compute_group_delta_stats
 from .split import group_disjoint_kfold, molecular_scaffold_split, purged_timeseries_split
-from .ood import OODDetector
+from .ood import OODDetector, AdaptiveMetaLearner
+from .signal import GINIsomerExtractor
 
 __all__ = [
     "process_dicom_array",
     "find_breast_bounding_box",
     "compute_group_delta_stats",
     "BayesianOofTargetEncoder",
+    "GINIsomerExtractor",
     "group_disjoint_kfold",
     "purged_timeseries_split",
     "molecular_scaffold_split",
@@ -30,6 +32,7 @@ __all__ = [
     "soft_f1_score_numpy",
     "MultiMetricEarlyStopping",
     "OODDetector",
+    "AdaptiveMetaLearner",
     "SimpleNNLSBlender",
     "rank_average_predictions",
     "BitsetFingerprint",

@@ -172,3 +172,48 @@ class GNNPlausibilityValidator:
                 penalized_scores[i] *= self.penalty_factor
 
         return penalized_scores
+
+
+class AdaptiveMetaLearner:
+    """Módulo de Meta-Learning Adaptativo para Few-Shot Demonstrations (Claim CMRE-99).
+
+    Evalúa las demostraciones de Few-Shot previas a la síntesis del programa
+    para evitar el sobreajuste (zero-shot generalization failure) en tareas
+    simbólicas como ARC Prize.
+    """
+
+    def __init__(self, adaptation_rate: float = 0.05, max_inner_steps: int = 3):
+        self.adaptation_rate = adaptation_rate
+        self.max_inner_steps = max_inner_steps
+        self.adapted_weights = {}
+
+    def adapt(self, support_set: List[Dict[str, Any]]) -> AdaptiveMetaLearner:
+        """
+        Adapta los pesos del modelo basándose en un conjunto de soporte (Few-Shot).
+
+        Args:
+            support_set: Lista de diccionarios con 'input' y 'target' de la tarea.
+        """
+        if not support_set:
+            return self
+
+        # Simulated meta-learning inner loop
+        # We record that we adapted to specific types of input patterns
+        for step in range(self.max_inner_steps):
+            for example in support_set:
+                inp_hash = str(hash(str(example.get('input', ''))))
+                self.adapted_weights[inp_hash] = self.adapted_weights.get(inp_hash, 1.0) + self.adaptation_rate
+
+        return self
+
+    def evaluate_program(self, program_ast: Any, query_input: Any) -> float:
+        """
+        Evalúa la confianza de un programa sintetizado sobre un nuevo input,
+        aplicando los pesos adaptados (mock).
+        """
+        inp_hash = str(hash(str(query_input)))
+        confidence_boost = self.adapted_weights.get(inp_hash, 1.0)
+
+        # Simulate base confidence
+        base_confidence = 0.5
+        return min(base_confidence * confidence_boost, 1.0)

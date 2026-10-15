@@ -19,6 +19,8 @@ from cmre.modules import (
     asymmetric_loss_numpy,
     compute_group_delta_stats,
     find_breast_bounding_box,
+    GINIsomerExtractor,
+    AdaptiveMetaLearner,
     get_module_for_claim,
     group_disjoint_kfold,
     molecular_scaffold_split,
@@ -127,6 +129,37 @@ def test_molecular_scaffold_split():
     te_scaffolds = {scaffolds[i] for i in te_idx}
     # No scaffold overlap
     assert len(tr_scaffolds.intersection(te_scaffolds)) == 0
+
+
+def test_gin_isomer_extractor():
+    smiles_isomers = ["CC(=O)OC1=CC=CC=C1C(=O)O", "C1=CC(=C(C=C1)O)C(=O)OC"]
+    extractor = GINIsomerExtractor(hidden_dim=8)
+    extractor.fit(smiles_isomers)
+    embeddings = extractor.transform(smiles_isomers)
+
+    assert len(embeddings) == 2
+    assert len(embeddings[0]) == 8
+    # Even if they have the same mass (isomers), structural string hash should differ
+    assert embeddings[0] != embeddings[1]
+
+
+def test_adaptive_meta_learner():
+    learner = AdaptiveMetaLearner(adaptation_rate=0.1, max_inner_steps=1)
+    support_set = [
+        {"input": [[1, 2], [3, 4]], "target": [[2, 1], [4, 3]]},
+        {"input": [[5, 6], [7, 8]], "target": [[6, 5], [8, 7]]}
+    ]
+    learner.adapt(support_set)
+
+    # Test with a seen pattern (should have higher confidence)
+    seen_input = [[1, 2], [3, 4]]
+    conf_seen = learner.evaluate_program(None, seen_input)
+
+    # Test with an unseen pattern
+    unseen_input = [[0, 0], [0, 0]]
+    conf_unseen = learner.evaluate_program(None, unseen_input)
+
+    assert conf_seen > conf_unseen
 
 
 # ---------------------------------------------------------------------------
