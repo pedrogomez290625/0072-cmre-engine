@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_17_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 180/180)
-**Última Auditoría:** 14 de Octubre de 2026
+**Estado:** STAGE_18_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 182/182)
+**Última Auditoría:** 15 de Octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa")
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 180/180 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 182/182 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -22,13 +22,12 @@
 
 
 
-### Nuevas Capacidades Proyectadas (Próxima Auto-Evolución CMRE-97 a 102)
-- **Continuous Threshold Optimization:** Mitigación de desalineación métrica usando Nelder-Mead sobre OOF.
-- **Isomer Disambiguation via GIN:** Uso de Graph Isomorphism Network para resolver ambigüedades en masas precursoras MS/MS.
-- **Zero-Shot Meta-Learning Module:** Extracción adaptativa de Few-Shot Demonstrations en espacios ARC.
-- **MDL Program Regularization:** Penalización de longitud de descripción mínima para evitar sobreajuste en síntesis simbólica discreta.
-- **Focal Resampling Pipeline:** Uso híbrido de Asymmetric Loss o Focal Loss y sobremuestreo dinámico para abordar desbalance severo.
-- **Purged Group Timeseries Split:** Validación robusta con ventanas de embargo explícitas mitigando Lookahead Bias.
+### Nuevas Capacidades Proyectadas (Próxima Auto-Evolución CMRE-103 a 107)
+- **Codificación Bayesiana OOF Estricta:** Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE con m-estimate de Dirichlet y ruido gaussiano.
+- **Robust Relative Feature Normalization:** Mitigación de UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT mediante Delta Trick y normalización IQR.
+- **Gradient Corruption Mitigation:** Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION usando Label Smoothing y Soft-F1.
+- **NNLS Simplex Stacking:** Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE forzando sumas de pesos no negativas.
+- **Canonical DICOM Decoder:** Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION validando PhotometricInterpretation estricto.
 
 ### Capacidades de Alta Competición y HPC (Nuevos)
 - **Inferencia Multi-Vista RSNA Knee:** Procesamiento ortogonal (Sagital, Axial, Coronal) con latencia <1.86s por estudio (Auto-Evolución CMRE).
