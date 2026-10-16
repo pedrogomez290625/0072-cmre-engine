@@ -3,47 +3,37 @@
 **Iteración:** Auto-Evolución y Proyección Diaria
 **Autor:** Perez, Ernesto Rafael ("Rafa")
 
-Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 5 nuevas super-tareas agnósticas (CMRE-103 a CMRE-107) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
+Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 5 nuevas super-tareas agnósticas (CMRE-108 a CMRE-112) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
 
 ---
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [x] SUPER-TAREA CMRE-103: Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE
-- **Origen:** `FAIL_06` (Catálogo de fallos).
-- **Problema:** Fuga de la variable objetivo hacia medias de grupo causando colapso en test temporal en competencias como IEEE-CIS Fraud Detection.
-- **Implementación:** Desarrollar Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano.
+### [ ] SUPER-TAREA CMRE-108: Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE
+- **Origen:** `FAIL_05` (Catálogo de fallos).
+- **Problema:** Fuga de cohortes por identidad de paciente resultando en validación OOF demasiado optimista.
+- **Implementación:** Implementar StratifiedGroupKFold agrupado estrictamente por patient_id combinado con la normalización de Patito Feo.
 
-### [x] SUPER-TAREA CMRE-104: Mitigación de UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT
-- **Origen:** `FAIL_07` (Catálogo de fallos).
-- **Problema:** Sobreajuste a conteos brutos no escalados que no generalizan al cambiar densidad de dispersión.
-- **Implementación:** Implementar cálculo de desvíos relativos (Delta Trick) y normalización robusta intercuartílica (IQR).
+### [ ] SUPER-TAREA CMRE-109: Mitigación de SCAFFOLD_ANALOG_MEMORIZATION_LEAK
+- **Origen:** `FAIL_04` (Catálogo de fallos).
+- **Problema:** Memorización de análogos de andamiaje / scaffolds moleculares en metabolómica.
+- **Implementación:** Implementar particionado disjunto por esqueletos moleculares de Bemis-Murcko (BemisMurckoScaffoldSplit).
 
-### [x] SUPER-TAREA CMRE-105: Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION
-- **Origen:** `FAIL_08` (Catálogo de fallos).
-- **Problema:** Cross-Entropy pura corrompiendo gradientes al forzar la red a memorizar ruido en etiquetas.
-- **Implementación:** Implementar Label Smoothing, Bi-Tempered Loss o Soft-F1 con gradientes amortiguados para mitigar la penalización de outliers.
+### [ ] SUPER-TAREA CMRE-110: Mitigación de SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE
+- **Origen:** `FAIL_11` (Catálogo de fallos).
+- **Problema:** Colapso de score a cero por devolver la entrada (identidad) intacta ante un timeout en inferencia simbólica de ARC-AGI.
+- **Implementación:** Implementar Guardián estricto anti-identidad que prohíba la sumisión de grillas idénticas y conmute a Test-Time Training (TTT) con aumentaciones D8 y transformaciones cromáticas/topológicas seguras.
 
-### [x] SUPER-TAREA CMRE-106: Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE
-- **Origen:** `FAIL_09` (Catálogo de fallos).
-- **Problema:** Asignación de pesos fuertemente negativos en ensambles de modelos colineales resultando en predicciones fuera de rango.
-- **Implementación:** Integrar Mínimos Cuadrados No Negativos (NNLS) forzando pesos w_i >= 0 y sum(w) = 1.0 en stacking.
+### [ ] SUPER-TAREA CMRE-111: Mitigación de UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION
+- **Origen:** `FAIL_12` (Catálogo de fallos).
+- **Problema:** Consumo total del presupuesto de latencia antes de procesar el conjunto de test completo.
+- **Implementación:** Implementar LatencyBudgetPruner podando el ensamble a una tríada quirúrgica reduciendo el tiempo de inferencia a presupuestos aceptables.
 
-### [x] SUPER-TAREA CMRE-107: Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION
-- **Origen:** `FAIL_10` (Catálogo de fallos).
-- **Problema:** Inversión de tejidos (blanco vs negro) por ignorar polaridad MONOCHROME en archivos radiológicos DICOM.
-- **Implementación:** Implementar Decodificador DICOM canónico con verificación estricta de PhotometricInterpretation y normalización forzada a MONOCHROME2.
+### [ ] SUPER-TAREA CMRE-112: Mitigación de UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD
+- **Origen:** `FAIL_14` (Catálogo de fallos).
+- **Problema:** Sobrecarga de candidatos falsos no constreñidos en metabolómica.
+- **Implementación:** Implementar Axioma de Ausencia SIRIUS que penaliza severamente candidatos que carecen de heteroátomos requeridos para las pérdidas neutrales observadas.
 
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
-
-### [ ] SUPER-TAREA CMRE-108: Mitigación de SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE
-- **Origen:** `FAIL_11` (Catálogo de fallos).
-- **Problema:** Fallback de identidad ante timeout en búsqueda simbólica, colapsando score en ARC-AGI.
-- **Implementación:** Implementar TTT (Test-Time Training) y D8 Anti-Identity Advanced.
-
-### [ ] SUPER-TAREA CMRE-109: Mitigación de INSUFFICIENT_LATENCY_BUDGET
-- **Origen:** `FAIL_12` (Catálogo de fallos).
-- **Problema:** Exceso de inferencias en ensamble que consumen el presupuesto de latencia antes de predecir test completo.
-- **Implementación:** Implementar Controlador de Latencia Dinámica y LatencyBudgetPruner.
