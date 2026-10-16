@@ -713,6 +713,71 @@
         "ensemble": "NNLS stacking and dynamic time warping",
         "raw_text": "CV Scheme: 5-fold Stratified. Feature Engineering: Extracted robust aggregates. Architecture: EfficientNet-B5 with SDSI Leg C. Loss: Asymmetric Soft-F1. Ensemble: NNLS stacking and dynamic time warping."
       }
+    },
+    {
+      "id": "CMRE-103",
+      "description": "Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE",
+      "origin": "FAIL_06 (Catálogo de fallos)",
+      "content": {
+        "cv_scheme": "Strict OOF",
+        "feature_engineering": "Out-of-Fold Bayesian Target Encoding with Dirichlet (m-estimate) smoothing and Gaussian noise",
+        "architecture": "Agnostic",
+        "loss": "Agnostic",
+        "ensemble": "Agnostic",
+        "raw_text": "Fuga de la variable objetivo hacia medias de grupo causando colapso en test temporal en competencias como IEEE-CIS Fraud Detection. Solución: Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano."
+      }
+    },
+    {
+      "id": "CMRE-104",
+      "description": "Mitigación de UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT",
+      "origin": "FAIL_07 (Catálogo de fallos)",
+      "content": {
+        "cv_scheme": "Agnostic",
+        "feature_engineering": "DeltaTrickNormalizer - Cálculo de desvíos relativos y normalización robusta intercuartílica (IQR)",
+        "architecture": "Agnostic",
+        "loss": "Agnostic",
+        "ensemble": "Agnostic",
+        "raw_text": "Sobreajuste a conteos brutos no escalados que no generalizan al cambiar densidad de dispersión. Solución: Implementar cálculo de desvíos relativos (Delta Trick) y normalización robusta intercuartílica (IQR)."
+      }
+    },
+    {
+      "id": "CMRE-105",
+      "description": "Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION",
+      "origin": "FAIL_08 (Catálogo de fallos)",
+      "content": {
+        "cv_scheme": "Agnostic",
+        "feature_engineering": "Agnostic",
+        "architecture": "Agnostic",
+        "loss": "BiTemperedLogisticLoss / WeightedSoftF1Loss con Label Smoothing",
+        "ensemble": "Agnostic",
+        "raw_text": "Cross-Entropy pura corrompiendo gradientes al forzar la red a memorizar ruido en etiquetas. Solución: Implementar Label Smoothing, Bi-Tempered Loss o Soft-F1 con gradientes amortiguados para mitigar la penalización de outliers."
+      }
+    },
+    {
+      "id": "CMRE-106",
+      "description": "Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE",
+      "origin": "FAIL_09 (Catálogo de fallos)",
+      "content": {
+        "cv_scheme": "Agnostic",
+        "feature_engineering": "Agnostic",
+        "architecture": "Agnostic",
+        "loss": "Agnostic",
+        "ensemble": "NonNegativeLeastSquaresBlender (NNLS) simplex stacking",
+        "raw_text": "Asignación de pesos fuertemente negativos en ensambles de modelos colineales resultando en predicciones fuera de rango. Solución: Integrar Mínimos Cuadrados No Negativos (NNLS) forzando pesos w_i >= 0 y sum(w) = 1.0 en stacking."
+      }
+    },
+    {
+      "id": "CMRE-107",
+      "description": "Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION",
+      "origin": "FAIL_10 (Catálogo de fallos)",
+      "content": {
+        "cv_scheme": "Agnostic",
+        "feature_engineering": "StrictDicomLUTDecoder - Decodificador DICOM canónico MONOCHROME2",
+        "architecture": "Agnostic",
+        "loss": "Agnostic",
+        "ensemble": "Agnostic",
+        "raw_text": "Inversión de tejidos (blanco vs negro) por ignorar polaridad MONOCHROME en archivos radiológicos DICOM. Solución: Implementar Decodificador DICOM canónico con verificación estricta de PhotometricInterpretation y normalización forzada a MONOCHROME2."
+      }
     }
   ]
 }
