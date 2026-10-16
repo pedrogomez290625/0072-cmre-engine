@@ -152,3 +152,13 @@
   - **Objetivo:** Mitigar vulnerabilidades AGI e implementar super-tareas.
   - **Requerimiento:** Implementar GINIsomerExtractor y AdaptiveMetaLearner. Asegurar que los otros modulos ya existen y estan probados. Actualizar logs y estado.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-EVOL-049 (Implementación de Super-Tareas CMRE-103 a CMRE-107):**
+  - **Objetivo:** Ejecutar implementación y testeo unitario de CMRE-103 a CMRE-107.
+  - **Requerimiento:** Verificar testeo e integración de los módulos. Actualizar tableros y logs.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-CLOSURE (Cierre de Sesión y Auto-evolución 16 Oct):**
+  - **Objetivo:** Ejecutar cierre, benchmarking final y proyectar nuevas super-tareas para el motor (CMRE-103 a CMRE-107).
+  - **Requerimiento:** Verificar 182 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y reescribir JULES_DYNAMIC_TASKS.md. Abrir PR limpio hacia main.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
