@@ -15,8 +15,8 @@ from .ingest import find_breast_bounding_box, process_dicom_array
 from .loss import asymmetric_loss_numpy, soft_f1_score_numpy, MultiMetricEarlyStopping
 from .registry import CLAIM_MODULE_MAP, get_module_for_claim
 from .signal import BayesianOofTargetEncoder, compute_group_delta_stats
-from .split import group_disjoint_kfold, molecular_scaffold_split, purged_timeseries_split
-from .ood import OODDetector, AdaptiveMetaLearner
+from .split import group_disjoint_kfold, molecular_scaffold_split, purged_timeseries_split, StratifiedGroupKFold, BemisMurckoScaffoldSplit
+from .ood import OODDetector, AdaptiveMetaLearner, SIRIUSAbsenceAxiomOptimizer
 from .signal import GINIsomerExtractor
 
 __all__ = [
@@ -40,6 +40,12 @@ __all__ = [
     "popcount64",
     "CLAIM_MODULE_MAP",
     "get_module_for_claim",
+    "StratifiedGroupKFold",
+    "BemisMurckoScaffoldSplit",
+    "UglyDucklingPatientNormalizer",
+    "LatencyBudgetPruner",
+    "SIRIUSAbsenceAxiomOptimizer",
+
 ]
 from .ensemble import NelderMeadThresholdOptimizer
 from .signal import OOFTargetEncoder
@@ -48,9 +54,10 @@ from .ensemble import NonNegativeLeastSquaresBlender
 from .ingest import StrictDicomLUTDecoder
 
 from .ingest import HanningWindowTiler2D
+from .radiology_advanced import UglyDucklingPatientNormalizer
 
 from .signal import DeltaTrickNormalizer
 
 from .loss import WeightedSoftF1Loss
 
-from .ensemble import NNLSBlender
+from .ensemble import NNLSBlender, LatencyBudgetPruner
