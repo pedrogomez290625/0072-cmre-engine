@@ -193,3 +193,112 @@ class DTWPurgedTimeSeriesSplit:
             folds.append((train_indices, val_indices))
 
         return folds
+
+class StratifiedGroupKFold:
+    """Stratified Group K-Fold Cross-Validator (Claim CMRE-108).
+
+    Provides train/test indices to split data such that no group overlaps between
+    folds, and the class distribution is approximately preserved across folds.
+    """
+
+    def __init__(self, n_splits=5, shuffle=False, random_state=None):
+        self.n_splits = n_splits
+        self.shuffle = shuffle
+        self.random_state = random_state
+
+    def split(self, X, y, groups):
+        """Generates indices to split data into training and test set."""
+        if len(X) != len(y) or len(X) != len(groups):
+            raise ValueError("X, y, and groups must have the same length.")
+
+        import numpy as np
+        groups = np.array(groups)
+        y = np.array(y)
+
+        unique_groups = np.unique(groups)
+
+        if self.shuffle:
+            rng = np.random.RandomState(self.random_state)
+            rng.shuffle(unique_groups)
+
+        # Count classes per group
+        unique_classes = np.unique(y)
+        group_class_counts = {g: {c: 0 for c in unique_classes} for g in unique_groups}
+        for i in range(len(y)):
+            group_class_counts[groups[i]][y[i]] += 1
+
+        fold_class_counts = [{c: 0 for c in unique_classes} for _ in range(self.n_splits)]
+        group_to_fold = {}
+
+        # Greedy assignment based on class imbalance
+        for g in unique_groups:
+            # Find the fold that has the least of the classes that this group has
+            best_fold = -1
+            min_eval = float('inf')
+
+            for f in range(self.n_splits):
+                fold_eval = 0
+                for c in unique_classes:
+                    fold_eval += fold_class_counts[f][c] * group_class_counts[g][c]
+
+                if fold_eval < min_eval:
+                    min_eval = fold_eval
+                    best_fold = f
+
+            # If all folds evaluate to 0 (e.g., initial state), just pick the smallest fold
+            if min_eval == 0 and sum(sum(counts.values()) for counts in fold_class_counts) == 0:
+                best_fold = np.argmin([sum(counts.values()) for counts in fold_class_counts])
+
+            # Additional heuristic: if still tied, assign to fold with fewest samples
+            if best_fold == -1:
+                 best_fold = np.argmin([sum(counts.values()) for counts in fold_class_counts])
+
+            group_to_fold[g] = best_fold
+            for c in unique_classes:
+                fold_class_counts[best_fold][c] += group_class_counts[g][c]
+
+        folds = []
+        for f in range(self.n_splits):
+            val_idx = [i for i, g in enumerate(groups) if group_to_fold[g] == f]
+            train_idx = [i for i, g in enumerate(groups) if group_to_fold[g] != f]
+            folds.append((train_idx, val_idx))
+
+        return folds
+
+class BemisMurckoScaffoldSplit:
+    """Particionado disjunto por esqueletos moleculares de Bemis-Murcko (Claim CMRE-109).
+
+    Ensures Out-of-Distribution evaluation on structurally novel chemical scaffolds.
+    """
+
+    def __init__(self, test_ratio: float = 0.2, seed: int = 42):
+        self.test_ratio = test_ratio
+        self.seed = seed
+
+    def split(self, scaffolds: List[str]) -> Tuple[List[int], List[int]]:
+        """Splits chemical compounds based on core Bemis-Murcko molecular scaffolds."""
+        scaffold_to_indices: Dict[str, List[int]] = {}
+        for idx, sc in enumerate(scaffolds):
+            scaffold_to_indices.setdefault(sc, []).append(idx)
+
+        # Sort scaffolds by size descending to distribute large clusters fairly
+        sorted_scaffolds = sorted(
+            scaffold_to_indices.keys(),
+            key=lambda s: (len(scaffold_to_indices[s]), hashlib.sha256(s.encode()).hexdigest()),
+            reverse=True,
+        )
+
+        n_total = len(scaffolds)
+        n_test = int(n_total * self.test_ratio)
+
+        train_indices: List[int] = []
+        test_indices: List[int] = []
+
+        for sc in sorted_scaffolds:
+            idxs = scaffold_to_indices[sc]
+            if len(test_indices) + len(idxs) <= n_test:
+                test_indices.extend(idxs)
+            else:
+                train_indices.extend(idxs)
+
+        return train_indices, test_indices

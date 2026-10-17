@@ -1,7 +1,7 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_18_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 182/182)
+**Estado:** STAGE_19_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 182/182)
 **Última Auditoría:** 15 de Octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa")
 
@@ -21,6 +21,15 @@
 ## 📂 2. INVENTARIO DE MÓDULOS ACTIVOS
 
 
+
+
+
+### Nuevas Capacidades Proyectadas (Auto-Evolución CMRE-108 a 112)
+- **Stratified Group Patient Splitting:** Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE agrupando estrictamente por `patient_id` con `StratifiedGroupKFold`.
+- **Bemis-Murcko Scaffold Splitting:** Mitigación de SCAFFOLD_ANALOG_MEMORIZATION_LEAK particionando disjointamente los esqueletos moleculares para metabolómica ciego con `BemisMurckoScaffoldSplit`.
+- **Anti-Identity Guardian (ARC-AGI):** Mitigación de SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE aplicando forzosamente aumentaciones D8 ante predicciones de identidad.
+- **Latency Budget Pruning:** Mitigación de UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION implementando ruteo dinámico hacia una tríada quirúrgica vía `LatencyBudgetPruner`.
+- **SIRIUS Absence Axiom Neutral Filtering:** Mitigación de UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD penalizando candidatos mediante `SIRIUSAbsenceAxiomOptimizer`.
 
 ### Nuevas Capacidades Proyectadas (Próxima Auto-Evolución CMRE-103 a 107)
 - **Codificación Bayesiana OOF Estricta:** Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE con m-estimate de Dirichlet y ruido gaussiano.

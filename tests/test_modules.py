@@ -419,3 +419,34 @@ def test_nnls_blender_cmre_60():
     # Predict
     preds = blender.predict([m1, m2, m3])
     assert len(preds) == 4
+
+
+def test_stratified_group_kfold():
+    from cmre.modules.split import StratifiedGroupKFold
+    import numpy as np
+
+    # 10 samples, 4 groups, 2 classes
+    X = np.arange(10)
+    y = np.array([0, 0, 1, 1, 0, 1, 0, 1, 0, 1])
+    groups = np.array([1, 1, 1, 2, 2, 2, 3, 3, 4, 4])
+
+    cv = StratifiedGroupKFold(n_splits=2)
+    folds = cv.split(X, y, groups)
+
+    assert len(folds) == 2
+    for tr_idx, va_idx in folds:
+        tr_groups = {groups[i] for i in tr_idx}
+        va_groups = {groups[i] for i in va_idx}
+        assert len(tr_groups.intersection(va_groups)) == 0
+
+
+def test_bemis_murcko_scaffold_split():
+    from cmre.modules.split import BemisMurckoScaffoldSplit
+
+    scaffolds = ["benzene", "benzene", "pyridine", "indole", "indole", "furan"]
+    splitter = BemisMurckoScaffoldSplit(test_ratio=0.33)
+    tr_idx, te_idx = splitter.split(scaffolds)
+
+    tr_scaffolds = {scaffolds[i] for i in tr_idx}
+    te_scaffolds = {scaffolds[i] for i in te_idx}
+    assert len(tr_scaffolds.intersection(te_scaffolds)) == 0
