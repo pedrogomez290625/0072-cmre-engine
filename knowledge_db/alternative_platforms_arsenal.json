@@ -1,0 +1,66 @@
+{
+  "author": "Perez, Ernesto Rafael (\"Rafa\") & Angelus AGI",
+  "version": "1.0.0",
+  "date": "2026-09-21",
+  "platforms": ["DrivenData", "Zindi"],
+  "total_snippets": 4,
+  "snippets": [
+    {
+      "snippet_id": "SNIP_ALT_DRIVENDATA_MULTI_TARGET_CALIBRATOR",
+      "platform": "DrivenData",
+      "origin_competition": "Flu Shot Learning: Predict H1N1 and Seasonal Flu Vaccines",
+      "problem_type": "Multi-Target Binary Classification (Mean ROC-AUC)",
+      "module": "MOD_ALTERNATIVE",
+      "description": "Calibrador y modelador de objetivos múltiples dependientes. Utiliza Classifier Chains para condicionar P(seasonal_vaccine | h1n1_vaccine, X) con imputación semántica de valores faltantes (MNAR) y calibración isotónica OOF.",
+      "code_signature": "class MultiTargetClassifierChainCalibrator",
+      "key_mechanisms": [
+        "Missingness as Signal (indicadores booleanos de valores nulos)",
+        "Classifier Chains con orden probabilístico",
+        "Calibración de probabilidades OOF mediante regresión isotónica"
+      ]
+    },
+    {
+      "snippet_id": "SNIP_ALT_DRIVENDATA_ORDINAL_DAMAGE_MODELER",
+      "platform": "DrivenData",
+      "origin_competition": "Richter's Predictor: Modeling Earthquake Damage",
+      "problem_type": "Ordinal Multi-Class Classification (Micro-Averaged F1)",
+      "module": "MOD_ALTERNATIVE",
+      "description": "Modelador ordinal de daño estructural acumulativo (Grados 1, 2, 3) con cálculo de ratios de esbeltez de edificios, frecuencias relativas jerárquicas geo_level y optimización simplex Nelder-Mead continua sobre los dos umbrales de partición [th1, th2] maximizando directamente Micro F1.",
+      "code_signature": "class OrdinalDamageClassifier",
+      "key_mechanisms": [
+        "Descomposición ordinal binaria acumulativa (P(Y >= 2), P(Y >= 3))",
+        "Ratios de esbeltez (height_percentage / area_percentage)",
+        "Búsqueda simplex Nelder-Mead de umbrales óptimos para F1-Micro"
+      ]
+    },
+    {
+      "snippet_id": "SNIP_ALT_ZINDI_SPATIO_TEMPORAL_LAG_BLENDER",
+      "platform": "Zindi",
+      "origin_competition": "AirQo Ugandan Air Quality Forecast Challenge",
+      "problem_type": "Spatial-Temporal Regression (PM2.5 Sensor Forecasting)",
+      "module": "MOD_ALTERNATIVE",
+      "description": "Pipeline de ingeniería espacio-temporal para redes de sensores IoT ambientales. Incorpora GroupKFold espacial sobre identificadores de dispositivo, lags temporales multiescala (t-1h, t-2h, t-3h, t-24h), armónicos diurnos senoidales/cosenoidales y ensamble ponderado 85% GBDT + 15% KNN geoespacial.",
+      "code_signature": "class SpatioTemporalLagBlender",
+      "key_mechanisms": [
+        "Spatial Group K-Fold (cero contaminación de microclimas entre sensores)",
+        "Lags temporales multiescala con ventanas rodantes (media, desvío)",
+        "Armónicos trigonométricos del ciclo diurno y semanal",
+        "Ensamble híbrido no-lineal (GBDT + Geo-KNN)"
+      ]
+    },
+    {
+      "snippet_id": "SNIP_ALT_ZINDI_BIOMETRIC_REID_ARCFACE",
+      "platform": "Zindi",
+      "origin_competition": "Turtle Recall: Sea Turtle Face Identification",
+      "problem_type": "Few-Shot Biometric Re-Identification & Open-Set Classification",
+      "module": "MOD_ALTERNATIVE",
+      "description": "Pipeline de re-identificación facial biométrica para fauna en libertad. Aplica doble recorte anatómico guiado por puntos de control, función de pérdida de margen angular aditivo ArcFace (s=30.0, m=0.35) y clasificación por similitud coseno con umbral de rechazo dinámico para la clase residual new_turtle.",
+      "code_signature": "class BiometricReIDArcFaceModeler",
+      "key_mechanisms": [
+        "Doble recorte tisular/morfológico (perfil de escamas craneales + silueta cefálica)",
+        "Additive Angular Margin Loss (ArcFace) proyectado sobre hiperesfera unitaria",
+        "Inferencia por similitud coseno con asignación de clase abierta (Open-Set)"
+      ]
+    }
+  ]
+}
