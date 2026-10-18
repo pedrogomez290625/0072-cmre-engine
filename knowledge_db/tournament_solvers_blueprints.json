@@ -1,0 +1,53 @@
+{
+  "author": "Perez, Ernesto Rafael (\"Rafa\") & Angelus AGI",
+  "version": "1.0.0",
+  "date": "2026-09-21",
+  "total_solvers": 5,
+  "solvers": [
+    {
+      "solver_id": "SOLVER_ENVEDA_CASMI_2026",
+      "filename": "enveda_casmi_2026_solver.py",
+      "competition": "Enveda CASMI 2026 Blind Molecular Identification",
+      "domain": "cheminformatics_mass_spec",
+      "target_rule": "RULE_CHEM_MOLECULAR_SCAFFOLD",
+      "architecture": "Binned MS/MS (0.05 Da) L2-Norm -> Bemis-Murcko Scaffold Split -> Bitset POPCNT Tanimoto -> Chokudai Beam Search -> Bayesian Mass Delta Reranker",
+      "expected_lift": "Top-1 Accuracy 0.280 -> 0.465 (+0.185)"
+    },
+    {
+      "solver_id": "SOLVER_RSNA_MAMMOGRAPHY",
+      "filename": "rsna_mammography_solver.py",
+      "competition": "RSNA Screening Mammography Breast Cancer Detection",
+      "domain": "medical_radiology",
+      "target_rule": "RULE_MED_MAMMO_EXTREME_IMBALANCE",
+      "architecture": "DICOM VOI LUT / MONOCHROME1 Inversion -> StratifiedGroupKFold por patient_id -> CrossView Mammography Attention CC <-> MLO -> AsymmetricLoss (gamma_neg=4.0) -> Nelder-Mead Continuous OOF Threshold",
+      "expected_lift": "pF1 0.210 -> 0.585 (+0.375)"
+    },
+    {
+      "solver_id": "SOLVER_ISIC_2024_MELANOMA",
+      "filename": "isic_2024_melanoma_solver.py",
+      "competition": "ISIC 2024 Skin Cancer Detection with 3D-TBP",
+      "domain": "medical_dermatology",
+      "target_rule": "RULE_MED_DERMATOLOGY_PATIENT_COHORT",
+      "architecture": "Tabular/Image Dual Read -> Ugly Duckling Patient Normalization (IQR Desvios) -> Patient Disjoint Split -> LightGBM ScalePosWeight + ViT -> High-Sensitivity Window Calibration (TPR >= 0.80)",
+      "expected_lift": "pAUC 0.125 -> 0.182 (+0.057)"
+    },
+    {
+      "solver_id": "SOLVER_DRIVENDATA_RICHTERS_PREDICTOR",
+      "filename": "drivendata_richters_predictor_solver.py",
+      "competition": "Richter's Predictor: Modeling Earthquake Damage",
+      "domain": "tabular_engineering",
+      "target_rule": "RULE_TAB_ORDINAL_DAMAGE",
+      "architecture": "Slenderness Ratios (Height/Area) -> Geo-Hierarchy District Relative Frequency -> Simulated Annealing Feature Selection -> Cumulative Ordinal Damage Classifier -> Nelder-Mead Simplex Thresholding for Micro-F1",
+      "expected_lift": "Micro-F1 0.695 -> 0.755 (Top 1% Tier)"
+    },
+    {
+      "solver_id": "SOLVER_ZINDI_AIRQO",
+      "filename": "zindi_airqo_solver.py",
+      "competition": "AirQo Ugandan Air Quality Forecast Challenge",
+      "domain": "environmental_telemetry",
+      "target_rule": "RULE_ENV_SPATIO_TEMPORAL_IOT",
+      "architecture": "Causal Multiscale Lags (t-1h, t-2h, t-3h, t-24h) -> Diurnal Harmonics (sin/cos 24h) -> Spatial Group K-Fold over Sensor Devices -> Convex Blending (85% LightGBM + 15% Geo-KNN) -> Physical Non-Negative Clipping (PM2.5 >= 0)",
+      "expected_lift": "RMSE 32.50 -> 22.85 (-9.65 error)"
+    }
+  ]
+}
