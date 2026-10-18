@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_19_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 182/182)
-**Última Auditoría:** 15 de Octubre de 2026
+**Estado:** STAGE_20_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 184/184)
+**Última Auditoría:** 18 de October de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa")
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 182/182 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 184/184 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -219,6 +219,19 @@ Autor: Perez, Ernesto Rafael ("Rafa")
   - Fugas de autocorrelación temporal / lookahead bias (`FAIL_02`).
   - Degradación de bordes y discontinuidad en mosaicos WSI (`FAIL_03`).
   - Colisiones de precisión FP16/Double en CUDA (`FAIL_13`).
+
+---
+[VINCIT_OMNIA_VERITAS]
+Autor: Perez, Ernesto Rafael ("Rafa")
+
+## 🚀 17. EVOLUCIÓN DINÁMICA DE CIERRE Y BENCHMARKING (18 de Octubre de 2026)
+- **Benchmarking Universal:** Validación de estado de cierre con la suite completa de 184/184 tests pasando sin errores (0 regresiones).
+- **Auto-Reescritura Dinámica:** Integrada la reescritura de `JULES_DYNAMIC_TASKS.md` basada en un análisis cruzado de `ACTIVE_COMPETITIONS.json` y `postmortems_failures_catalog.json`. Se proyectaron 5 nuevas super-tareas (CMRE-118 a CMRE-122) enfocadas en:
+  - Mitigación de explosión de latencia en ensambles (`FAIL_12`).
+  - Filtrado de esqueletos para evitar memorización análoga (`FAIL_04`).
+  - Failsafes anti-identidad y generalización TTT D8 (`FAIL_11`).
+  - Poda masiva de sobrecarga de candidatos decoy usando heurísticas de SIRIUS (`FAIL_14`).
+  - Optimización Nelder-Mead ante colapso de umbrales métricos por desbalance severo (`FAIL_01`).
 
 ---
 [VINCIT_OMNIA_VERITAS]
