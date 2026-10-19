@@ -167,3 +167,8 @@
   - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
   - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (184 pasando) y asentar log en JULES_EXECUTION_LOG.md.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-INIT-058 (Inicialización y Memoria Dinámica 25 Oct):**
+  - **Objetivo:** Ejecutar la rutina diaria de inicialización y actualización de contexto.
+  - **Requerimiento:** Analizar ACTIVE_COMPETITIONS, ARQUITECTURA_ESTADO, logs previos y catálogos en data/knowledge, ejecutar tests (184 pasando) y asentar log en JULES_EXECUTION_LOG.md.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")
