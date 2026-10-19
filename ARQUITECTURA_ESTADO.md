@@ -236,3 +236,10 @@ Autor: Perez, Ernesto Rafael ("Rafa")
 ---
 [VINCIT_OMNIA_VERITAS]
 Autor: Perez, Ernesto Rafael ("Rafa")
+
+### Actualización 25 de Octubre 2026: Mitigaciones de Fallos Sistémicos
+- **CMRE-118:** Verificado el uso de `MultiViewOrthogonalAligner` para evitar UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION mediante poda predictiva limitada por presupuesto de latencia en validación multi-vista.
+- **CMRE-119:** Confirmada la eficacia de `molecular_scaffold_split` contra la ambigüedad y SCAFFOLD_ANALOG_MEMORIZATION_LEAK.
+- **CMRE-120:** Mitigado SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE aplicando estricta transformación cromática no-identidad en `ArcAgiHybridSolver`.
+- **CMRE-121:** Probado el mitigador UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD vía `SIRIUSAbsenceAxiomOptimizer` penalizando fuertemente ausencias elementales según picos de pérdida neutral.
+- **CMRE-122:** Integrado `NelderMeadThresholdOptimizer` como salvaguarda contra THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT en métricas asimétricas severas.
