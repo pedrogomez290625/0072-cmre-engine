@@ -3,36 +3,36 @@
 **Iteración:** Auto-Evolución y Proyección Diaria
 **Autor:** Perez, Ernesto Rafael ("Rafa")
 
-Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 5 nuevas super-tareas agnósticas (CMRE-118 a CMRE-122) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
+Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE_COMPETITIONS.json` con `data/knowledge/postmortems_failures_catalog.json`. El motor proyecta 5 nuevas super-tareas agnósticas (CMRE-123 a CMRE-127) para abordar los desafíos pendientes en las modalidades activas para la sesión de mañana.
 
 ---
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [x] SUPER-TAREA CMRE-118: Mitigación de UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION
-- **Origen:** `FAIL_12` (Catálogo de fallos) / Desafío Activo: `multi_view_ortho_alignment`
-- **Problema:** El desafío 'multi_view_ortho_alignment' expone la vulnerabilidad sistémica de upstream ensemble latency explosion.
-- **Implementación:** Alineamiento y poda dinámica multi-vista ortogonal de ensambles.
+### [ ] SUPER-TAREA CMRE-123: Mitigación de TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS
+- **Origen:** `FAIL_02` (Catálogo de fallos)
+- **Problema:** Riesgo de fuga temporal al evaluar el modelo sobre datos correlacionados en series de tiempo.
+- **Implementación:** Implementación de Purged Group Time Series Split con embargo riguroso.
 
-### [x] SUPER-TAREA CMRE-119: Mitigación de SCAFFOLD_ANALOG_MEMORIZATION_LEAK
-- **Origen:** `FAIL_04` (Catálogo de fallos) / Desafío Activo: `precursor_mass_ambiguity`
-- **Problema:** El desafío 'precursor_mass_ambiguity' expone la vulnerabilidad sistémica de scaffold analog memorization leak.
-- **Implementación:** Mitigación de ambigüedad aislando esqueletos moleculares ciegamente.
+### [ ] SUPER-TAREA CMRE-124: Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE
+- **Origen:** `FAIL_05` (Catálogo de fallos) / Desafío Activo: RSNA Knee
+- **Problema:** Filtración de identidad del paciente entre particiones provocando sobreajuste al ID.
+- **Implementación:** Estrategia estricta de partición GroupKFold asegurando que un paciente solo exista en un fold.
 
-### [x] SUPER-TAREA CMRE-120: Mitigación de SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE
-- **Origen:** `FAIL_11` (Catálogo de fallos) / Desafío Activo: `zero_shot_generalization`
-- **Problema:** El desafío 'zero_shot_generalization' expone la vulnerabilidad sistémica de symbolic timeout identity fallback collapse.
-- **Implementación:** Aplicación estricta de mitigación anti-identidad y generalización TTT D8.
+### [ ] SUPER-TAREA CMRE-125: Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE
+- **Origen:** `FAIL_06` (Catálogo de fallos) / Desafío Activo: Tabular Metadata
+- **Problema:** Codificación directa de variables categóricas provocando colapso temporal en test.
+- **Implementación:** Codificación bayesiana OOF estricta con regularización Dirichlet m-estimate.
 
-### [x] SUPER-TAREA CMRE-121: Mitigación de UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD
-- **Origen:** `FAIL_14` (Catálogo de fallos) / Desafío Activo: `high_dimensional_decoys`
-- **Problema:** El desafío 'high_dimensional_decoys' expone la vulnerabilidad sistémica de unconstrained candidate decoy overload.
-- **Implementación:** Poda masiva de decoys basada en reglas biofísicas de pérdida neutral (SIRIUS).
+### [ ] SUPER-TAREA CMRE-126: Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION
+- **Origen:** `FAIL_08` (Catálogo de fallos) / Desafío Activo: Medical Label Noise
+- **Problema:** Memorización del ruido en etiquetas médicas con Cross-Entropy.
+- **Implementación:** Integración de Bi-Tempered Logistic Loss y Weighted Soft-F1 Loss.
 
-### [x] SUPER-TAREA CMRE-122: Mitigación de THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT
-- **Origen:** `FAIL_01` (Catálogo de fallos) / Desafío Activo: `severe_class_imbalance`
-- **Problema:** El desafío 'severe_class_imbalance' expone la vulnerabilidad sistémica de threshold collapse and metric disalignment.
-- **Implementación:** Alineación de umbrales optimizados (Nelder-Mead) contra colapso de clase minoritaria.
+### [ ] SUPER-TAREA CMRE-127: Mitigación de CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH
+- **Origen:** `FAIL_13` (Catálogo de fallos) / Desafío Activo: hardware kaggle
+- **Problema:** Colisión de tipos al usar normalización float64 de numpy con torch.autocast.
+- **Implementación:** Sanitizador FP16 para garantizar compatibilidad CUDA y prevenir fallos silenciosos.
 
 ---
 [VINCIT_OMNIA_VERITAS]
