@@ -1,14 +1,14 @@
 # 🏛️ ARQUITECTURA Y ESTADO VIGENTE DEL REPOSITORIO
 ### Proyecto: `0072-cmre-engine` - Competitive ML Reasoning Engine (CMRE)
 **Versión:** 1.0.0
-**Estado:** STAGE_20_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 184/184)
-**Última Auditoría:** 18 de October de 2026
+**Estado:** STAGE_20_AUTO_EVOLUTION_COMPLETED 🟢 (100% Tests Pasando: 189/189)
+**Última Auditoría:** 20 de octubre de 2026
 **Investigador Principal:** Perez, Ernesto Rafael ("Rafa")
 
 ---
 
 ## 📊 1. RESUMEN DE COBERTURA Y SALUD
-- **Tests Unitarios:** 184/184 pasados (100% de éxito en pytest).
+- **Tests Unitarios:** 189/189 pasados (100% de éxito en pytest).
 - **Herramienta de Construcción:** `pyproject.toml` (PEP 621) + `uv.lock`.
 - **Smoke Test:** Verificado (60 claims metodológicas, forenses y HPC, 8 reportes de torneo generados con templates canónicos).
 - **Base de Datos Resiliente:** `src/cmre/db.py` con fallback automático a SQLite standalone (`sqlite:///data/cmre.db`) ante desconexión de PostgreSQL.
@@ -23,6 +23,13 @@
 
 
 
+
+### Nuevas Capacidades Proyectadas (Auto-Evolución CMRE-123 a 127)
+- **Purged Group Time Series Split:** Mitigación de TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS con embargo riguroso.
+- **Strict GroupKFold:** Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE asegurando que un paciente solo exista en un fold.
+- **Bayesian OOF Encoding:** Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE con regularización Dirichlet m-estimate.
+- **Bi-Tempered Logistic Loss:** Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION amortiguando gradientes.
+- **FP16 Sanitizer:** Mitigación de CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH previniendo colisión de tipos.
 
 ### Nuevas Capacidades Proyectadas (Auto-Evolución CMRE-108 a 112)
 - **Stratified Group Patient Splitting:** Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE agrupando estrictamente por `patient_id` con `StratifiedGroupKFold`.
