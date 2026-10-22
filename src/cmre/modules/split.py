@@ -108,7 +108,8 @@ def molecular_scaffold_split(
     return train_indices, test_indices
 
 
-CODE_TEMPLATE_PURGED_CV = '''# [CMRE MOD_SPLIT] Purged Group TimeSeries Split
+CODE_TEMPLATE_PURGED_CV = '''# [CMRE MOD_SPLIT] Purged Group TimeSeries Split...'''
+
 import numpy as np
 
 class PurgedGroupTimeSeriesSplit:
@@ -125,7 +126,7 @@ class PurgedGroupTimeSeriesSplit:
             val_end = min(n, val_start + fold_size)
             if val_start < n:
                 yield np.arange(0, train_end), np.arange(val_start, val_end)
-'''
+
 
 class DTWPurgedTimeSeriesSplit:
     """Dynamic Time-Warping Purged TimeSeries Split (Claim CMRE-29).
