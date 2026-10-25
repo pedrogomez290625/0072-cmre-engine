@@ -9,40 +9,40 @@ Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-157: Mitigación de TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS
-- **Origen:** `FAIL_02` (Catálogo de fallos)
-- **Problema:** Validación cruzada K-Fold aleatoria infló el score a 5.12 MAE. En la fase de test en vivo (Private L...
-- **Implementación:** PurgedGroupTimeSeriesSplit con ventana de embargo de al menos 10 minutos entre pliegues de entrenamiento y test.
-
-### [ ] SUPER-TAREA CMRE-158: Mitigación de severe_class_imbalance en RSNA
+### [ ] SUPER-TAREA CMRE-164: Mitigación de severe_class_imbalance en RSNA Knee Abnormality Detection 2026
 - **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
 - **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
-- **Implementación:** Implementar focal loss calibrada con temperature scaling para clases severamente desbalanceadas en radiología.
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en severe_class_imbalance.
 
-### [ ] SUPER-TAREA CMRE-159: Mitigación de multi_view_ortho_alignment en MRI
+### [ ] SUPER-TAREA CMRE-165: Mitigación de multi_view_ortho_alignment en RSNA Knee Abnormality Detection 2026
 - **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
 - **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
-- **Implementación:** Desarrollar un alineador 3D robusto invariante a la resolución para vistas sagital y coronal en MRI.
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en multi_view_ortho_alignment.
 
-### [ ] SUPER-TAREA CMRE-160: Optimización para kaggle_timeout_risk
+### [ ] SUPER-TAREA CMRE-166: Mitigación de kaggle_timeout_risk en RSNA Knee Abnormality Detection 2026
 - **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
 - **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
-- **Implementación:** Integrar poda dinámica de ensambles basada en budget de latencia y metric drop tolerance (Tolerancia a la Caída de Métrica).
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en kaggle_timeout_risk.
 
-### [ ] SUPER-TAREA CMRE-161: Mitigación de high_dimensional_decoys en Espectrometría
+### [ ] SUPER-TAREA CMRE-167: Mitigación de high_dimensional_decoys en Enveda CASMI 2026 - Molecule ID from Mass Spectra
 - **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
 - **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
-- **Implementación:** Refinar filtros biofísicos para descartar decoys sin presencia de fragmentos peptídicos comunes en CASMI.
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en high_dimensional_decoys.
 
-### [ ] SUPER-TAREA CMRE-162: Resolución de precursor_mass_ambiguity
+### [ ] SUPER-TAREA CMRE-168: Mitigación de precursor_mass_ambiguity en Enveda CASMI 2026 - Molecule ID from Mass Spectra
 - **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
 - **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
-- **Implementación:** Módulo de corrección de ventanas de aislamiento para masas precursoras ambiguas en MS/MS.
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en precursor_mass_ambiguity.
 
-### [ ] SUPER-TAREA CMRE-163: Manejo de neutral_loss_absence
+### [ ] SUPER-TAREA CMRE-169: Mitigación de neutral_loss_absence en Enveda CASMI 2026 - Molecule ID from Mass Spectra
 - **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
 - **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
-- **Implementación:** Implementar validador de vías de fragmentación usando un grafo dirigido de pérdidas neutras permitidas.
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en neutral_loss_absence.
+
+### [ ] SUPER-TAREA CMRE-170: Mitigación de zero_shot_generalization en ARC Prize 2026 - ARC-AGI-2
+- **Origen:** `ACTIVE_COMPETITIONS.json` (Retos activos)
+- **Problema:** Desafío activo no resuelto completamente que limita el performance en el torneo asociado.
+- **Implementación:** Implementar heurística o mitigación robusta enfocada en zero_shot_generalization.
 
 ---
 [VINCIT_OMNIA_VERITAS]
