@@ -9,15 +9,15 @@ Six battle-tested modules extracted from elite Kaggle & platform winning solutio
 - MOD_HPC: Packed bitset popcount (Tanimoto/Hamming) and Disjoint Set Union (DSU).
 """
 
-from .ensemble import SimpleNNLSBlender, rank_average_predictions
+from .ensemble import SimpleNNLSBlender, rank_average_predictions, NelderMeadThresholdOptimizer, NonNegativeLeastSquaresBlender, NNLSBlender, LatencyBudgetPruner
 from .hpc import BitsetFingerprint, DisjointSetUnion, popcount64, CUDAMixedPrecisionSanitizer
-from .ingest import find_breast_bounding_box, process_dicom_array
-from .loss import asymmetric_loss_numpy, soft_f1_score_numpy, MultiMetricEarlyStopping
+from .ingest import find_breast_bounding_box, process_dicom_array, StrictDicomLUTDecoder, HanningWindowTiler2D
+from .loss import asymmetric_loss_numpy, soft_f1_score_numpy, MultiMetricEarlyStopping, BiTemperedLogisticLoss, WeightedSoftF1Loss
 from .registry import CLAIM_MODULE_MAP, get_module_for_claim
-from .signal import BayesianOofTargetEncoder, compute_group_delta_stats
+from .signal import BayesianOofTargetEncoder, compute_group_delta_stats, GINIsomerExtractor, OOFTargetEncoder, DeltaTrickNormalizer
 from .split import group_disjoint_kfold, molecular_scaffold_split, purged_timeseries_split, StratifiedGroupKFold, BemisMurckoScaffoldSplit, PurgedGroupTimeSeriesSplit
 from .ood import OODDetector, AdaptiveMetaLearner, SIRIUSAbsenceAxiomOptimizer
-from .signal import GINIsomerExtractor
+from .radiology_advanced import UglyDucklingPatientNormalizer
 
 __all__ = [
     "process_dicom_array",
@@ -45,19 +45,4 @@ __all__ = [
     "UglyDucklingPatientNormalizer",
     "LatencyBudgetPruner",
     "SIRIUSAbsenceAxiomOptimizer",
-
 ]
-from .ensemble import NelderMeadThresholdOptimizer
-from .signal import OOFTargetEncoder
-from .loss import BiTemperedLogisticLoss
-from .ensemble import NonNegativeLeastSquaresBlender
-from .ingest import StrictDicomLUTDecoder
-
-from .ingest import HanningWindowTiler2D
-from .radiology_advanced import UglyDucklingPatientNormalizer
-
-from .signal import DeltaTrickNormalizer
-
-from .loss import WeightedSoftF1Loss
-
-from .ensemble import NNLSBlender, LatencyBudgetPruner
