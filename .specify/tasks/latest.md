@@ -206,3 +206,8 @@
   - **Objetivo:** Ejecutar cierre, benchmarking final y proyectar nuevas super-tareas para el motor (CMRE-180 a CMRE-188).
   - **Requerimiento:** Verificar 189 tests en verde, actualizar LOG, ARQUITECTURA_ESTADO, y reescribir JULES_DYNAMIC_TASKS.md. Abrir PR limpio hacia main.
   - **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+- [x] **TASK-EVOL-073 (Implementación de Super-Tareas CMRE-198 a CMRE-206):**
+  - **Objetivo:** Ejecutar implementación y testeo unitario de CMRE-198 a CMRE-206.
+  - **Requerimiento:** Verificar testeo e integración de los módulos. Actualizar tableros y logs.
+  - **Autor:** Perez, Ernesto Rafael ("Rafa")

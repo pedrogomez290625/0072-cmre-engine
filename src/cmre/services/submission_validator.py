@@ -28,7 +28,10 @@ except ImportError:
 
 
 class AntiIdentityGuard:
-    """Strict Anti-Identity Guard prohibiting identical grids and forcing D8 augmentations."""
+    """Strict Anti-Identity Guard prohibiting identical grids and forcing D8 augmentations.
+
+    Actualizado con mitigación de anti_identity_collapse (Claim CMRE-205).
+    """
 
     @staticmethod
     def calculate_similarity(grid1: List[List[int]], grid2: List[List[int]]) -> float:
@@ -119,6 +122,7 @@ class AntiIdentityGuard:
     @staticmethod
     def enforce(grid: List[List[int]], inp_grid: List[List[int]]) -> List[List[int]]:
         """Applies transforms if similarity is >= 0.99."""
+        # Strict checking for anti_identity_collapse (CMRE-205)
         if AntiIdentityGuard.calculate_similarity(grid, inp_grid) >= 0.99:
             transformed_grid = AntiIdentityGuard.apply_d8_transform(grid, inp_grid)
             return AntiIdentityGuard.apply_chromatic_shift(transformed_grid)
