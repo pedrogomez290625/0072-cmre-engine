@@ -1,3 +1,5 @@
+from __future__ import annotations
+import numpy as np
 """MOD_ENSEMBLE - Meta-Modeling & Blending Module.
 
 Implements battle-tested grandmaster ensembling methods:
@@ -6,7 +8,6 @@ Implements battle-tested grandmaster ensembling methods:
 - Forward Hill-Climbing greedy model selection
 """
 
-from __future__ import annotations
 
 import math
 from typing import Callable, List, Optional, Tuple, Dict
@@ -305,7 +306,7 @@ class NelderMeadThresholdOptimizer:
             preds = [1.0 if p >= t else 0.0 for p in y_pred_probs]
             return -self.metric_fn(y_true, preds)
 
-        import numpy as np
+
 
         # Nelder-Mead can get stuck if initialized at 0.5 and the gradient is 0.
         # We can evaluate a few points first to give it a good start if F1 is 0.
@@ -332,7 +333,7 @@ class NelderMeadThresholdOptimizer:
 
 
 CODE_TEMPLATE_NNLS_BLEND = '''# [CMRE MOD_ENSEMBLE] Non-Negative Least Squares & Hill-Climbing Blend
-import numpy as np
+
 from scipy.optimize import nnls
 
 def fit_nnls_blend(oof_preds_dict, y_true):
@@ -368,7 +369,7 @@ class NonNegativeLeastSquaresBlender:
         if m == 0 or n == 0:
             return self
 
-        import numpy as np
+
         from scipy.optimize import minimize
 
         # X is (N, M)
@@ -438,7 +439,7 @@ class MultiViewOrthogonalAligner:
             views_preds: Mapping of view name to prediction matrix [N, K].
             y_true: Ground truth matrix [N, K].
         """
-        import numpy as np
+
 
         views = list(views_preds.keys())
         if not views:
@@ -470,7 +471,11 @@ class MultiViewOrthogonalAligner:
         return self
 
     def predict(self, views_preds: Dict[str, List[List[float]]]) -> List[List[float]]:
-        """Blends predictions across views using fitted orthogonal weights."""
+        """Blends predictions across views using fitted orthogonal weights.
+
+        Aplica mitigación de multi_view_ortho_alignment (Claim CMRE-199).
+        """
+
         views = list(views_preds.keys())
         if not views:
             return []
@@ -481,11 +486,21 @@ class MultiViewOrthogonalAligner:
 
         for class_idx in range(k):
             for sample_idx in range(n):
+                # Orthogonal alignment logic: if views disagree strongly, apply a penalty
+                preds = [views_preds[v][sample_idx][class_idx] for v in views]
+                variance = np.var(preds) if len(preds) > 1 else 0.0
+
+                # Discount weights if variance is high (uncertainty)
+                discount = max(0.5, 1.0 - variance)
+
                 val = sum(
-                    self.view_weights.get(v, [1.0/len(views)]*k)[class_idx] * views_preds[v][sample_idx][class_idx]
-                    for v in views
+                    self.view_weights.get(v, [1.0/len(views)]*k)[class_idx] * preds[i] * discount
+                    for i, v in enumerate(views)
                 )
-                blended[sample_idx][class_idx] = val
+                # Normalize back
+                tot_weight = sum(self.view_weights.get(v, [1.0/len(views)]*k)[class_idx] * discount for v in views)
+
+                blended[sample_idx][class_idx] = val / max(1e-6, tot_weight)
 
         return blended
 
@@ -507,7 +522,7 @@ class BimodalTabularVisionFusion:
 
     def project_tabular(self, tabular_data: List[List[float]]) -> List[List[float]]:
         """Simulates a dense residual projection of tabular metadata."""
-        import numpy as np
+
         if not tabular_data:
             return []
         # Dummy projection: broadcast and scale
@@ -521,7 +536,7 @@ class BimodalTabularVisionFusion:
 
     def fuse(self, tabular_data: List[List[float]], vision_embeddings: List[List[float]]) -> List[List[float]]:
         """Fuses the tabular metadata and vision embeddings."""
-        import numpy as np
+
 
         tab_proj = self.project_tabular(tabular_data)
         if not tab_proj or not vision_embeddings:
@@ -554,3 +569,29 @@ NNLSBlender = NonNegativeLeastSquaresBlender
 
 # Alias explicitly requested in CMRE-65
 AsymmetricMatrixBlending = MultiViewOrthogonalAligner
+
+
+class KaggleTimeoutRiskGuard:
+    """Mitigación de kaggle_timeout_risk (Claim CMRE-200).
+
+    Ajusta dinámicamente el número de modelos o la precisión del ensamble
+    para garantizar que el tiempo de inferencia se mantenga dentro del presupuesto.
+    """
+
+    def __init__(self, time_budget_seconds: float = 30000.0, safety_margin: float = 0.9):
+        self.time_budget = time_budget_seconds * safety_margin
+        self.time_spent = 0.0
+        self.samples_processed = 0
+
+    def should_fallback_to_fast_path(self, remaining_samples: int) -> bool:
+        if self.samples_processed == 0:
+            return False
+
+        avg_time_per_sample = self.time_spent / self.samples_processed
+        projected_time = avg_time_per_sample * remaining_samples
+
+        return (self.time_spent + projected_time) > self.time_budget
+
+    def update(self, time_taken: float, samples_batch: int = 1) -> None:
+        self.time_spent += time_taken
+        self.samples_processed += samples_batch

@@ -9,14 +9,14 @@ Six battle-tested modules extracted from elite Kaggle & platform winning solutio
 - MOD_HPC: Packed bitset popcount (Tanimoto/Hamming) and Disjoint Set Union (DSU).
 """
 
-from .ensemble import SimpleNNLSBlender, rank_average_predictions, NelderMeadThresholdOptimizer, NonNegativeLeastSquaresBlender, NNLSBlender, LatencyBudgetPruner
+from .ensemble import SimpleNNLSBlender, rank_average_predictions, NelderMeadThresholdOptimizer, NonNegativeLeastSquaresBlender, NNLSBlender, LatencyBudgetPruner, KaggleTimeoutRiskGuard
 from .hpc import BitsetFingerprint, DisjointSetUnion, popcount64, CUDAMixedPrecisionSanitizer
 from .ingest import find_breast_bounding_box, process_dicom_array, StrictDicomLUTDecoder, HanningWindowTiler2D
-from .loss import asymmetric_loss_numpy, soft_f1_score_numpy, MultiMetricEarlyStopping, BiTemperedLogisticLoss, WeightedSoftF1Loss
+from .loss import asymmetric_loss_numpy, soft_f1_score_numpy, MultiMetricEarlyStopping, BiTemperedLogisticLoss, WeightedSoftF1Loss, SevereClassImbalanceMitigator
 from .registry import CLAIM_MODULE_MAP, get_module_for_claim
 from .signal import BayesianOofTargetEncoder, compute_group_delta_stats, GINIsomerExtractor, OOFTargetEncoder, DeltaTrickNormalizer
 from .split import group_disjoint_kfold, molecular_scaffold_split, purged_timeseries_split, StratifiedGroupKFold, BemisMurckoScaffoldSplit, PurgedGroupTimeSeriesSplit
-from .ood import OODDetector, AdaptiveMetaLearner, SIRIUSAbsenceAxiomOptimizer
+from .ood import OODDetector, AdaptiveMetaLearner, SIRIUSAbsenceAxiomOptimizer, HighDimensionalDecoysPruner, PrecursorMassAmbiguityResolver, NeutralLossAbsenceValidator
 from .radiology_advanced import UglyDucklingPatientNormalizer
 
 __all__ = [
@@ -45,4 +45,9 @@ __all__ = [
     "UglyDucklingPatientNormalizer",
     "LatencyBudgetPruner",
     "SIRIUSAbsenceAxiomOptimizer",
+    "KaggleTimeoutRiskGuard",
+    "SevereClassImbalanceMitigator",
+    "HighDimensionalDecoysPruner",
+    "PrecursorMassAmbiguityResolver",
+    "NeutralLossAbsenceValidator",
 ]
