@@ -9,41 +9,35 @@ Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-207: Mitigación de THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT (FAIL_01)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_01)
-- **Problema:** Modelos con ROC-AUC > 0.82 y buena convergencia en entrenamiento colapsaron a pF1 de 0.02 en validación y test por evaluar con un umbral fijo estándar (0.50). Caída de más de 600 puestos en el Private Leaderboard para equipos que no optimizaron el umbral.
-- **Causa Raíz:** La métrica pF1 sobre una prevalencia mamográfica extrema (~2.1% positiva) es hipersensible al umbral de binarización. Con umbral 0.50, la precisión y recall colapsan por inhibición de predicciones positivas. El umbral óptimo residía entre [0.03, 0.08].
-- **Implementación:** Optimización simplex Nelder-Mead continua del umbral sobre predicciones OOF restringiendo recall mínimo.
+### [ ] SUPER-TAREA CMRE-213: Mitigación de EDGE_SEAM_BOUNDARY_DEGRADATION (FAIL_03)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_03)
+- **Problema:** En WSI (Whole Slide Imaging), el tilling estándar genera artefactos de borde (seams) que degradan el Dice score local de los vasos sanguíneos cerca del margen de la ventana.
+- **Causa Raíz:** Falta de fusión superpuesta y ponderación gaussiana en la reconstrucción (Hanning Window Tiling).
+- **Implementación:** Desarrollar `HanningWindowTiler2D` y `GaussianOverlapBlender` en MOD_VISION.
 
-### [ ] SUPER-TAREA CMRE-208: Mitigación de TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS (FAIL_02)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_02)
-- **Problema:** Validación cruzada K-Fold aleatoria infló el score a 5.12 MAE. En la fase de test en vivo (Private LB) el score se degradó a 5.89 MAE, provocando caídas de más de 800 puestos.
-- **Causa Raíz:** Autocorrelación intradiaria de alta frecuencia en el libro de órdenes (order book). Muestras contiguas en el tiempo compartían micro-tendencias y volatilidad. Un split aleatorio filtró información del futuro inmediato hacia el pasado.
-- **Implementación:** PurgedGroupTimeSeriesSplit con ventana de embargo de al menos 10 minutos entre pliegues de entrenamiento y test.
+### [ ] SUPER-TAREA CMRE-214: Mitigación de TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE (FAIL_06)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_06)
+- **Problema:** Target encoding directo sobre pares de tarjetas y direcciones (card1 + addr1) infló el CV a 0.985, colapsando a 0.880 en test temporal.
+- **Causa Raíz:** Fuga de la variable objetivo hacia las medias de grupo sin validación cruzada interna (in-fold) ni regularización bayesiana m-estimate.
+- **Implementación:** Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano (`OOFTargetEncoder` robusto).
 
-### [ ] SUPER-TAREA CMRE-209: Mitigación de PATIENT_IDENTITY_COHORT_LEAKAGE (FAIL_05)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_05)
-- **Problema:** ROC-AUC local de 0.945; caída a 0.812 pAUC en Private LB y fallo en detección de melanomas sutiles.
-- **Causa Raíz:** Los pacientes tenían múltiples lesiones cutáneas. Al no aislar el paciente en un único pliegue, las redes aprendieron a reconocer el tipo de piel y fondo del paciente en lugar de la atipia celular de la lesión.
-- **Implementación:** StratifiedGroupKFold agrupado estrictamente por patient_id combinado con la normalización de Patito Feo.
+### [ ] SUPER-TAREA CMRE-215: Mitigación de UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT (FAIL_07)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_07)
+- **Problema:** El conteo directo de ceros por fila mejoró drásticamente el Public LB, pero cayó más de 400 puestos en Private LB al cambiar la densidad de dispersión.
+- **Causa Raíz:** Sobreajuste a la matriz de dispersión sintética generada por el banco en el subconjunto público.
+- **Implementación:** Cálculo de desvíos relativos (Delta Trick) y normalización robusta intercuartílica (IQR) mediante `DeltaTrickNormalizer`.
 
-### [ ] SUPER-TAREA CMRE-210: Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION (FAIL_08)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_08)
-- **Problema:** Modelos complejos (EfficientNet-B5) alcanzaron 99% accuracy en train con Cross-Entropy, pero la validación se estancó en 87.5% por sobreajuste severo a etiquetas erróneas.
-- **Causa Raíz:** El dataset contenía entre 15% y 20% de ruido en las etiquetas debido a diagnósticos de campo en hojas de yuca sin confirmación de laboratorio. Cross-Entropy penaliza exponencialmente las discrepancias, forzando a la red a memorizar el ruido.
-- **Implementación:** Uso de Label Smoothing, Bi-Tempered Loss o Soft-F1 con gradientes amortiguados para mitigar la penalización de outliers.
+### [ ] SUPER-TAREA CMRE-216: Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION (FAIL_10)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_10)
+- **Problema:** Pipelines basados en OpenCV/PIL estándar leyeron mamografías DICOM sin interpretar la etiqueta PhotometricInterpretation, invirtiendo la apariencia de los tejidos en el 30% del dataset.
+- **Causa Raíz:** DICOM soporta MONOCHROME1 y MONOCHROME2. Al ignorar esta metadata, las convoluciones aprendieron características con polaridad invertida.
+- **Implementación:** Decodificador DICOM canónico con verificación obligatoria de PhotometricInterpretation y normalización a MONOCHROME2 (`StrictDicomLUTDecoder`).
 
-### [ ] SUPER-TAREA CMRE-211: Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE (FAIL_09)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_09)
-- **Problema:** Regresión lineal ordinaria (OLS) sobre las predicciones de 15 modelos de Gradient Boosting asignó coeficientes fuertemente negativos (-3.8) a varios modelos colineales, generando probabilidades negativas y Log-Loss infinito en test.
-- **Causa Raíz:** Multicolinealidad severa entre modelos casi idénticos (LightGBM vs XGBoost con semillas distintas). OLS busca balancear diferencias infinitesimales asignando pesos gigantescos de signos opuestos.
-- **Implementación:** Mínimos Cuadrados No Negativos (Non-Negative Least Squares / NNLS) forzando w_i >= 0 y suma(w) = 1.0.
-
-### [ ] SUPER-TAREA CMRE-212: Mitigación de CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH (FAIL_13)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_13)
-- **Problema:** Al ejecutar inferencia en Kaggle GPU (Tesla T4) con torch.autocast, el kernel falló con RuntimeError: expected scalar type Half but found Double.
-- **Causa Raíz:** Constantes de normalización ImageNet (mean/std) importadas como float64 (Double) en NumPy o PyTorch. Al interactuar con capas Half sin conversión explícita, CUDA aborta la ejecución.
-- **Implementación:** Sanitización explícita forzando tensores y buffers de normalización a .float() antes del autocast a .half().
+### [ ] SUPER-TAREA CMRE-217: Mitigación de UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION (FAIL_12)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_12)
+- **Problema:** Pipeline multi-modelo demoró más de 6.5 horas en el test set privado, rozando el timeout de 9 horas.
+- **Causa Raíz:** Sobre-ingeniería de ensamble sin presupuestación de latencia de inferencia. La concatenación ciega de modelos pesados degrada la velocidad.
+- **Implementación:** `LatencyBudgetPruner` podando el ensamble basado en presupuesto estricto manteniendo el desempeño marginal AUC.
 
 ---
 [VINCIT_OMNIA_VERITAS]
