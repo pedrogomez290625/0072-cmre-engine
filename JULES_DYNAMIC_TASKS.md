@@ -9,38 +9,38 @@ Este archivo ha sido reescrito totalmente de forma dinámica tras cruzar `ACTIVE
 
 ## 🚀 BACKLOG DE SUPER-TAREAS AGNÓSTICAS (PRÓXIMA SESIÓN)
 
-### [ ] SUPER-TAREA CMRE-232: Mitigación de LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION (FAIL_08)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_08)
-- **Problema:** Modelos complejos alcanzaron 99% accuracy en train con Cross-Entropy, pero la validación se estancó por sobreajuste severo a etiquetas erróneas.
-- **Causa Raíz:** Cross-Entropy pura penaliza exponencialmente las discrepancias, forzando a la red a memorizar el ruido.
-- **Implementación:** Uso de Label Smoothing, Bi-Tempered Loss o Soft-F1 con gradientes amortiguados para mitigar la penalización de outliers.
+### [ ] SUPER-TAREA CMRE-238: Mitigación de FAIL_11 (SNIP_ARC_ANTI_IDENTITY_GUARD)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_11)
+- **Problema:** Pipeline híbrido V2 de búsqueda simbólica + heurísticas colapsó a un score oficial de 0.00 en Kaggle tras 17 horas de corrida.
+- **Causa Raíz:** Cuando el motor simbólico alcanzó su límite de profundidad y tiempo de CPU, el bloque de escape ejecutó fallback = test_input (copia idéntica de la grilla de entrada). En ARC-AGI, la grilla objetivo jamás es idéntica a la entrada; por tanto 0/240 intentos fueron correctos.
+- **Implementación:** Guardián estricto anti-identidad que prohíbe la sumisión de grillas idénticas y conmuta a Test-Time Training (TTT) con aumentaciones D8 y transformaciones cromáticas/topológicas seguras.
 
-### [ ] SUPER-TAREA CMRE-233: Mitigación de NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE (FAIL_09)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_09)
-- **Problema:** Regresión lineal ordinaria sobre predicciones asignó coeficientes fuertemente negativos, generando Log-Loss infinito en test.
-- **Causa Raíz:** Multicolinealidad severa entre modelos casi idénticos. OLS busca balancear diferencias asignando pesos gigantescos de signos opuestos.
-- **Implementación:** Mínimos Cuadrados No Negativos (Non-Negative Least Squares / NNLS) forzando w_i >= 0 y suma(w) = 1.0.
+### [ ] SUPER-TAREA CMRE-239: Mitigación de FAIL_12 (SNIP_ENS_LATENCY_BUDGET_PRUNING)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_12)
+- **Problema:** Pipeline multi-modelo con más de 30 sub-redes demoró más de 6.5 horas en el test set privado, rozando el timeout de 9 horas y arriesgando la pérdida de la sumisión.
+- **Causa Raíz:** Sobre-ingeniería de ensamble sin presupuestación de latencia de inferencia. La concatenación ciega de modelos pesados sin podado greedy degrada la velocidad sin aportar ganancia marginal de AUC.
+- **Implementación:** LatencyBudgetPruner podando el ensamble a una tríada quirúrgica (KneeSpecialistMONAI512 + CoAtNet + Raptor) reduciendo el tiempo de inferencia a 1.86s por estudio.
 
-### [ ] SUPER-TAREA CMRE-234: Mitigación de INVERSION_MONOCHROME_LUT_MISINTERPRETATION (FAIL_10)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_10)
-- **Problema:** Pipelines leyeron mamografías DICOM sin interpretar PhotometricInterpretation, invirtiendo la apariencia de los tejidos.
-- **Causa Raíz:** Al ignorar la metadata, las convoluciones aprendieron características con polaridad invertida en diferentes centros hospitalarios.
-- **Implementación:** Decodificador DICOM canónico con verificación obligatoria de PhotometricInterpretation y normalización a MONOCHROME2.
+### [ ] SUPER-TAREA CMRE-240: Mitigación de FAIL_13 (SNIP_GPU_FP16_PRECISION_SANITIZER)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_13)
+- **Problema:** Al ejecutar inferencia en Kaggle GPU (Tesla T4) con torch.autocast, el kernel falló con RuntimeError: expected scalar type Half but found Double.
+- **Causa Raíz:** Constantes de normalización ImageNet (mean/std) importadas como float64 (Double) en NumPy o PyTorch. Al interactuar con capas Half sin conversión explícita, CUDA aborta la ejecución.
+- **Implementación:** Sanitización explícita forzando tensores y buffers de normalización a .float() antes del autocast a .half().
 
-### [ ] SUPER-TAREA CMRE-235: Mitigación de UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT (FAIL_07)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_07)
-- **Problema:** El conteo directo de ceros mejoró el Public LB, pero cayó en Private LB al cambiar la densidad de dispersión.
-- **Causa Raíz:** Sobreajuste a la matriz de dispersión sintética generada por el banco en el subconjunto público.
-- **Implementación:** Cálculo de desvíos relativos (Delta Trick) y normalización robusta intercuartílica (IQR).
+### [ ] SUPER-TAREA CMRE-241: Mitigación de FAIL_14 (SNIP_CHEM_SIRIUS_ABSENCE_FILTER)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_14)
+- **Problema:** Búsqueda ciega en bibliotecas masivas saturó el Top-25 con moléculas decoy que compartían masa similar pero presentaban fórmulas incompatibles con las pérdidas neutras espectrales.
+- **Causa Raíz:** Filtrado basado exclusivamente en delta de masa monoisotópica sin validación de reglas biofísicas de fragmentación. Las moléculas con estructuras ajenas a las vías biológicas dominaban el ranking.
+- **Implementación:** Axioma de Ausencia SIRIUS que penaliza severamente candidatos que carecen de heteroátomos (O, N) requeridos para las pérdidas neutrales observadas (H2O, CO2, NH3).
 
-### [ ] SUPER-TAREA CMRE-236: Mitigación de TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS (FAIL_05)
-- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_05)
-- **Problema:** Un modelo predictivo de series de tiempo financieras colapsó de Sharpe 2.4 OOF a Sharpe -1.2 en vivo.
-- **Causa Raíz:** Fuga de autocorrelación temporal al normalizar Z-Score sobre ventanas temporales superpuestas (lookahead bias sutil).
-- **Implementación:** Splitter de validación cruzada temporal estricto de series temporales (PurgedGroupTimeSeriesSplit).
-
-### [ ] SUPER-TAREA CMRE-237: Mitigación de SINGLE_VIEW_EDGE_DEGRADATION_ARTEFACT (FAIL_02)
+### [ ] SUPER-TAREA CMRE-242: Mitigación de FAIL_02 (SINGLE_VIEW_EDGE_DEGRADATION_ARTEFACT)
 - **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_02)
 - **Problema:** El parcheado ciego (tiling) masivo en Whole Slide Images (WSI) sin contexto global provocó clasificaciones de alto riesgo en bordes benignos.
 - **Causa Raíz:** Pérdida de topología tisular global al procesar tiles de 256x256 aislados.
 - **Implementación:** Bimodal WSI Fusion con embeddings globales (DINOv2) y atención cruzada tile-to-slide.
+
+### [ ] SUPER-TAREA CMRE-243: Mitigación de FAIL_05 (TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS)
+- **Origen:** `data/knowledge/postmortems_failures_catalog.json` (FAIL_05)
+- **Problema:** Un modelo predictivo de series de tiempo financieras colapsó de Sharpe 2.4 OOF a Sharpe -1.2 en vivo.
+- **Causa Raíz:** Fuga de autocorrelación temporal al normalizar Z-Score sobre ventanas temporales superpuestas (lookahead bias sutil).
+- **Implementación:** Splitter de validación cruzada temporal estricto de series temporales (PurgedGroupTimeSeriesSplit).
