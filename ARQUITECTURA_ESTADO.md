@@ -449,3 +449,10 @@ Nuevas capacidades proyectadas consolidadas:
 - Particionado disjunto por esqueletos moleculares de Bemis-Murcko (BemisMurckoScaffoldSplit).
 - StratifiedGroupKFold agrupado estrictamente por patient_id combinado con la normalización de Patito Feo.
 - Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano.
+
+## 🔴 32. Auto-evolución Dinámica CMRE-256 a CMRE-261
+- **Fecha:** 2026-11-06
+- **Resultados de benchmarking:** 189/189 pruebas pasadas (100% éxito).
+- **Proyección de Capacidades:**
+  - Nuevas modalidades y desafíos descubiertos en `ACTIVE_COMPETITIONS.json` se cruzaron con `postmortems_failures_catalog.json` para proyectar 6 tareas.
+  - Mitigación planificada contra Edge Seam Boundary Degradation (FAIL_03), fallas de normalización y polaridad en DICOM (FAIL_10), Latency Explosion en inferencia (FAIL_12), y Label Noise (FAIL_08).

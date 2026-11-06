@@ -1,9 +1,9 @@
 # JULES DYNAMIC TASKS
 Registro de super-tareas de ingeniería autónoma generadas dinámicamente.
 
-- [ ] CMRE-250: Optimización simplex Nelder-Mead continua del umbral sobre predicciones OOF restringiendo recall mínimo.
-- [ ] CMRE-251: PurgedGroupTimeSeriesSplit con ventana de embargo de al menos 10 minutos entre pliegues de entrenamiento y test.
-- [ ] CMRE-252: Corte con solapamiento del 25% y reconstrucción mediante ponderación separable con ventana 2D de Hanning.
-- [ ] CMRE-253: Particionado disjunto por esqueletos moleculares de Bemis-Murcko (BemisMurckoScaffoldSplit).
-- [ ] CMRE-254: StratifiedGroupKFold agrupado estrictamente por patient_id combinado con la normalización de Patito Feo.
-- [ ] CMRE-255: Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano.
+- [ ] CMRE-256: Implementar Normalización a MONOCHROME2 y verificación obligatoria de PhotometricInterpretation para inferencia DICOM.
+- [ ] CMRE-257: Construir un podador de latencia (LatencyBudgetPruner) para limitar la profundidad de ensambles pesados, apuntando a inferencias ultra rápidas (<2s).
+- [ ] CMRE-258: Incorporar pérdidas robustas al ruido (Bi-Tempered Loss o Soft-F1 con gradientes amortiguados) para datasets médicos como mitigación de sobreajuste de etiquetas erróneas.
+- [ ] CMRE-259: Construir un guardián anti-identidad que prohíba test_input=fallback para inferencia simbólica en entornos ARC-AGI.
+- [ ] CMRE-260: Incorporar sanitización de buffers y tensores pre-autocast a .float() para prevenir RuntimeError en entornos CUDA de Kaggle con modelos de precisión media (FP16).
+- [ ] CMRE-261: Implementar un filtro canónico SIRIUS para poda molecular de decoys en CASMI, aplicando axiomas de penalización de pérdida neutra (O, N).
