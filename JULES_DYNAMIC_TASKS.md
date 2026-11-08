@@ -1,9 +1,10 @@
 # JULES DYNAMIC TASKS
 Registro de super-tareas de ingeniería autónoma generadas dinámicamente.
 
-- [ ] CMRE-262: Implementar optimización simplex Nelder-Mead continua del umbral sobre predicciones OOF restringiendo recall mínimo (Mitigación FAIL_01 - THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT).
-- [ ] CMRE-263: Desarrollar PurgedGroupTimeSeriesSplit con ventana de embargo de al menos 10 minutos entre pliegues de entrenamiento y test (Mitigación FAIL_02 - TEMPORAL_LOOKAHEAD_AUTOCORRELATION_BIAS).
-- [ ] CMRE-264: Integrar corte con solapamiento del 25% y reconstrucción mediante ponderación separable con ventana 2D de Hanning (Mitigación FAIL_03 - EDGE_SEAM_BOUNDARY_DEGRADATION).
-- [ ] CMRE-265: Construir particionado disjunto por esqueletos moleculares de Bemis-Murcko - BemisMurckoScaffoldSplit (Mitigación FAIL_04 - SCAFFOLD_ANALOG_MEMORIZATION_LEAK).
-- [ ] CMRE-266: Implementar StratifiedGroupKFold agrupado estrictamente por patient_id combinado con la normalización de Patito Feo (Mitigación FAIL_05 - PATIENT_IDENTITY_COHORT_LEAKAGE).
-- [ ] CMRE-267: Integrar Mínimos Cuadrados No Negativos (Non-Negative Least Squares / NNLS) forzando pesos w_i >= 0 y suma(w) = 1.0 para stacking (Mitigación FAIL_09 - NEGATIVE_WEIGHT_MULTICOLLINEARITY_COLLAPSE).
+- [ ] CMRE-268: Codificación bayesiana OOF estricta con regularización m-estimate de Dirichlet y adición de ruido gaussiano. (Mitigación FAIL_06 - TARGET_ENCODING_HIGH_CARDINALITY_LEAKAGE).
+- [ ] CMRE-269: Cálculo de desvíos relativos (Delta Trick) y normalización robusta intercuartílica (IQR). (Mitigación FAIL_07 - UNSCALED_COUNT_FEATURE_LEAKAGE_AND_CONSTANT_SHIFT).
+- [ ] CMRE-270: Uso de Label Smoothing, Bi-Tempered Loss o Soft-F1 con gradientes amortiguados para mitigar la penalización de outliers. (Mitigación FAIL_08 - LABEL_NOISE_MEMORIZATION_AND_GRADIENT_CORRUPTION).
+- [ ] CMRE-271: Guardián estricto anti-identidad que prohíbe la sumisión de grillas idénticas y conmuta a Test-Time Training (TTT) con aumentaciones D8 y transformaciones cromáticas/topológicas seguras. (Mitigación FAIL_11 - SYMBOLIC_TIMEOUT_IDENTITY_FALLBACK_COLLAPSE).
+- [ ] CMRE-272: LatencyBudgetPruner podando el ensamble a una tríada quirúrgica (KneeSpecialistMONAI512 + CoAtNet + Raptor) reduciendo el tiempo de inferencia a 1.86s por estudio. (Mitigación FAIL_12 - UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION).
+- [ ] CMRE-273: Sanitización explícita forzando tensores y buffers de normalización a .float() antes del autocast a .half(). (Mitigación FAIL_13 - CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH).
+- [ ] CMRE-274: Axioma de Ausencia SIRIUS que penaliza severamente candidatos que carecen de heteroátomos (O, N) requeridos para las pérdidas neutrales observadas (H2O, CO2, NH3). (Mitigación FAIL_14 - UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD).
