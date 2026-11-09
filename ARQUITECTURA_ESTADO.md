@@ -485,3 +485,15 @@ Nuevas capacidades proyectadas consolidadas:
     * UPSTREAM_ENSEMBLE_LATENCY_EXPLOSION (FAIL_12)
     * CUDA_FP16_DOUBLE_PRECISION_TYPE_MISMATCH (FAIL_13)
     * UNCONSTRAINED_CANDIDATE_DECOY_OVERLOAD (FAIL_14)
+
+## 🔴 35. Auto-evolución Dinámica CMRE-275 a CMRE-279
+- **Fecha:** 2026-11-09
+- **Resultados de benchmarking:** 189/189 pruebas pasadas (100% éxito).
+- **Proyección de Capacidades:**
+  - Nuevas modalidades y desafíos descubiertos en `ACTIVE_COMPETITIONS.json` proyectan 5 tareas (CMRE-275 a CMRE-279).
+  - Mitigación planificada contra:
+    * severe_class_imbalance
+    * multi_view_ortho_alignment
+    * precursor_mass_ambiguity
+    * zero_shot_generalization
+    * mdl_program_complexity
