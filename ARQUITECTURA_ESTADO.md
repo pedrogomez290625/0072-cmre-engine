@@ -497,3 +497,15 @@ Nuevas capacidades proyectadas consolidadas:
     * precursor_mass_ambiguity
     * zero_shot_generalization
     * mdl_program_complexity
+
+## 🔴 36. Auto-evolución Dinámica CMRE-280 a CMRE-284
+- **Fecha:** 2026-11-10
+- **Resultados de benchmarking:** 189/189 pruebas pasadas (100% éxito).
+- **Proyección de Capacidades:**
+  - Nuevas modalidades y desafíos descubiertos en `ACTIVE_COMPETITIONS.json` y fallos no mitigados proyectan 5 tareas (CMRE-280 a CMRE-284).
+  - Mitigación planificada contra:
+    * kaggle_timeout_risk
+    * high_dimensional_decoys
+    * neutral_loss_absence
+    * anti_identity_collapse
+    * THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT (FAIL_01)
