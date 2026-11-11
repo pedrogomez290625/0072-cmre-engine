@@ -1425,3 +1425,13 @@ Autor: Perez, Ernesto Rafael ("Rafa")
 - **Proyección de Tareas (CMRE-280 a CMRE-284):** 5 nuevas super-tareas autónomas de ingeniería agnóstica generadas y escritas en `JULES_DYNAMIC_TASKS.md` para mitigar fallos descubiertos (kaggle_timeout_risk, high_dimensional_decoys, neutral_loss_absence, anti_identity_collapse, THRESHOLD_COLLAPSE_AND_METRIC_DISALIGNMENT).
 
 **Autor:** Perez, Ernesto Rafael ("Rafa")
+
+
+## 🟢 ENTRADA 107 - INICIALIZACIÓN Y MEMORIA DINÁMICA
+**Fecha:** 2026-11-11
+**Autor:** Perez, Ernesto Rafael ("Rafa")
+- Lectura de ACTIVE_COMPETITIONS.json completada para descubrir dinámicamente competencias, modalidades y métricas.
+- Lectura de ARQUITECTURA_ESTADO.md y JULES_DYNAMIC_TASKS.md completada para conocer el estado y tareas.
+- Revisión de JULES_EXECUTION_LOG.md para identificar lecciones previas completada.
+- Sincronización aditiva de los catálogos en data/knowledge/ y knowledge_db/ completada respetando la regla anti-colisión con Spark.
+- Ejecución de pytest tests/ validando 189 tests aprobados (100%).
